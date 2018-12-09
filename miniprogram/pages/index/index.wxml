@@ -40,4 +40,9 @@
     </navigator>
   </view>
 
+  <view>
+    <navigator url='../submitForm/submitForm' class="uploader-text">
+      <text>提交表单</text>
+    </navigator>
+  </view>
 </view>
