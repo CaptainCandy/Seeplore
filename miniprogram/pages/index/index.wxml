@@ -1,5 +1,6 @@
 <!--index.wxml-->
 <view class="container">
+  
 
   <!-- 用户 openid -->
   <view class="userinfo">
@@ -9,6 +10,7 @@
       class="userinfo-avatar"
       style="background-image: url({{avatarUrl}})"
     ></button>
+    <text class="userinfo-nickname" style="color:grey">{{userInfo.nickName}}</text>
     <view>
       <button class="userinfo-nickname" bindtap="onGetOpenid">点击获取 openid</button>
     </view>

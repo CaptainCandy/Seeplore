@@ -7,13 +7,44 @@
     "pages/addFunction/addFunction",
     "pages/deployFunctions/deployFunctions",
     "pages/chooseLib/chooseLib",
-    "pages/submitForm/submitForm"
+    "pages/submitForm/submitForm",
+    "pages/mine/mine",
+    "pages/post/post",
+    "pages/module/module",
+    "pages/schoolLib/schoolLib"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#F6F6F6",
-    "navigationBarTitleText": "云开发 QuickStart",
+    "navigationBarBackgroundColor": "#ffc0cb",
+    "navigationBarTitleText": "Seeplore",
     "navigationBarTextStyle": "black"
-  }
+  },
+  "tabBar": {
+    "color": "#808080",
+    "selectedColor": "#7cb9e8",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/module/module",
+        "text": "版块"
+      },
+      {
+        "pagePath": "pages/post/post",
+        "text": "发帖"
+      },
+      {
+        "pagePath": "pages/schoolLib/schoolLib",
+        "text": "院校库"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的"
+      }
+    ]
+  },
+  "borderStyle": "white"
 }
