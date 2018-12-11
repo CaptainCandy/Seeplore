@@ -1,7 +1,49 @@
 /**app.wxss**/
 .container {
+  height: 100%;
   display: flex;
   flex-direction: column;
   align-items: center;
   box-sizing: border-box;
-} 
+}
+.postList{
+  padding: .5rpx .6rpx .3rpx;
+}
+.postPre_block{
+  width: 90vw;
+  padding: 30rpx 30rpx 20rpx 30rpx;
+  margin: 8rpx 0 6rpx 0;
+  background: #ffffff;
+  border-top: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  box-shadow: 0 2px 5px #eeeeee;
+}
+.postPre_image{
+  width: 60rpx;
+  height: 60rpx;
+  margin: 0 20rpx 0 0;
+  border-radius: 60rpx;
+  display: inline-block;
+  vertical-align: middle;
+}
+.postPre_nickname{
+  color: black;
+  font-size: 30rpx;
+  display: inline-block;
+  vertical-align: middle;
+  margin: 0 20rpx 0 0;
+}
+.postPre_date{
+  color: gray;
+  font-size: 25rpx;
+  display: inline-block;
+  vertical-align: middle;
+}
+.postPre_title{
+  color: black;
+  font-size: 40rpx;
+}
+.postPre_text{
+  color: #666666;
+  font-size: 35rpx;
+}

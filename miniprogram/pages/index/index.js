@@ -7,7 +7,10 @@ Page({
     userInfo: {},
     logged: false,
     takeSession: false,
-    requestResult: ''
+    requestResult: '',
+    tabbar:{},
+    navTab: ["最新", "最热"],
+    currentNavtab: "0"
   },
 
   onLoad: function() {
@@ -17,6 +20,8 @@ Page({
       })
       return
     }
+
+    app.editTabbar()
 
     // 获取用户信息
     wx.getSetting({
@@ -34,6 +39,12 @@ Page({
         }
       }
     })
+  },
+
+  switchTopTab: function (e) {
+    this.setData({
+      currentNavtab: e.currentTarget.dataset.idx
+    });
   },
 
   onGetUserInfo: function(e) {

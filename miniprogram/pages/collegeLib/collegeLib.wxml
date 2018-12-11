@@ -1,0 +1,3 @@
+<!--pages/collegeLib/collegeLib.wxml-->
+<text>pages/collegeLib/collegeLib.wxml</text>
+<tabbar tabbar="{{tabbar}}"></tabbar>

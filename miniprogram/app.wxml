@@ -1,0 +1,15 @@
+<template name="postPreview">
+  <view class="postList">
+        <block>
+            <view class="item">
+                <view class="postPre_block">
+                    <image class="postPre_image" src="{{userInfo.avatarUrl}}"></image>
+                    <view class="postPre_nickname"><text>{{userInfo.nickName}}</text></view>
+                    <view class="postPre_date"><text>2018-12-10</text></view>
+                    <view class="postPre_title"><text>test title</text></view>
+                    <view class="postPre_text"><text>test text</text></view>
+                </view>
+            </view>
+        </block>
+      </view>
+</template>

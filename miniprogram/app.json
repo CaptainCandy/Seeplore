@@ -10,8 +10,8 @@
     "pages/submitForm/submitForm",
     "pages/mine/mine",
     "pages/post/post",
-    "pages/module/module",
-    "pages/schoolLib/schoolLib"
+    "pages/collegeLib/collegeLib",
+    "pages/category/category"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
@@ -21,7 +21,7 @@
     "navigationBarTextStyle": "black"
   },
   "tabBar": {
-    "color": "#808080",
+    "color": "#999999",
     "selectedColor": "#7cb9e8",
     "list": [
       {
@@ -29,15 +29,11 @@
         "text": "首页"
       },
       {
-        "pagePath": "pages/module/module",
+        "pagePath": "pages/category/category",
         "text": "版块"
       },
       {
-        "pagePath": "pages/post/post",
-        "text": "发帖"
-      },
-      {
-        "pagePath": "pages/schoolLib/schoolLib",
+        "pagePath": "pages/collegeLib/collegeLib",
         "text": "院校库"
       },
       {
