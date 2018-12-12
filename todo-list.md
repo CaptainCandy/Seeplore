@@ -26,6 +26,8 @@
     - post collection 仅保存点赞数
 - [ ] `discuss` post JSON数据格式
   - 依赖于编辑器产生的数据格式 @CaptainCandy
+  - 依赖于前端渲染template可以使用的内容格式
+  
     array套JSON
   ```
     [
@@ -42,4 +44,3 @@
       {}
     ]
   ```
-  - 依赖于前端渲染template可以使用的内容格式
