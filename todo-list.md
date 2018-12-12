@@ -26,4 +26,20 @@
     - post collection 仅保存点赞数
 - [ ] `discuss` post JSON数据格式
   - 依赖于编辑器产生的数据格式 @CaptainCandy
+    array套JSON
+  ```
+    [
+      {
+        title: "",
+        content: "",
+        viewCount: ,
+        heartCount: ,
+        whetherHeart: ,
+        userInfo: {},
+        createTime: ,
+      },
+      {},
+      {}
+    ]
+  ```
   - 依赖于前端渲染template可以使用的内容格式
