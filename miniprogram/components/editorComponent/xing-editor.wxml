@@ -1,0 +1,21 @@
+<!--components/xing-editor.wxml-->
+<view class="editor-wrapper" style="min-height: {{windowHeight}}px" scroll-y enable-back-to-top>
+  <input class='editor-title' placeholder='请输入标题' placeholder-style='color: #d1d1d1' data-index="-1" value="{{titleNode.children[0].text}}" bindtap='onTitleInput'></input>
+  <block wx:for="{{nodeList}}" wx:for-item="node" wx:key="{{index}}">
+    <view class="editor-node-wrapper">
+      <block wx:if="{{node.name === 'p'}}">
+        <textarea class="editor-textarea" value="{{node.children[0].text}}" auto-height maxlength="-1" data-index="{{index}}" bindinput="onTextareaInput" placeholder='请输入正文' placeholder-style='color: #d1d1d1'>
+        </textarea>
+      </block>
+      <block wx:if="{{node.name === 'img'}}">
+        <image class="editor-image" src="{{node.attrs.src}}" style="height: {{node.attrs._height * 700}}rpx"></image>
+      </block>
+      <view class="editor-delete iconfont icon-close" data-index="{{index}}" bindtap="deleteNode"></view>
+    </view>
+  </block>
+  <view class="editor-add-wrapper">
+    <view class="editor-add iconfont icon-align-left" data-index="{{currentIndex}}" bindtap="addText"></view>
+    <view class="editor-add iconfont icon-image" data-index="{{currentIndex}}" bindtap="addImage"></view>
+  </view>
+  <button class="editor-submit-btn" style="background-color: {{buttonBackgroundColor}}; color: {{buttonTextColor}}" bindtap="onFinish">完成</button>
+</view>

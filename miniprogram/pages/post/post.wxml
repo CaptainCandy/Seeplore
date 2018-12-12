@@ -1,2 +1,2 @@
 <!--miniprogram/pages/post/post.wxml-->
-<text>miniprogram/pages/post/post.wxml</text>
+<post-editor></post-editor>

@@ -6,7 +6,7 @@
   align-items: center;
   box-sizing: border-box;
 }
-.postList{
+.postList {
   padding: .5rpx .6rpx .3rpx;
 }
 .postPre_block{

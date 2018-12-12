@@ -1,1 +1,5 @@
-{}
+{
+  "usingComponents":{
+    "post-editor":"../../components/editorComponent/xing-editor"
+  }
+}
