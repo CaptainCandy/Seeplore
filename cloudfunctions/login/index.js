@@ -18,21 +18,29 @@ exports.main = (event, context) => {
   // console.log 的内容可以在云开发云函数调用日志查看
   console.log('beging it!')
   try{
-    cloud.database().collection('users').where(
+    var queryResult = await cloud.cloud.database().collection('users').where(
       { _openid: context.OPENID }
-    ).get().then(result => {
-      console.log('result is: ')
-      console.log(result);
-    }).catch(error => {
-      console.log("cathch it!")
-      console.log(error)
-    })
-    console.log('where is the data?')
-  }catch(err){
-    console.log('here is outside try:')
-    console.log(err)
-  }
+    ).get()
 
+    if (queryResult.data.length==1){
+      const retVal = await cloud.callFunction({
+        name: 'updateUserInfo',
+        data: {
+          //需要用户基本信息 UserInfo
+        }
+      })
+    }
+    else if(queryResult.data.length==0){
+      const retVal = await cloud.callFunction({
+        name: 'createUserInfo',
+        data: {
+          x: 1,
+          y: 2,
+        }
+      })
+    } else  {
+      throw { toString: function () { return "More than one user record of the same openid!"; } };
+    } 
 
   // 获取 WX Context (微信调用上下文)，包括 OPENID、APPID、及 UNIONID（需满足 UNIONID 获取条件）
   const wxContext = cloud.getWXContext()
