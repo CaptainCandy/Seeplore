@@ -1,4 +1,4 @@
-# Project
+# Seeplore-miniprogram Project
 
 ## Tasks
 
@@ -32,6 +32,15 @@
 - [ ] `issue` post content: 图片保存
   - 现有editor是将图片上传到服务器，返回URL
   - wx.cloud.uploadFile则是返回fileID
+  - rich-text组件应当可以处理fileID [文档：组件支持](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-client-api/component/index.html) 退而求其次，也可以使用image组件
+
+### User control
+
+- [ ] app.js OnLaunch, 同步数据库的UserInfo
+  - 由于用户会更改头像和微信昵称，数据库保存的用户身份可能失效；因此，每次用户打开小程序时与后端数据库同步一次UserInfo；Post control需要显示发帖人昵称和头像时，从数据库User Collection调取。
+  - `func` OnLaunch: 判断 open id 是否存在于数据库
+- `Cloud Function` updateUserInfo() createUserInfo()
+  - 
   
 ## Protocol
 
@@ -49,7 +58,7 @@
       heartCount: Number,
       whetherHearted: true/false,
       userInfo: Object,//作者的userinfo
-      createTime: Datetime
+      createTime: Date
     },
     {...},
     ...
@@ -60,9 +69,16 @@
 
 ```js
   {
-    openid: true/false,
-    userInfo: Object,//作者的userinfo
-    createTime: Datetime
+    openid: String,
+    userInfo: Object,//包含Avatar,nickname,gender..
+    createTime: Date,
+    email: String,
+    phone: String,
+    role: {isActivated:Boolean, isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
+    introduction: String,
+    tagsOfInterest: Array,
+    background: {undergraduate:String, graduate:,
+      GPA:,TOEFL:,...}
   }
 ```
 
@@ -79,3 +95,14 @@
     - 调用这一函数，需要首先获取授权
     - 若用户更换头像，原有头像 URL 将失效
   - 登录机制 wx.login [官方文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html) ; [时序图](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/image/api-login.jpg) ; 似乎针对涉及开发者服务器的小程序
+- `数据库操作`
+  - command.set: 对于某一字段(类型Object)调用update时，若传入dict:key-value，默认只更新该字段的Object当中dict:key所对应的成员value。使用command.set时会整体更新。
+- `云控制台` 日志仅显示console.log() 不显示console.error()
+
+## JavaScript Basics
+
+### function & object
+
+- function里面的this指向谁？取决于如何调用此function
+  - 使用new关键字，作为构造函数调用：指向所构造的新对象
+  - 简单直接调用，非严格模式：指向全局对象；严格模式：undefined
