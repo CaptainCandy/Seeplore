@@ -7,7 +7,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-
+    html: "",
   },
 
   /**
@@ -64,5 +64,13 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
+  },
+
+  /**
+   * 
+   */
+  finish: function (e) {
+    console.log(e.detail.title);
+    console.log(e.detail.content);
+  },
 })

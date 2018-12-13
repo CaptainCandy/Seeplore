@@ -40,13 +40,13 @@
 
 .editor-wrapper {
   width: 100vw;
-  background: #f2f6fc;
+  background: #fff;
   padding: 20rpx;
   box-sizing: border-box;
 }
 
 .editor-submit-btn {
-  width: 100vw;
+  width: 94vw;
   height: 50px;
   display: flex;
   align-items: center;
@@ -103,17 +103,16 @@
 
 .editor-textarea {
   display: block;
-  width: 95vw;
-  border: solid 2rpx #e4e7ed;
+  width: 93vw;
   min-height: 200rpx;
   font-size: 32rpx;
   padding: 6rpx 6rpx 6rpx 6rpx;
-  /* box-sizing: border-box; */
 }
 
 .editor-image {
   display: block;
   width: 95vw;
+  margin: 10rpx 0 10rpx 0;
 }
 
 .editor-title {
