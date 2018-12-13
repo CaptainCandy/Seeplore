@@ -7,7 +7,7 @@
 
 <import src="../../app.wxml"/>
 
-<scroll-view scroll-y="true" style='margin-top: 80rpx' class="container withtab" bindscrolltoupper="upper" bindscrolltolower="lower"  scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+<scroll-view scroll-y="true" style='margin-top: 80rpx; margin-bottom: 130rpx' class="container withtab" bindscrolltoupper="upper" bindscrolltolower="lower"  scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
   
   <view class="container" hidden="{{currentNavtab==0 ? '' : true}}">
 
