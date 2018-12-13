@@ -54,12 +54,12 @@ Component({
       }]
     },
     nodeList: [],
-    titleBuffer: "",
+    titleBuffer: '',
     textBufferPool: [],
     currentIndex: 0,
   },
 
-  attached: function () {
+  /*attached: function () {
     const { windowHeight } = wx.getSystemInfoSync();
     this.setData({
       windowHeight,
@@ -88,7 +88,7 @@ Component({
         nodeList,
       })
     }
-  },
+  },*/
 
   /**
    * 组件的方法列表
@@ -346,7 +346,9 @@ Component({
           this.triggerEvent('finish', { content: this.data.nodeList });
         }
         if (this.properties.outputType.toLowerCase() === 'html') {
-          this.triggerEvent('finish', { content: this.nodeListToHTML() });
+          this.triggerEvent('finish', { 
+            title: this.data.titleNode,
+            content: this.nodeListToHTML() });
         }
         return;
       }
