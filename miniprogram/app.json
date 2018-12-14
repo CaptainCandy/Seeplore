@@ -1,5 +1,6 @@
 {
   "pages": [
+    "pages/loginEnrty/entry",
     "pages/index/index",
     "pages/userConsole/userConsole",
     "pages/storageConsole/storageConsole",

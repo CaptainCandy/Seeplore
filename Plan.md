@@ -46,10 +46,10 @@
 - [ ] onLaunch: 判断是否拥有授权userInfo；若无，则展示“登录”按钮。@Candy
   - 点击登录后，调用`CF login`：授权和bindtap孰先孰后？
   - [必须通过button获取userInfo](https://developers.weixin.qq.com/community/develop/doc/0000a26e1aca6012e896a517556c01)
-- [ ] `latest` 登录流程
-  - [ ] 建立前端登录按钮 button:getUserInfo
-  - [ ] 在按钮的响应事件里调用login云函数，传入userInfo
-  - [ ] login云函数根据openid判断是否新拥护，选择调用create/update
+- [x] `latest` 登录流程
+  - [x] 建立前端登录按钮 button:getUserInfo
+  - [x] 在按钮的响应事件里调用login云函数，传入userInfo
+  - [xs] login云函数根据openid判断是否新拥护，选择调用create/update
     - create可以直接写进login; update用户手动更新个人信息时也会调用
 
 ```html
@@ -121,6 +121,8 @@ onGotUserInfo(e) {
 - `数据库操作`
   - command.set: 对于某一字段(类型Object)调用update时，若传入dict:key-value，默认只更新该字段的Object当中dict:key所对应的成员value。使用command.set时会整体更新。
 - `云控制台` 日志仅显示console.log() 不显示console.error()
+- `版本问题` 云函数login一直在报错，提示Unexpected identifier，发现是await关键字无法识别。
+  - Fucking 云后台 JS版本到底是不是ES6
 
 ## JavaScript Basics
 
@@ -129,3 +131,8 @@ onGotUserInfo(e) {
 - function里面的this指向谁？取决于如何调用此function
   - 使用new关键字，作为构造函数调用：指向所构造的新对象
   - 简单直接调用，非严格模式：指向全局对象；严格模式：undefined
+
+### vairable scope
+
+- var / let 定义变量的作用范围
+  - ?: 上文定义过变量recordID时，后文回调函数的形式参数同样命名为recordID "then(recordID=>{...})" 是否会引起冲突：{...}内部的recordID错误地引用至全局变量？

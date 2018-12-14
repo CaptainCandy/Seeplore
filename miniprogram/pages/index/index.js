@@ -126,6 +126,6 @@ Page({
         console.error(e)
       }
     })
-  },
+  }
 
 })

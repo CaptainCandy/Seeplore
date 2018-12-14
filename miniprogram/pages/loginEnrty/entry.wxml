@@ -1,0 +1,10 @@
+<!--miniprogram/pages/loginEnrty/entry.wxml-->
+<view>
+  <button 
+    open-type="getUserInfo" 
+    bindgetuserinfo="onLogin"
+  >登录</button>
+</view>
+<view><button bindtap="onHelpMe">Help me!</button>
+<button bindtap='onTest'>Test</button>
+</view>
