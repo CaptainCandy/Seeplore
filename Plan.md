@@ -39,9 +39,32 @@
 - [ ] app.js OnLaunch, 同步数据库的UserInfo
   - 由于用户会更改头像和微信昵称，数据库保存的用户身份可能失效；因此，每次用户打开小程序时与后端数据库同步一次UserInfo；Post control需要显示发帖人昵称和头像时，从数据库User Collection调取。
   - `func` OnLaunch: 判断 open id 是否存在于数据库
-- `Cloud Function` updateUserInfo() createUserInfo()
-  - 
-  
+- [ ] `Cloud Function` updateUserInfo() createUserInfo()
+  - 云函数login判断如何调用
+  - [ ] create user info 在云函数获取userInfo
+    - wx.authorize不适用userInfo？需要一个登陆页面，包含一个获取授权的按钮。
+- [ ] onLaunch: 判断是否拥有授权userInfo；若无，则展示“登录”按钮。@Candy
+  - 点击登录后，调用`CF login`：授权和bindtap孰先孰后？
+  - [必须通过button获取userInfo](https://developers.weixin.qq.com/community/develop/doc/0000a26e1aca6012e896a517556c01)
+- [ ] `latest` 登录流程
+  - [ ] 建立前端登录按钮 button:getUserInfo
+  - [ ] 在按钮的响应事件里调用login云函数，传入userInfo
+  - [ ] login云函数根据openid判断是否新拥护，选择调用create/update
+    - create可以直接写进login; update用户手动更新个人信息时也会调用
+
+```html
+<button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
+获取用户信息</button>
+<button open-type="openSetting">打开授权设置页</button>
+```
+
+```js
+onGotUserInfo(e) {
+  console.log(e.detail.errMsg); console.log(e.detail.userInfo);
+  console.log(e.detail.rawData)
+}
+```
+
 ## Protocol
 
 ### Data Format
