@@ -106,3 +106,38 @@
 - function里面的this指向谁？取决于如何调用此function
   - 使用new关键字，作为构造函数调用：指向所构造的新对象
   - 简单直接调用，非严格模式：指向全局对象；严格模式：undefined
+
+ 
+## Browser Tasks
+
+### Finished
+
+- overall
+  - customized tabbar
+- index
+- category
+- post
+  - richtext editor
+- college
+- mine
+
+
+### Unsolved
+
+- overall
+  - seeplore放中间
+  - acquire user authorization popup
+- index
+  - pre-post list templete: dataformat, heart share etc. button
+- category
+  - 类目-标签的 templete
+- post
+  - 弹窗或跳转页面提示选择帖子种类
+- college
+  - pre-college list templete: dataformat, collect button
+- mine
+  - selfinfo templete
+  - my draft page
+  - my collection page
+  - agent certification application page
+  - settings 
