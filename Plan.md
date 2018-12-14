@@ -136,3 +136,36 @@ onGotUserInfo(e) {
 
 - var / let 定义变量的作用范围
   - ?: 上文定义过变量recordID时，后文回调函数的形式参数同样命名为recordID "then(recordID=>{...})" 是否会引起冲突：{...}内部的recordID错误地引用至全局变量？
+
+## Browser Tasks
+
+### Finished
+
+- overall
+  - customized tabbar
+- index
+- category
+- post
+  - richtext editor
+- college
+- mine
+
+### Unsolved
+
+- overall
+  - seeplore放中间
+  - acquire user authorization popup
+- index
+  - pre-post list templete: dataformat, heart share etc. button
+- category
+  - 类目-标签的 templete
+- post
+  - 弹窗或跳转页面提示选择帖子种类
+- college
+  - pre-college list templete: dataformat, collect button
+- mine
+  - selfinfo templete
+  - my draft page
+  - my collection page
+  - agent certification application page
+  - settings 
