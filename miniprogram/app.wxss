@@ -11,39 +11,50 @@
 }
 .postPre_block{
   width: 90vw;
-  padding: 30rpx 30rpx 20rpx 30rpx;
+  padding: 20rpx 30rpx 20rpx 30rpx;
   margin: 8rpx 0 6rpx 0;
   background: #ffffff;
   border-top: 1px solid #eee;
   border-bottom: 1px solid #eee;
   box-shadow: 0 2px 5px #eeeeee;
 }
-.postPre_image{
+.postPre_portrait_box{
+  display: inline-block;
+}
+.postPre_portrait{
   width: 60rpx;
   height: 60rpx;
   margin: 0 20rpx 0 0;
-  border-radius: 60rpx;
-  display: inline-block;
-  vertical-align: middle;
+  border-radius: 50%;
 }
-.postPre_nickname{
-  color: black;
-  font-size: 30rpx;
+.postPre_head{
   display: inline-block;
-  vertical-align: middle;
+}
+.postPre_head .postPre_nickname{
+  height: 30rpx;
+  color: black;
+  font-size: 24rpx;
+  display: inline-block;
+  padding: 0 0 0 0;
   margin: 0 20rpx 0 0;
 }
-.postPre_date{
+.postPre_head .postPre_date{
+  height: 30rpx;
   color: gray;
-  font-size: 25rpx;
+  font-size: 24rpx;
   display: inline-block;
-  vertical-align: middle;
+  padding: 0 0 0 0;
 }
-.postPre_title{
+.postPre_head .postPre_title{
+  height: 30rpx;
   color: black;
-  font-size: 40rpx;
+  font-size: 30rpx;
+  display: flex;
+  padding: 0 0 0 0;
+  margin: 0 0 0 0;
 }
-.postPre_text{
+.postPre_abstract{
   color: #666666;
-  font-size: 35rpx;
+  font-size: 36rpx;
+  margin: 10rpx 0 0 0;
 }

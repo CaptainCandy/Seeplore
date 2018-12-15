@@ -10,7 +10,9 @@ Page({
     requestResult: '',
     tabbar:{},
     navTab: ["最新", "最热"],
-    currentNavtab: "0"
+    currentNavtab: "0",
+    prePostListNew: [],
+    prePostListHot: [],
   },
 
   onLoad: function() {
