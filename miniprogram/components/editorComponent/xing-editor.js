@@ -53,6 +53,7 @@ Component({
         text: '',
       }]
     },
+    anstract: '',
     nodeList: [],
     titleBuffer: '',
     textBufferPool: [],
@@ -202,6 +203,23 @@ Component({
     },
 
     /**
+     * 事件：存储摘要
+     */
+    setAbstract: function (e){
+      var i = 0;
+      const nodeList = this.data.nodeList
+      while (nodeList[i].name === 'p'){
+        this.setData({
+          abstract: nodeList[i].children[0].text.slice(0,20),
+        });
+        return;
+      }
+      this.setData({
+        abstract: "[图片]",
+      })
+    },
+
+    /**
      * 事件：提交内容
      */
     onFinish: function (e) {
@@ -209,6 +227,7 @@ Component({
         title: '正在保存',
       })
       this.writeTextToNode();
+      this.setAbstract();
       this.handleOutput();
     },
 
