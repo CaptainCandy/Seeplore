@@ -76,6 +76,7 @@ onGotUserInfo(e) {
   [//JSON Array
     {
       title: String,
+      abstract: String,
       content: String,
       viewCount: Number,
       heartCount: Number,
@@ -144,6 +145,7 @@ onGotUserInfo(e) {
 - overall
   - customized tabbar
 - index
+  - pre-post list templete: dataformat, style
 - category
 - post
   - richtext editor
@@ -153,10 +155,11 @@ onGotUserInfo(e) {
 ### Unsolved
 
 - overall
-  - seeplore放中间
-  - acquire user authorization popup
+  - seeplore放中间 //无法实现，微信不提供这样的功能，要实现的话顶部导航栏全部要自己重写
+  - acquire user authorization popup //用G宁的方法实现
+  - 美化G宁的登录界面
 - index
-  - pre-post list templete: dataformat, heart share etc. button
+  - post查看页面style, heart\reply etc. button
 - category
   - 类目-标签的 templete
 - post
