@@ -5,6 +5,8 @@ const cloud = require('wx-server-sdk')
 
 // 初始化 cloud
 cloud.init()
+
+const db = cloud.database()
 /**
  * 这个示例将经自动鉴权过的小程序用户 openid 返回给小程序端
  * 
@@ -16,15 +18,16 @@ exports.main = (event, context) => {
   // console.log 的内容可以在云开发云函数调用日志查看
   // 获取 WX Context (微信调用上下文)，包括 OPENID、APPID、及 UNIONID（需满足 UNIONID 获取条件）
   var isOldUser = false; var recordID = null;
-  cloud.database().collection('users').where(
+  db.collection('users').where(
     { _openid: context.OPENID }
   ).get().then(result=>{
     if(result.data.length == 1){
+      console.log('$ an old user.')
       var isOldUser = true;
       cloud.callFunction({
         name: 'test',
         data:{
-          wxUserInfo: event.userInfo
+          wxUserInfo: event.myUserInfo
         }
       }).then(result=>{
         console.log(result);//TODO
@@ -32,9 +35,10 @@ exports.main = (event, context) => {
         console.log(err);
       });
     }else if(result.data.length == 0){
-      cloud.database.collection('users').add({
+      console.log('$ new user to add.')
+      db.collection('users').add({
         data: {
-          wxUserInfo: event.userInfo,
+          wxUserInfo: event.myUserInfo,
           createDate: new Date(),
           email: null,
           phone: null,
@@ -43,20 +47,23 @@ exports.main = (event, context) => {
             isAccoundManager: false, isSuperUser: false
           },
           introduction: null,
-          tagsOfInterest: [],
+          tagsPreferred: [],
           background: {
             undergraduate: null, graduate: null
           }
         }
       }).then(recordID_rv => {
-        console.log('new user created:' + recordID_rv);
-        this.recordID = recordID_rv;
+        console.log('$ new user created:' + recordID_rv._id);
+        var recordID = recordID_rv._id;
       }).catch(error => {
         throw { toString: function () { return "database error: failure to add new user!"; } };
       })
     }else{
       throw { toString: function () { return "More than one user record of the same openid!"; } };
     }
+  }).catch(err=>{
+    console.log(err);
+    throw err;
   });
 
   return {

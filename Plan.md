@@ -36,21 +36,23 @@
 
 ### User control
 
-- [ ] app.js OnLaunch, 同步数据库的UserInfo
-  - 由于用户会更改头像和微信昵称，数据库保存的用户身份可能失效；因此，每次用户打开小程序时与后端数据库同步一次UserInfo；Post control需要显示发帖人昵称和头像时，从数据库User Collection调取。
-  - `func` OnLaunch: 判断 open id 是否存在于数据库
-- [ ] `Cloud Function` updateUserInfo() createUserInfo()
-  - 云函数login判断如何调用
-  - [ ] create user info 在云函数获取userInfo
-    - wx.authorize不适用userInfo？需要一个登陆页面，包含一个获取授权的按钮。
-- [ ] onLaunch: 判断是否拥有授权userInfo；若无，则展示“登录”按钮。@Candy
-  - 点击登录后，调用`CF login`：授权和bindtap孰先孰后？
-  - [必须通过button获取userInfo](https://developers.weixin.qq.com/community/develop/doc/0000a26e1aca6012e896a517556c01)
+- 由于用户会更改头像和微信昵称，数据库保存的用户身份可能失效；因此，每次用户打开小程序时与后端数据库同步一次UserInfo；Post control需要显示发帖人昵称和头像时，从数据库User Collection调取。
+- [ ] `Cloud Function` updateUserInfo() ~~createUserInfo()~~
+  - [x] create user info 在云函数获取userInfo
+  - `Trap!` 云端调用云函数，云函数无法通过context获取openid。
+- [ ] onLaunch: 判断是否拥有授权userInfo；若无，则展示“登录”按钮。
+  - ~~点击登录后，调用`CF login`：授权和bindtap孰先孰后？~~
+  - wx.authorize()不适用userInfo [必须通过button获取userInfo](https://developers.weixin.qq.com/community/develop/doc/0000a26e1aca6012e896a517556c01)
+- 需要获取用户头像的情景
+  - 用户查看本人信息：“我的” —— wxml:opendata直接获取
+  - 用户查看他人信息 —— getUserInfo 获取头像URL/fielid 同时需要introduction
+  - 用户查看各种帖子 —— 只需要头像和昵称，根据userID获取
 - [x] `latest` 登录流程
   - [x] 建立前端登录按钮 button:getUserInfo
   - [x] 在按钮的响应事件里调用login云函数，传入userInfo
-  - [xs] login云函数根据openid判断是否新拥护，选择调用create/update
-    - create可以直接写进login; update用户手动更新个人信息时也会调用
+    - 默认参数userInfo只含openid；自定义参数myUserInfo包含详细信息
+  - [x] login云函数根据openid判断是否新用户，选择调用create/update
+    - create可以直接写进login; 而update函数在用户手动更新个人信息时也会被调用
 
 ```html
 <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
@@ -121,6 +123,9 @@ onGotUserInfo(e) {
 - `数据库操作`
   - command.set: 对于某一字段(类型Object)调用update时，若传入dict:key-value，默认只更新该字段的Object当中dict:key所对应的成员value。使用command.set时会整体更新。
 - `云控制台` 日志仅显示console.log() 不显示console.error()
+- `云函数` 从云端调用云函数，context是什么？
+  - 上传云函数前需要保存。
+  - Fucking HELL!!! 为什么云函数里面调用云函数只有await关键字的做法可以work，then()链式调用就不行！
 - `版本问题` 云函数login一直在报错，提示Unexpected identifier，发现是await关键字无法识别。
   - Fucking 云后台 JS版本到底是不是ES6
 
@@ -168,4 +173,4 @@ onGotUserInfo(e) {
   - my draft page
   - my collection page
   - agent certification application page
-  - settings 
+  - settings

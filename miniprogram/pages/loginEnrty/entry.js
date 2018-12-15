@@ -18,7 +18,7 @@ Page({
     wx.cloud.callFunction({
       name:'login',
       data:{
-        userInfo: event.detail.userInfo
+        myUserInfo: event.detail.userInfo
       }
     }).then(retval => {
       console.log(retval)
@@ -31,11 +31,16 @@ Page({
     })
   },
 
-  onHelpMe: function(event){
+  onTap: function(event){
     console.log(event)
     wx.cloud.callFunction({
-      name:'login',
-      data:{}
+      name:'updateUserInfo',
+      data:{
+        userid: null,
+        updates: {
+          email: 'sos@fuckme.com'
+        }
+      }
     }).then(retval=>{
       console.log(retval)
       console.log('We make it!!!!!!!')
@@ -45,13 +50,25 @@ Page({
     })
   },
 
-  onTest:function(){
+  onTest:function(e){
+    console.log('onTest');
     wx.cloud.callFunction({
-      name:'test',
-      data:{}
-    }).then(retval=>console.log(retval)).catch((err)=>{
-      console.log(err)
-    })
+      name: 'test',
+      data: {
+        myUserInfo: e.detail.userInfo,
+        whereFrom: 'client'
+      }
+    }).then(retval => console.log(retval.result))
+  },
+
+  onHelpMe:function(e){
+    console.log('onTap');
+    wx.cloud.callFunction({
+      name: 'updateUserInfo',
+      data: {
+        myUserInfo: e.detail.userInfo
+      }
+    }).then(retval => console.log(retval.result))
   },
 
   /**

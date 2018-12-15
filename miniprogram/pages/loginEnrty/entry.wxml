@@ -6,5 +6,7 @@
   >登录</button>
 </view>
 <view><button bindtap="onHelpMe">Help me!</button>
-<button bindtap='onTest'>Test</button>
+<button
+    open-type="getUserInfo" 
+    bindgetuserinfo="onTest" bindtap="onTap">Test</button>
 </view>
