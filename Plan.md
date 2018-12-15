@@ -37,7 +37,7 @@
 ### User control
 
 - 由于用户会更改头像和微信昵称，数据库保存的用户身份可能失效；因此，每次用户打开小程序时与后端数据库同步一次UserInfo；Post control需要显示发帖人昵称和头像时，从数据库User Collection调取。
-- [ ] `Cloud Function` updateUserInfo() ~~createUserInfo()~~
+- [x] `Cloud Function` updateUserInfo() ~~createUserInfo()~~
   - [x] create user info 在云函数获取userInfo
   - `Trap!` 云端调用云函数，云函数无法通过context获取openid。
 - [ ] onLaunch: 判断是否拥有授权userInfo；若无，则展示“登录”按钮。
@@ -139,6 +139,7 @@ onGotUserInfo(e) {
 - function里面的this指向谁？取决于如何调用此function
   - 使用new关键字，作为构造函数调用：指向所构造的新对象
   - 简单直接调用，非严格模式：指向全局对象；严格模式：undefined
+- [object的定义与引用方法](http://es6.ruanyifeng.com/#docs/object)
 
 ### vairable scope
 

@@ -25,9 +25,12 @@ exports.main = (event, context) => {
       console.log('$ an old user.')
       var isOldUser = true;
       cloud.callFunction({
-        name: 'test',
+        name: 'updateUserInfo',
         data:{
-          wxUserInfo: event.myUserInfo,
+          userid: result.data[0]._id,
+          updates:{
+            wxUserInfo: event.myUserInfo
+          } 
         }
       }).then(retval=>{
         if(retval.result.stats.updated!=1){
