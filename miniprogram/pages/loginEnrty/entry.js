@@ -18,12 +18,12 @@ Page({
     wx.cloud.callFunction({
       name:'login',
       data:{
-        userInfo: null//event.detail.userInfo
+        userInfo: event.detail.userInfo
       }
     }).then(retval => {
       console.log(retval)
-      wx.navigateTo({
-        url: 'index',
+      wx.switchTab({
+        url: '../index/index',
       })
       //TODO 将后台返回的用户状态保存到app全局变量
     }).catch(error => {
