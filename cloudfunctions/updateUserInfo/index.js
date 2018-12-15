@@ -6,31 +6,28 @@ cloud.init()
 // 云函数入口函数
 exports.main = async (event, context) => {
   
-  const wxContext = cloud.getWXContext()
-  let openid = wxContext.OPENID;
+  let openid = event.openid;
   let userid = event.userid;
-  let updates = ['here is update.'];
+  let updates = event.updates;
+  let ref = null;
   
-  //const userCollection = cloud.database().collection('users');
-  /*cloud.callFunction({
-    name: 'test',
-    data:{
-      whereFrom: 'cloud'
-    }
-  }).then(ret=>{
-    return {cld: ret.result};
-  })*/
-  const res = await cloud.callFunction({
-    // 要调用的云函数名称
-    name: 'test',
-    // 传递给云函数的参数
-    data: {
-      whereFrom: 'cloud'
-    }
-  }) 
-  return res.result;
-
-  return {
-    upd: updates
+  if(!openid && !userid){
+    throw {toString:function(){return "neither userid nor openid";}}
+    return;
+  }else if(userid){
+    ref = cloud.database().collection('users').doc(userid);
+  }else{
+    ref = cloud.database().collection('users').where({
+      _openid:openid
+    });
   }
+
+  try{
+    return await ref.update({
+      data: updates
+    });
+  }catch(err){
+    console.error(err);
+  }
+
 }

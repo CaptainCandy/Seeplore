@@ -84,7 +84,7 @@ onGotUserInfo(e) {
       heartCount: Number,
       whetherHearted: true/false,
       userInfo: Object,//作者的userinfo
-      createTime: Date
+      createDate: Date
     },
     {...},
     ...
@@ -95,14 +95,14 @@ onGotUserInfo(e) {
 
 ```js
   {
-    openid: String,
-    userInfo: Object,//包含Avatar,nickname,gender..
-    createTime: Date,
+    _openid: String,
+    wxUserInfo: Object,//包含Avatar,nickname,gender..
+    createDate: Date,
     email: String,
     phone: String,
     role: {isActivated:Boolean, isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
     introduction: String,
-    tagsOfInterest: Array,
+    tagsPreferred: Array,
     background: {undergraduate:String, graduate:,
       GPA:,TOEFL:,...}
   }
@@ -123,7 +123,9 @@ onGotUserInfo(e) {
   - 登录机制 wx.login [官方文档](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/login.html) ; [时序图](https://developers.weixin.qq.com/miniprogram/dev/framework/open-ability/image/api-login.jpg) ; 似乎针对涉及开发者服务器的小程序
 - `数据库操作`
   - command.set: 对于某一字段(类型Object)调用update时，若传入dict:key-value，默认只更新该字段的Object当中dict:key所对应的成员value。使用command.set时会整体更新。
-- `云控制台` 日志仅显示console.log() 不显示console.error()
+    - collection.doc 未能取到对应记录也不会报错。
+- `云控制台` ~~日志仅显示console.log() 不显示console.error()~~ 都显示的
+  - 云函数在控制台上具备“测试”功能。
 - `云函数` 从云端调用云函数，context是什么？
   - 上传云函数前需要保存。
   - Fucking HELL!!! 为什么云函数里面调用云函数只有await关键字的做法可以work，then()链式调用就不行！

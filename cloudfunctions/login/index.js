@@ -16,21 +16,23 @@ const db = cloud.database()
 exports.main = (event, context) => {
 
   // console.log 的内容可以在云开发云函数调用日志查看
-  // 获取 WX Context (微信调用上下文)，包括 OPENID、APPID、及 UNIONID（需满足 UNIONID 获取条件）
+  // 获取 WX Context (微信调用上下文)，包括 OPENID、APPID、及 UNIONID（需满足 UNIONID 获取条件）;;;
   var isOldUser = false; var recordID = null;
   db.collection('users').where(
     { _openid: context.OPENID }
   ).get().then(result=>{
-    if(result.data.length == 1){
+    if(result.data.length == 1){//当前用户已存在 ;;;;
       console.log('$ an old user.')
       var isOldUser = true;
       cloud.callFunction({
         name: 'test',
         data:{
-          wxUserInfo: event.myUserInfo
+          wxUserInfo: event.myUserInfo,
         }
-      }).then(result=>{
-        console.log(result);//TODO
+      }).then(retval=>{
+        if(retval.result.stats.updated!=1){
+          console.error(' $ update went wrong.')
+        }
       }).catch(err=>{
         console.log(err);
       });
@@ -46,7 +48,7 @@ exports.main = (event, context) => {
             isActivated: false, isAgent: false, isActivityManager: false,
             isAccoundManager: false, isSuperUser: false
           },
-          introduction: null,
+          introduction: "",
           tagsPreferred: [],
           background: {
             undergraduate: null, graduate: null
