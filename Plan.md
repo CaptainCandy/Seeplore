@@ -171,6 +171,9 @@ onGotUserInfo(e) {
   - Fucking 云后台 JS版本到底是不是ES6
 - `Promise` [没那么简单！](https://segmentfault.com/a/1190000010345031)
   - 返回then语句块当中修改过的变量一直失败！因为！！！搞了一晚上！发现！then之外的语句先于then之内的语句执行。
+    - 讲道理应该把return语句放在then里面，但这样云函数直接把null返回给客户端了
+    - await关键字应该可以中断这个异步函数，让它...合着我之前的云函数一直是同步函数我FFFFFFFF 应该搜索“await unexpected identifier”的。
+    - Promise then 和 async await 机制层面就不一样呀。
 
 ## JavaScript Basics
 
