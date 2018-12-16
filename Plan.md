@@ -17,9 +17,19 @@
     - 操作名称： like,follow,collect
     - 操作状态： 新增，撤销
   - [ ] 在该post的对应字段的数组添加用户的post id
-- [x] `discuss` 将用户-内容的操作，包括点赞/收藏，分别在用户和帖子的数据集保存一条array类型的字段。
-  - 相较于“单独的数据表存储点赞记录”，产生额外数据冗余；但获取用户的收藏列表会更快捷。
-  - An alternative solution:  ~~建立单独的operation control的云函数，用于维护 operation collection；用户查看某一个帖子，程序检查该用户是否为这个帖子点过赞时，从operation collection当中查找。post collection 仅保存点赞数 ~~
+- `comparison` 点赞单独存储/作为用户与帖子的数字型字段
+  - 单独存储
+    - 查看某用户的点赞记录：拉取与当前_openid相匹配的“点赞”记录（post id）；调用getPostList(id列表) operation array => arr.map(ret postid) ~~// 使用field指定所返回的字段~~ => post array
+    - 查看某个帖子的点赞数：where.count
+    - 检查当前用户是否点过赞：where.where.count
+    - 新的点赞：增加一条记录。取消点赞：删除一条记录。匹配 postid openid
+  - 从属字段
+    - 查看某个帖子的点赞数：array.length
+    - 查看某用户的点赞记录：postid array=>post array
+    - 检查当前用户是否点过赞：openid in array
+    - 取消点赞：从帖子与用户分别获取数组；从数组删除某一项元素（使用filter）；用新数组update原有数组的相应字段 `terrible trouble`
+- [x] `discuss` 将用户-内容的操作，包括点赞/收藏，分别在用户和帖子的数据集保存一条array类型的字段。相较于“单独的数据表存储点赞记录”，产生额外数据冗余；但获取用户的收藏列表会更快捷。
+  - An alternative solution:  建立单独的operation control的云函数，用于维护 operation collection；用户查看某一个帖子，程序检查该用户是否为这个帖子点过赞时，从operation collection当中查找。post collection 仅保存点赞数
   - `agree` 分别在帖子和用户两处存储operation
 - [x] `discuss` post JSON数据格式
   - 依赖于编辑器产生的数据格式 @CaptainCandy
@@ -80,28 +90,33 @@ onGotUserInfo(e) {
     title: String,
     abstract: String,
     content: String/Array,
-    tags: Array,
-    authorID: String,//_id in 'user' collection
-    createDate: Date
+    tags: Array,//? 仅保存至tag collection
+    authorID: String, //_id in 'user' collection
+    createTime: Date,
+    status: Number// 0 草稿 1 发布 -1 隐藏
   }
 
-  {//保存事件
-
+  {//保存事件 opearionP
+    _openid:,
+    postid:,
+    userid:,//?
+    operation:Number,// 1 点赞 2 收藏 -1 举报
+    createTime: Date
   }
 
   [//JSON Array 用于传给前端渲染列表
     {
       _id:,  _openid,
       title: String,
-      abstract: String,
-      content: String,
+      abstract: String,//仅用于list
+      content: String,//仅用于detail
       viewCount: Number,
       heartCount: Number,
-      whetherHearted: true/false,
+      whetherHearted: Boolean,
       author: {
         nickname: String, avatar: fileID/URL
       },//作者的userinfo
-      createDate: Date
+      createTime: Date
     },
     {...},
     ...
@@ -114,7 +129,7 @@ onGotUserInfo(e) {
   {
     _openid: String,
     wxUserInfo: Object,//包含Avatar,nickname,gender..
-    createDate: Date,
+    createTime: Date,
     email: String,
     phone: String,
     role: {isActivated:Boolean, isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
