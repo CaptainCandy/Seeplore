@@ -6,7 +6,6 @@
 
 - [ ] `Cloud Function` create post
   - 将编辑器保存的数据，转换格式，提交到数据库。
-    - 不是submit，而是getContent?
 - [ ] `CF` get single post in detail by post id
   - [ ] retrive metadata from cloud db
   - [ ] get replies and comment
@@ -20,14 +19,14 @@
   - [ ] 在该post的对应字段的数组添加用户的post id
 - [x] `discuss` 将用户-内容的操作，包括点赞/收藏，分别在用户和帖子的数据集保存一条array类型的字段。
   - 相较于“单独的数据表存储点赞记录”，产生额外数据冗余；但获取用户的收藏列表会更快捷。
-  - An alternative solution:
-    - 建立单独的operation control的云函数，用于维护 operation collection
-    - 用户查看某一个帖子，程序检查该用户是否为这个帖子点过赞时，从operation collection当中查找。
-    - post collection 仅保存点赞数
+  - An alternative solution:  ~~建立单独的operation control的云函数，用于维护 operation collection；用户查看某一个帖子，程序检查该用户是否为这个帖子点过赞时，从operation collection当中查找。post collection 仅保存点赞数 ~~
   - `agree` 分别在帖子和用户两处存储operation
 - [x] `discuss` post JSON数据格式
   - 依赖于编辑器产生的数据格式 @CaptainCandy
   - 依赖于前端渲染template可以使用的内容格式
+- [ ] post 是否保存作者头像fileID? 如果每次查看帖子都需要根据openid从数据库查找昵称头像，返回列表后会比较复杂。
+  - 保存时从user collection读取昵称、头像、_id。*读取方式与头像的保存方式解耦*
+  - 但若仅在发帖时保存昵称、头像至post集合，它们将无法自动随用户更改头像而变化。
 - [ ] 展示帖子列表时：传给bindtap回调的event参数需要包含 post-id
 - [ ] `issue` post content: 图片保存
   - 现有editor是将图片上传到服务器，返回URL
@@ -75,15 +74,33 @@ onGotUserInfo(e) {
   - `列表如何显示正文？不显示/摘要/全文`
 
 ```js
-  [//JSON Array
+  {//JSON 用于后台保存
+    _id:,
+    _openid:,
+    title: String,
+    abstract: String,
+    content: String/Array,
+    tags: Array,
+    authorID: String,//_id in 'user' collection
+    createDate: Date
+  }
+
+  {//保存事件
+
+  }
+
+  [//JSON Array 用于传给前端渲染列表
     {
+      _id:,  _openid,
       title: String,
       abstract: String,
       content: String,
       viewCount: Number,
       heartCount: Number,
       whetherHearted: true/false,
-      userInfo: Object,//作者的userinfo
+      author: {
+        nickname: String, avatar: fileID/URL
+      },//作者的userinfo
       createDate: Date
     },
     {...},
@@ -104,7 +121,8 @@ onGotUserInfo(e) {
     introduction: String,
     tagsPreferred: Array,
     background: {undergraduate:String, graduate:,
-      GPA:,TOEFL:,...}
+      GPA:,TOEFL:,...},
+    collection: Array,
   }
 ```
 
