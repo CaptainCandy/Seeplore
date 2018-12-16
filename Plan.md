@@ -49,7 +49,7 @@
 - [x] `Cloud Function` updateUserInfo() ~~createUserInfo()~~
   - [x] create user info 在云函数获取userInfo
   - `Trap!` 云端调用云函数，云函数无法通过context获取openid。
-- [ ] onLaunch: 判断是否拥有授权userInfo；若无，则展示“登录”按钮。
+- ~~[ ] onLaunch: 判断是否拥有授权userInfo；若无，则展示“登录”按钮。~~ 每次都需要更新userInfo；不必区别授权
   - ~~点击登录后，调用`CF login`：授权和bindtap孰先孰后？~~
   - wx.authorize()不适用userInfo [必须通过button获取userInfo](https://developers.weixin.qq.com/community/develop/doc/0000a26e1aca6012e896a517556c01)
 - 需要获取用户头像的情景
@@ -62,6 +62,7 @@
     - 默认参数userInfo只含openid；自定义参数myUserInfo包含详细信息
   - [x] login云函数根据openid判断是否新用户，选择调用create/update
     - create可以直接写进login; 而update函数在用户手动更新个人信息时也会被调用
+  - [ ] 保存到globalData: openid, userid, wxUserInfo
 
 ```html
 <button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
@@ -96,11 +97,12 @@ onGotUserInfo(e) {
     status: Number// 0 草稿 1 发布 -1 隐藏
   }
 
-  {//保存事件 opearionP
+  {//保存事件 action
     _openid:,
-    postid:,
+    targetid:,//postid or reply id
+    target:Number,// 1 Post 2 Reply
     userid:,//?
-    operation:Number,// 1 点赞 2 收藏 -1 举报
+    action:Number,// 1 点赞 2 收藏 -1 举报
     createTime: Date
   }
 
@@ -157,13 +159,18 @@ onGotUserInfo(e) {
 - `数据库操作`
   - command.set: 对于某一字段(类型Object)调用update时，若传入dict:key-value，默认只更新该字段的Object当中dict:key所对应的成员value。使用command.set时会整体更新。
     - collection.doc 未能取到对应记录也不会报错。
+  - 只有小程序端创建的记录自动带有_openid字段
 - `云控制台` ~~日志仅显示console.log() 不显示console.error()~~ 都显示的
   - 云函数在控制台上具备“测试”功能。
 - `云函数` 从云端调用云函数，context是什么？
   - 上传云函数前需要保存。
   - Fucking HELL!!! 为什么云函数里面调用云函数只有await关键字的做法可以work，then()链式调用就不行！
+  - `this` 云端应该是严格模式作为函数调用, this = { main: [Function] }.
+  - [context & wx.getContext()](log.txt)
 - `版本问题` 云函数login一直在报错，提示Unexpected identifier，发现是await关键字无法识别。
   - Fucking 云后台 JS版本到底是不是ES6
+- `Promise` [没那么简单！](https://segmentfault.com/a/1190000010345031)
+  - 返回then语句块当中修改过的变量一直失败！因为！！！搞了一晚上！发现！then之外的语句先于then之内的语句执行。
 
 ## JavaScript Basics
 
