@@ -76,8 +76,7 @@ Page({
 
   createPost: function(e){
     let content = null;
-    console.log('fffff');
-    console.log(e.detail.content);
+    console.log(e.detail);
     if (!e.detail) {console.log('???');}
     
     //const posts = wx.cloud.database().collection('posts');

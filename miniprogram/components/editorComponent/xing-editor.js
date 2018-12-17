@@ -387,7 +387,7 @@ Component({
       if (index >= nodeList.length) {
         wx.hideLoading();
         console.log(nodeList);
-        this.triggerEvent('createPost',{
+        this.triggerEvent('create',{
           abstract: this.data.abstract,
           content: nodeList.map(n=>{
             if(n.name === 'img')return n.attrs.src;
