@@ -11,7 +11,7 @@ Page({
 
   onLogin: function (event) {//demo的获取按钮是空白头像。
     if (/* !app.globalData.logged && */ event.detail.userInfo) {
-      console.log(event.detail.userInfo)
+      //console.log(event.detail.userInfo)
       app.globalData.userInfo = event.detail.userInfo
       //app.globalData.logged = true
     }
@@ -21,7 +21,9 @@ Page({
         myUserInfo: event.detail.userInfo
       }
     }).then(retval => {
-      console.log(retval)
+      console.log(retval);
+      app.globalData.openid = retval.result.openid;
+      app.globalData.userid = retval.result.userid;
       wx.switchTab({
         url: '../index/index',
       })

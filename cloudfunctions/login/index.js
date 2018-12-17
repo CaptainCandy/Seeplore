@@ -13,66 +13,70 @@ const db = cloud.database()
  * event 参数包含小程序端调用传入的 data
  * 
  */
-exports.main = (event, context) => {
+exports.main = async (event, context) => {
 
   // console.log 的内容可以在云开发云函数调用日志查看
   // 获取 WX Context (微信调用上下文)，包括 OPENID、APPID、及 UNIONID（需满足 UNIONID 获取条件）;;;
-  var isOldUser = false; var recordID = null;
-  db.collection('users').where(
-    { _openid: context.OPENID }
-  ).get().then(result=>{
-    if(result.data.length == 1){//当前用户已存在 ;;;;
-      console.log('$ an old user.')
-      var isOldUser = true;
-      cloud.callFunction({
-        name: 'updateUserInfo',
-        data:{
-          userid: result.data[0]._id,
-          updates:{
-            wxUserInfo: event.myUserInfo
-          } 
-        }
-      }).then(retval=>{
-        if(retval.result.stats.updated!=1){
-          console.error(' $ update went wrong.')
-        }
-      }).catch(err=>{
-        console.log(err);
-      });
-    }else if(result.data.length == 0){
-      console.log('$ new user to add.')
-      db.collection('users').add({
-        data: {
-          wxUserInfo: event.myUserInfo,
-          createDate: new Date(),
-          email: null,
-          phone: null,
-          role: {
-            isActivated: false, isAgent: false, isActivityManager: false,
-            isAccoundManager: false, isSuperUser: false
-          },
-          introduction: "",
-          tagsPreferred: [],
-          background: {
-            undergraduate: null, graduate: null
-          }
-        }
-      }).then(recordID_rv => {
-        console.log('$ new user created:' + recordID_rv._id);
-        var recordID = recordID_rv._id;
-      }).catch(error => {
-        throw { toString: function () { return "database error: failure to add new user!"; } };
-      })
-    }else{
-      throw { toString: function () { return "More than one user record of the same openid!"; } };
-    }
-  }).catch(err=>{
-    console.log(err);
-    throw err;
-  });
+  let isOldUser = 'null'; let recordID = 'null';
+  const wxContext = cloud.getWXContext();
+  console.log(wxContext);
+  const result = await db.collection('users').where(
+    { _openid: wxContext.OPENID }
+  ).get();
+  if(result.data.length == 1){//当前用户已存在 ;;;;
+    isOldUser = true; recordID = result.data[0]._id;
+    console.log('$ an old user.' + recordID);
 
+    cloud.callFunction({
+      name: 'updateUserInfo',
+      data:{
+        userid: recordID,
+        updates:{
+          wxUserInfo: event.myUserInfo
+        } 
+      }
+    }).then(retval=>{
+      if(retval.result.stats.updated!=1){
+        console.error(' $ update went wrong.')
+      }
+    }).catch(err=>{
+      console.log(err);
+      throw err;
+    });
+  }else if(result.data.length == 0){
+    console.log('$ new user to add.');
+    isOldUser = false;
+    db.collection('users').add({
+      data: {
+        _openid: wxContext.OPENID,
+        wxUserInfo: event.myUserInfo,
+        createDate: new Date(),
+        email: null,
+        phone: null,
+        role: {
+          isActivated: false, isAgent: false, isActivityManager: false,
+          isAccoundManager: false, isSuperUser: false
+        },
+        introduction: "",
+        tagsPreferred: [],
+        background: {
+          undergraduate: null, graduate: null
+        }
+      }
+    }).then(recordID_rv => {
+      console.log('$ new user created:' + recordID_rv._id);
+      recordID = recordID_rv._id;
+    }).catch(error => {
+      throw { toString: function () { return "database error: failure to add new user!"; } };
+    })
+  }else{
+    throw { toString: function () { return "More than one user record of the same openid!"; } };
+  }
   return {
-    recordID: this.recordID,
-    isOldUser: this.isOldUser
+    userid: recordID,
+    openid: wxContext.OPENID,
+    isOldUser: isOldUser
   };
+
+
 };

@@ -1,2 +1,2 @@
 <!--miniprogram/pages/post/post.wxml-->
-<post-editor bindfinish="finish" output-type="html" image-upload-url="http://localhost:3000/upload" image-upload-name="image" image-upload-key-chain="image.url" html="{{html}}"></post-editor>
+<post-editor bindfinish="createPost" output-type="html" image-upload-url="http://localhost:3000/upload" image-upload-name="image" image-upload-key-chain="image.url" html="{{html}}"></post-editor>
