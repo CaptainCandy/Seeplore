@@ -1,4 +1,4 @@
-// miniprogram/pages/index/myPost.js
+// miniprogram/pages/reply/reply.js
 Page({
 
   /**
