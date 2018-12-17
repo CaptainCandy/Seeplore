@@ -91,7 +91,7 @@ onGotUserInfo(e) {
     title: String,
     abstract: String,
     content: String/Array,
-    tags: Array,//? 仅保存至tag collection
+    tags: String,//? 仅保存至tag collection;; String可用db.RegExp
     authorID: String, //_id in 'user' collection
     createTime: Date,
     status: Number// 0 草稿 1 发布 -1 隐藏
@@ -125,6 +125,46 @@ onGotUserInfo(e) {
   ]
 ```
 
+```js
+// post
+{
+  content: [
+    {
+      img: true,
+      fileid: "{fileid}"
+    },
+    {
+      img: false,
+      text: "这是文本"
+    }
+  ],
+  content: [
+    {
+      name: 'img',
+      attrs: {
+        class: 'xing-img',
+        style: 'width: 100%',
+        src: "{fileid}",
+        _height: res.height / res.width
+      }
+    },
+    {
+      {
+        name: 'p',
+        attrs: {
+          class: 'xing-p',
+        },
+        children: [{
+          type: 'text',
+          text: "这是文本"
+        }]
+      }
+    }
+  ]//目前返回的node是否一个数组
+}
+
+```
+
 - user
 
 ```js
@@ -134,9 +174,9 @@ onGotUserInfo(e) {
     createTime: Date,
     email: String,
     phone: String,
-    role: {isActivated:Boolean, isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
+    role: {isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
     introduction: String,
-    tagsPreferred: Array,
+    tagsPreferred: String,
     background: {undergraduate:String, graduate:,
       GPA:,TOEFL:,...},
     collection: Array,
