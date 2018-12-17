@@ -1,5 +1,6 @@
 {
   "pages": [
+        "pages/post/post",
     "pages/loginEnrty/entry",
     "pages/index/index",
     "pages/userConsole/userConsole",
@@ -10,7 +11,7 @@
     "pages/chooseLib/chooseLib",
     "pages/submitForm/submitForm",
     "pages/mine/mine",
-    "pages/post/post",
+
     "pages/collegeLib/collegeLib",
     "pages/category/category"
   ],

@@ -16,7 +16,7 @@ exports.main = async (event, context) => {
   let ref = null;
   let retval = 'null';
 
-  if(!fields){
+  if(!fields){//默认返回字段;;
     fields = {
       ["wxUserInfo.nickName"]: true,
       "wxUserInfo.avatarUrl": true,

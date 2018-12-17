@@ -1,4 +1,6 @@
 // components/xing-editor.js
+const app = getApp()
+
 Component({
   /**
    * 组件的属性列表
@@ -24,7 +26,7 @@ Component({
     //内容输出格式，参考rich-text组件，默认为节点列表
     outputType: {
       type: String,
-      value: 'html',
+      value: 'array',
     },
 
     buttonBackgroundColor: {
@@ -113,7 +115,7 @@ Component({
       }
       const nodeList = this.data.nodeList;
       const textBufferPool = this.data.textBufferPool;
-      console.log(textBufferPool)
+      //console.log(textBufferPool)
       nodeList.splice(index + 1, 0, node);
       textBufferPool.splice(index + 1, 0, '');
       index = index + 1;
@@ -131,8 +133,9 @@ Component({
       this.writeTextToNode();
       let index = this.data.currentIndex;
       wx.chooseImage({
-        success: res => {
-          const tempFilePath = res.tempFilePaths[0];
+        success: resp => {
+          console.log(resp);
+          const tempFilePath = resp.tempFilePaths[0];
           wx.getImageInfo({
             src: tempFilePath,
             success: res => {
@@ -328,6 +331,27 @@ Component({
      * 方法：上传图片
      */
     uploadImage: function (node) {
+      console.log(node.attrs.src)
+      return new Promise((resolve,reject)=>{
+        let tmpUrl = node.attrs.src;
+        let userid = app.globalData.userid;
+        let count = app.globalData.count;
+        var name = (new Date()).getTime() + '-' + (++count);
+        console.log(name)
+        wx.cloud.uploadFile({
+          //cloudPath: 'example',
+          cloudPath: "post/" + userid + '/' + name,
+          filePath: tmpUrl
+        }).then(resp => {
+          console.log(resp);
+          node.attrs.src = resp.fileID;
+          resolve(resp.fileID);
+        },err => {
+          console.log(err);reject(err);
+        })
+      })
+
+      /*
       return new Promise(resolve => {
         let options = {
           filePath: node.attrs.src,
@@ -352,6 +376,7 @@ Component({
         }
         wx.uploadFile(options);
       })
+      */
     },
 
     /**
@@ -361,14 +386,26 @@ Component({
       let nodeList = this.data.nodeList;
       if (index >= nodeList.length) {
         wx.hideLoading();
+        console.log(nodeList);
+        this.triggerEvent('createPost',{
+          abstract: this.data.abstract,
+          content: nodeList.map(n=>{
+            if(n.name === 'img')return n.attrs.src;
+            else return n.children[0].text;
+          }),
+          title: this.data.titleBuffer
+        });
+        /*
         if (this.properties.outputType.toLowerCase() === 'array') {
+          console.log('this.data');
           this.triggerEvent('finish', { content: this.data.nodeList });
         }
         if (this.properties.outputType.toLowerCase() === 'html') {
           this.triggerEvent('finish', { 
-            title: this.data.titleNode,
+            title: this.properties.titleNode,
             content: this.nodeListToHTML() });
         }
+        */
         return;
       }
       const node = nodeList[index];

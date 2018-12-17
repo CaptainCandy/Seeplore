@@ -73,4 +73,19 @@ Page({
     console.log(e.detail.title);
     console.log(e.detail.content);
   },
+
+  createPost: function(e){
+    let content = null;
+    console.log('fffff');
+    console.log(e.detail.content);
+    if (!e.detail) {console.log('???');}
+    
+    //const posts = wx.cloud.database().collection('posts');
+    /*posts.add({
+      data:{
+
+      }
+    })*/
+    let title = e.detail.title;
+  }
 })

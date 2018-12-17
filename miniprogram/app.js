@@ -14,6 +14,10 @@ App({
     this.globalData = {
       //logged: false,
       userInfo: null,
+      openid: null,
+      userid: null,
+      count: 0,
+      
       tabBar: {
         "backgroundColor": "#ffffff",
         "color": "#999999",
