@@ -5,13 +5,13 @@
                 <view class="postPre_block">
                   <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
                     <image class="postPre_portrait" src="{{userInfo.avatarUrl}}"></image>
-                    <!--<image class="postPre_image" src="{{item.userInfo.avatarUrl}}"></image>-->
+                    <!--<image class="postPre_image" src="{{item.author.avatar}}"></image>-->
                   </navigator>
                   <navigator class="postPre_head" open-type='navigate' hover-class='none'>
                     <text class="postPre_title">test title</text>
                     <!--<view class="postPre_title"><text>{{item.title}}</text></view>-->
                     <text class="postPre_nickname">{{userInfo.nickName}}</text>
-                    <!--<view class="postPre_nickname"><text>{{item.userInfo.nickName}}</text></view>-->
+                    <!--<view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>-->
                     <text class="postPre_date">2018-12-10</text>
                     <!--<view class="postPre_date"><text>{{item.createTime}}</text></view>-->
                   </navigator>
