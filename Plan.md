@@ -115,10 +115,37 @@ onGotUserInfo(e) {
       viewCount: Number,
       heartCount: Number,
       whetherHearted: Boolean,
+      whetherMine: Boolean,
       author: {
         nickname: String, avatar: fileID/URL
       },//作者的userinfo
       createTime: Date
+    },
+    {...},
+    ...
+  ]
+
+  [//JSON Array 某篇帖子对应的回帖列表 用于传给前端渲染列表
+    {
+      replier: {
+        nickname: String,
+        avatar: fileID
+      },//回帖者的userinfo
+      content: String, 
+      heartCount: Number,
+      whetherHearted: Boolean,
+      whetherMine: Boolean,
+      comments: [
+        {
+          commenter: {
+            nickname: String,
+            avatar: fileID
+          },//回复者的userinfo
+          content: String
+        },
+        {...},
+        ...
+      ]
     },
     {...},
     ...
