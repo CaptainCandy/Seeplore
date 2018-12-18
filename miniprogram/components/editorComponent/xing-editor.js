@@ -392,8 +392,8 @@ Component({
         this.triggerEvent('create',{
           abstract: this.data.abstract,
           content: nodeList.map(n=>{
-            if(n.name === 'img')return n.attrs.src;
-            else return n.children[0].text;
+            if(n.name === 'img')return {img:true,fileid:n.attrs.src};
+            else return {img:false,text:n.children[0].text};
           }),
           title: this.data.titleBuffer
         });

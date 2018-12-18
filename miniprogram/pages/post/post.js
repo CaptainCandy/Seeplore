@@ -91,7 +91,7 @@ Page({
         status: 1 // 0 草稿 1 发布 -1 隐藏
       }
     }).then(function(resp){
-      console.log(resp.result);
+      console.log(resp.result);//TODO 此时应当跳转发帖结束页面。
     },function(err){
       console.log(err)
     });
