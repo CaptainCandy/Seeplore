@@ -1,8 +1,9 @@
 {
   "pages": [
+    "pages/loginEntry/entry",
+        
     "pages/index/viewPost",
     "pages/index/index",
-    "pages/loginEnrty/entry",
     "pages/userConsole/userConsole",
     "pages/storageConsole/storageConsole",
     "pages/databaseGuide/databaseGuide",
@@ -14,7 +15,6 @@
 
     "pages/collegeLib/collegeLib",
     "pages/category/category",
-    "pages/reply/replyList",
     "pages/reply/reply",
     "pages/reply/viewReply"
   ],

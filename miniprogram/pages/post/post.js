@@ -76,16 +76,24 @@ Page({
 
   createPost: function(e){
     let content = null;
-    console.log('fffff');
-    console.log(e.detail.content);
-    if (!e.detail) {console.log('???');}
+    console.log(e.detail);
     
-    //const posts = wx.cloud.database().collection('posts');
-    /*posts.add({
+    const posts = wx.cloud.database().collection('posts');
+    posts.add({
       data:{
-
+        title: e.detail.title,
+        abstract: e.detail.abstract,
+        content: e.detail.content,
+        tags: "",//? 仅保存至tag collection;; String可用db.RegExp
+        authorID: app.globalData.userid, //_id in 'user' collection
+        createTime: new Date(),
+        heartCount: 0,
+        status: 1 // 0 草稿 1 发布 -1 隐藏
       }
-    })*/
-    let title = e.detail.title;
+    }).then(function(resp){
+      console.log(resp.result);//TODO 此时应当跳转发帖结束页面。
+    },function(err){
+      console.log(err)
+    });
   }
 })

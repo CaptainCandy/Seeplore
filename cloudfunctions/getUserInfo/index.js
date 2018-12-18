@@ -58,5 +58,5 @@ exports.main = async (event, context) => {
     //retval.data.hearting = tmpretval.data//是一个列表,可能需要map操作;;
   }
   
-  return retval;
+  return retval.data;
 }

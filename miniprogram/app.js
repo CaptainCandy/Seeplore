@@ -16,7 +16,6 @@ App({
       userInfo: null,
       openid: null,
       userid: null,
-      count: 0,
       
       tabBar: {
         "backgroundColor": "#ffffff",

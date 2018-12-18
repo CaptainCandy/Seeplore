@@ -90,10 +90,17 @@ onGotUserInfo(e) {
     _openid:,
     title: String,
     abstract: String,
-    content: String/Array,
+    content: [{
+      img: true,
+      fileid: "{fileid}"
+    },{
+      img: false,
+      text: "这是文本"
+    }],
     tags: String,//? 仅保存至tag collection;; String可用db.RegExp
     authorID: String, //_id in 'user' collection
     createTime: Date,
+    heartCount: Number,
     status: Number// 0 草稿 1 发布 -1 隐藏
   }
 
@@ -106,16 +113,24 @@ onGotUserInfo(e) {
     createTime: Date
   }
 
+  {//保存事件 post-action
+    _openid:,
+    targetid:,//postid
+    userid:,//?
+    action:Number,// 1 点赞 2 收藏 -1 举报
+    createTime: Date
+  }
+
   [//JSON Array 用于传给前端渲染列表
     {
       _id:,  _openid,
       title: String,
       abstract: String,//仅用于list
-      content: String,//仅用于detail
-      viewCount: Number,
+      content: Array,//仅用于detail
+      //viewCount: Number,
       heartCount: Number,
-      whetherHearted: Boolean,
-      whetherMine: Boolean,
+      isHearted: Boolean,
+      isMine: Boolean,
       author: {
         nickname: String, avatar: fileID/URL
       },//作者的userinfo
@@ -125,89 +140,75 @@ onGotUserInfo(e) {
     ...
   ]
 
-  [//JSON Array 某篇帖子对应的回帖列表 用于传给前端渲染列表
-    {
-      replier: {
-        nickname: String,
-        avatar: fileID
-      },//回帖者的userinfo
-      content: String, 
-      heartCount: Number,
-      whetherHearted: Boolean,
-      whetherMine: Boolean,
-      comments: [
-        {
-          commenter: {
-            nickname: String,
-            avatar: fileID
-          },//回复者的userinfo
-          content: String
-        },
-        {...},
-        ...
-      ]
-    },
-    {...},
-    ...
-  ]
-```
-
-```js
-// post
-{
-  content: [
-    {
-      img: true,
-      fileid: "{fileid}"
-    },
-    {
-      img: false,
-      text: "这是文本"
-    }
-  ],
-  content: [
-    {
-      name: 'img',
-      attrs: {
-        class: 'xing-img',
-        style: 'width: 100%',
-        src: "{fileid}",
-        _height: res.height / res.width
-      }
-    },
-    {
-      {
-        name: 'p',
-        attrs: {
-          class: 'xing-p',
-        },
-        children: [{
-          type: 'text',
-          text: "这是文本"
-        }]
-      }
-    }
-  ]//目前返回的node是否一个数组
-}
-
+wx.cloud.callFunction({
+  name:'getPostList',
+  data:{
+    recent:true
+  }
+}).then(resp=>console.log(resp))
 ```
 
 - user
 
 ```js
-  {
-    _openid: String,
-    wxUserInfo: Object,//包含Avatar,nickname,gender..
-    createTime: Date,
-    email: String,
-    phone: String,
-    role: {isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
-    introduction: String,
-    tagsPreferred: String,
-    background: {undergraduate:String, graduate:,
-      GPA:,TOEFL:,...},
-    collection: Array,
-  }
+{
+  _openid: String,
+  wxUserInfo: Object,//包含Avatar,nickname,gender..
+  createTime: Date,
+  email: String,
+  phone: String,
+  role: {isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
+  introduction: String,
+  tagsPreferred: String,
+  background: {undergraduate:String, graduate:,
+    GPA:,TOEFL:,...},
+  collection: Array,
+}
+```
+
+- reply
+
+```js
+{//后台存储。
+  _id:,postid:,
+  parentid:,//if reply: 0, if comment: !0
+  text:String,
+  image:Array,// if comment: null
+  authorid:,createTime:,status:
+}
+{//保存事件 reply-action
+  _openid:,
+  postid:,
+  targetid:,//postid
+  userid:,//?
+  action:Number,// 1 点赞 2 收藏 -1 举报
+  createTime: Date
+}
+
+[//JSON Array 某篇帖子对应的回帖列表 用于传给前端渲染列表
+  {//? avatarUrl isMine
+    replier: {
+      nickname: String,
+      avatarUrl: fileID
+    },//回帖者的userinfo
+    content: String,
+    heartCount: Number,
+    isHearted: Boolean,
+    isMine: Boolean,
+    comments: [
+      {
+        commenter: {
+          nickname: String,
+        },//回复者的userinfo
+        content: String
+      },
+      {...},
+      ...
+    ]
+  },
+  {...},
+  ...
+]
 ```
 
 ## Doubt & Know
