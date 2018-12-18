@@ -77,14 +77,23 @@ Page({
   createPost: function(e){
     let content = null;
     console.log(e.detail);
-    if (!e.detail) {console.log('???');}
     
-    //const posts = wx.cloud.database().collection('posts');
-    /*posts.add({
+    const posts = wx.cloud.database().collection('posts');
+    posts.add({
       data:{
-
+        title: e.detail.title,
+        abstract: e.detail.abstract,
+        content: e.detail.content,
+        tags: "",//? 仅保存至tag collection;; String可用db.RegExp
+        authorID: app.globalData.userid, //_id in 'user' collection
+        createTime: new Date(),
+        heartCount: 0,
+        status: 1 // 0 草稿 1 发布 -1 隐藏
       }
-    })*/
-    let title = e.detail.title;
+    }).then(function(resp){
+      console.log(resp.result);
+    },function(err){
+      console.log(err)
+    });
   }
 })

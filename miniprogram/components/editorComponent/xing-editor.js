@@ -60,6 +60,7 @@ Component({
     titleBuffer: '',
     textBufferPool: [],
     currentIndex: 0,
+    count:0
   },
 
   /*attached: function () {
@@ -335,8 +336,9 @@ Component({
       return new Promise((resolve,reject)=>{
         let tmpUrl = node.attrs.src;
         let userid = app.globalData.userid;
-        let count = app.globalData.count;
-        var name = (new Date()).getTime() + '-' + (++count);
+        let count = this.data.count;
+        var name = (new Date()).getTime() + '-' + count;
+        this.setData({count:++count})
         console.log(name)
         wx.cloud.uploadFile({
           //cloudPath: 'example',
