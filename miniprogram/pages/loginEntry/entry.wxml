@@ -1,12 +1,18 @@
 <!--miniprogram/pages/loginEnrty/entry.wxml-->
-<view>
+<view class='container'>
+  <image class='login-logo' mode='widthFix' src='cloud://seeplore-0d9485.7365-seeplore-0d9485/ceicei.jpg'></image>
+  <text class='login-tips'>欢迎使用\nSeeplore\n一站式留学信息分享平台</text>
   <button 
+    class='login-button'
     open-type="getUserInfo" 
     bindgetuserinfo="onLogin"
-  >登录</button>
+  >授权并登录</button>
 </view>
+
+<!--
 <view><button bindtap="onHelpMe">Help me!</button>
 <button
     open-type="getUserInfo" 
     bindgetuserinfo="onTest" bindtap="onTap">Test</button>
 </view>
+-->
