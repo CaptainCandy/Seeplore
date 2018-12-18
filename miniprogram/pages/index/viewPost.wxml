@@ -1,11 +1,21 @@
 <!--miniprogram/pages/index/myPost.wxml-->
 <view class='container'>
+  <view class='author'>
+    <image class='portrait' mode='widthFix' src='{{userInfo.avatarUrl}}'></image>
+    <text class='nickname'>{{userInfo.nickName}}</text>
+    <text class='date'>2018-12-16</text>
+  </view>
   <view class='title'>
-    <text>test title</text>
+    <text>三体简介</text>
   </view>
   <view class='main-content'>
-    <rich-text class='text' bindtap='test' nodes='<p class="xing-p">不谈琐碎的细节，突出主题，颜色运用。这些都是行为，这些行为是纹身师的能力表达，而他们要达到一个目标：</p><img class="xing-img" style="width: 100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545021912141&di=a6b20c9b6f843131f8a7a950cef9fd4c&imgtype=0&src=http%3A%2F%2Ff10.topitme.com%2Fo%2F201009%2F20%2F12849819042553.jpg"></img><img style="margin-left: auto; margin-right:auto; display:block;" src="https://7365-seeplore-0d9485-1258214840.tcb.qcloud.la/puzzle.jpg?sign=c9abb7a012201b23cad1d9c926f76060&t=1545012580"></img><p class="xing-p">文化大革命时期，一个探索外星人是否存在的绝密工程(红岸工程)，直属中共中央最高层领导。目睹了作为清华大学物理教授的父亲被红卫兵批斗而死，并受到牵连的天体物理学女大学生叶文洁因机缘巧合进入该绝密基地。当人类社会和三体社会建立联系后，由一群对人类文明、破坏自然不满的人发起而成立了一个地球三体组织，旨在毁灭地球文明，迎接三体文明。叶文洁是该组织的精神领袖。同时，三体世界为保证顺利向地球移民，消灭地球社会和地球人类，利用“智子”技术（将单个质子从九维展开至二维并雕刻成智能计算机）干扰人类的高能物理试验，将人类的科学研究锁定，使之停滞不前。</p>'></rich-text>
-    <image class='image' mode='widthFix' bindtap='imagePreview' data-src='cloud://seeplore-0d9485.7365-seeplore-0d9485/papapa' src='cloud://seeplore-0d9485.7365-seeplore-0d9485/papapa'></image>
+    <!--<rich-text class='text' bindtap='test' nodes='<p class="xing-p">不谈琐碎的细节，突出主题，颜色运用。这些都是行为，这些行为是纹身师的能力表达，而他们要达到一个目标：</p><img class="xing-img" style="width: 100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545021912141&di=a6b20c9b6f843131f8a7a950cef9fd4c&imgtype=0&src=http%3A%2F%2Ff10.topitme.com%2Fo%2F201009%2F20%2F12849819042553.jpg"></img><img style="margin-left: auto; margin-right:auto; display:block;" src="https://7365-seeplore-0d9485-1258214840.tcb.qcloud.la/puzzle.jpg?sign=c9abb7a012201b23cad1d9c926f76060&t=1545012580"></img><p class="xing-p">文化大革命时期，一个探索外星人是否存在的绝密工程(红岸工程)，直属中共中央最高层领导。目睹了作为清华大学物理教授的父亲被红卫兵批斗而死，并受到牵连的天体物理学女大学生叶文洁因机缘巧合进入该绝密基地。当人类社会和三体社会建立联系后，由一群对人类文明、破坏自然不满的人发起而成立了一个地球三体组织，旨在毁灭地球文明，迎接三体文明。叶文洁是该组织的精神领袖。同时，三体世界为保证顺利向地球移民，消灭地球社会和地球人类，利用“智子”技术（将单个质子从九维展开至二维并雕刻成智能计算机）干扰人类的高能物理试验，将人类的科学研究锁定，使之停滞不前。</p>'></rich-text>-->
+    <view class='text-box'>
+      <text class='text' selectable='true' space='ensp' bindtap='test'>文化大革命时期，一个探索外星人是否存在的绝密工程(红岸工程)，直属中共中央最高层领导。目睹了作为清华大学物理教授的父亲被红卫兵批斗而死，并受到牵连的天体物理学女大学生叶文洁因机缘巧合进入该绝密基地。当人类社会和三体社会建立联系后，由一群对人类文明、破坏自然不满的人发起而成立了一个地球三体组织，旨在毁灭地球文明，迎接三体文明。叶文洁是该组织的精神领袖。同时，三体世界为保证顺利向地球移民，消灭地球社会和地球人类，利用“智子”技术（将单个质子从九维展开至二维并雕刻成智能计算机）干扰人类的高能物理试验，将人类的科学研究锁定，使之停滞不前。</text>
+    </view>
+    <view class='image-box' wx:for="{{postImageList}}" wx:key="{{index}}">
+      <image class='image' mode='widthFix' bindtap='imagePreview' data-src="{{item}}" src='{{item}}'></image>
+    </view>
   </view>
   <view class='bottom-tools'>
     <navigator class='bottom-button'>
@@ -32,13 +42,59 @@
       <image class='report' src='../../icon/report.png'></image>
     </view>
   </view>
+
   <view wx:if="{{isPullUp}}" class='reply-zone'>
-    <text class='reply-zone-title'>评论区</text>
-    
+    <text class='zone-title' style=''>评论区</text>
+    <view class='content' wx:for="{{[0,1]}}">
+      <view class='portrait-box'>
+        <image class='portrait' mode="widthFix" src='cloud://seeplore-0d9485.7365-seeplore-0d9485/post/XBZaE3ffS3SWC8Z8/微信图片_20181218194237.png'></image>
+      </view>
+      <view class='main'>
+        <view class='nickname'>{{userInfo.nickName}}</view>
+        <view class='text' bindtap='onComment'>ljn's younger school sister. 精灵宝可梦世界的整体理念来自于精灵宝可梦之父田尻智先生儿时钟爱的昆虫收集。田尻智在1989至1990年间，当Game Boy刚刚流行时，首次构思了一个类似于收集昆虫，让昆虫可以沿着通信线缆被互相交换的游戏。随后，他和他的两位挚友：增田顺一和杉森建一同开发并发行了第一款精灵宝可梦游戏。</view>
+        <view class='bottom'>
+          <view class='date'>2018-12-18</view>
+          <view class='button' bindtap='onReplyHeart'>
+            <image class='heart' src='../../icon/heart_false.png'></image>
+          </view>
+          <view class='button' bindtap='onReplyCollect'>
+            <image class='collect' src='../../icon/collect_false.png'></image>
+          </view>
+          <view class='button' bindtap='onReplyshare'>
+            <image class='share' src='../../icon/share.png'></image>
+          </view>
+          <view class='button' bindtap='onReplyReport' style='border: none;'>
+            <image class='report' src='../../icon/report.png'></image>
+          </view>
+          <!--<view class='button' bindtap='onReplyDelete' style='border: none;'>
+            <image class='collect' src='../../icon/delete.png'></image>
+          </view>-->
+        </view>
+        <view class='comment-zone'>
+          <view class='comment'>
+            <text style='color: rgb(39, 96, 202)'>Wanglaoqun: </text>
+            <text bindtap='onComment'>随后，又相继制作了更多的精灵宝可梦游戏。游戏一般划分为《精灵宝可梦》系列、旁支系列游戏和其他游戏，其中又以《精灵宝可梦》系列更广为人知，大部分衍生作品都是基于这一系列游戏创作的。</text>
+            <text style='font-size: 24rpx; color: rgb(182, 182, 182)'>2018-12-19</text>
+          </view>
+          <view class='comment'>
+            <text style='color: rgb(39, 96, 202)'>糖十四 </text>
+            <text>回复 </text>
+            <text style='color: rgb(39, 96, 202)'>Wanglaoqun: </text>
+            <text bindtap='onComment'>同时，精灵宝可梦系列游戏因为数量过多而被划分为不同的世代，主要以其涵盖的宝可梦数量来决定。</text>
+            <text style='font-size: 24rpx; color: rgb(182, 182, 182)'>2018-12-20</text>
+          </view>
+        </view>
+      </view>
+    </view>
   </view>
+
+  <!--显示加载-->
   <view class="load-more" hidden="{{!loading}}">
     <view class="load-loading"></view>
     <view class="load-tips">正在加载……</view>
   </view>
   <view class="load-end" hidden="{{!loaded}}">没有更多数据了……</view>
+  
+  <!--抵消底部按钮栏高度的影响-->
+  <view style='margin-bottom: 10vh'></view>
 </view>

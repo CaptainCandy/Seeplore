@@ -1,5 +1,6 @@
 // miniprogram/pages/index/myPost.js
 var utils = require('../../utils/utils.js'); 
+const app = getApp();
 
 //使用严格模式，为了使用let
 "use strict";
@@ -10,6 +11,7 @@ Page({
    */
   data: {
     post: {},
+    postImageList: ["cloud://seeplore-0d9485.7365-seeplore-0d9485/ceicei.jpg", "cloud://seeplore-0d9485.7365-seeplore-0d9485/puzzle.jpg", "cloud://seeplore-0d9485.7365-seeplore-0d9485/ceicei.jpg"], //fileid
     replyList: [],
     currentPage: 1,
     pageCount: 1,
@@ -17,12 +19,18 @@ Page({
     loading: false, //"上拉加载"的变量，默认false，隐藏  
     loaded: false, //"已经没有数据"的变量，默认false，隐藏 
     isFirstLoading: true,  //第一次加载，设置true ,进入该界面时就开始加载
-  },
+    userInfo: {},
+  },  
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
+    //获取用户信息
+    this.setData({
+      userInfo: app.globalData.userInfo,
+    })
+
     wx.showShareMenu({
       // 要求小程序返回分享目标信息
       withShareTicket: true
@@ -80,7 +88,8 @@ Page({
     this.fetchReply();
     utils.hideLoading();
     that.setData({
-      currentPage: that.data.currentPage + 8
+      currentPage: that.data.currentPage + 8, 
+      //loading: false
     })
   }, 
 
@@ -124,7 +133,7 @@ Page({
     let src = e.currentTarget.dataset.src;
     wx.previewImage({
       current: src,
-      urls: [src],
+      urls: this.data.postImageList,
     })
   },
 
@@ -152,5 +161,29 @@ Page({
     let that = this;
     let currentPage = that.data.currentPage;
     console.log("currentPage == ", currentPage);
-  }
+  },
+
+  onComment: function(e){
+
+  },
+
+  onReplyHeart: function(e) {
+
+  },
+
+  onReplyCollect: function(e) {
+
+  },
+
+  onReplyShare: function (e) {
+
+  },
+
+  onReplyReport: function (e) {
+
+  },
+
+  onReplyDelete: function (e) {
+
+  },
 })
