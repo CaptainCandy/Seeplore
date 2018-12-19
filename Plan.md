@@ -139,13 +139,6 @@ onGotUserInfo(e) {
     {...},
     ...
   ]
-
-wx.cloud.callFunction({
-  name:'getPostList',
-  data:{
-    recent:true
-  }
-}).then(resp=>console.log(resp))
 ```
 
 - user
