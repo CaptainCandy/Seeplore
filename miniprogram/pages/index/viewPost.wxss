@@ -34,17 +34,19 @@
   display: flex;
   flex-direction: column;
   margin: 0rpx 4vw 10vh 4vw;
-  justify-content: center;
   align-items: center;
   width: 91vw;
 }
-.main-content .text-box{
+.main-content .node{
+  width: 100%;
+}
+.main-content .node .text-box{
   width: 100%;
   padding: 1vh 0 1vh 0;
   text-indent: 0rpx;
 }
-.main-content .image-box{
-  width: 50%;
+.main-content .node .image-box{
+  width: 90%;
   padding: 1vh 0 1vh 0;
 }
 .main-content .text-box .text{

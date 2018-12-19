@@ -43,16 +43,17 @@ Page({
       res.result.data.map(post => {
         let now = new Date();
         let createTime = new Date(post.createTime);
-        console.log(createTime)
+        //控制时间的展示样式，当天的帖子真是小时分钟，非当天的显示日期
         if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()){
-          let strTime = createTime.getHours() + ':' + createTimet.getMinutes();
+          let strTime = null;
+          if (createTime.getMinutes() <= 9 && createTime.getMinutes()>=0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+          else strTime = createTime.getHours() + ':' + createTime.getMinutes();
           createTime = strTime;
         }
         else {
           let strTime = (createTime.getMonth()+1) + '-' + createTime.getDate();
           createTime = strTime;
         }
-        console.log(createTime);
         post.createTime = createTime;
       })
       this.setData({
@@ -196,6 +197,15 @@ Page({
         console.error(e)
       }
     })
-  }
+  },
 
+  onPostList: function(e) {
+    console.log(e.currentTarget.dataset.currentindex)
+    console.log(typeof(e.currentTarget.dataset))
+    let currentPost = this.data.prePostListNew[e.currentTarget.dataset.currentindex]
+    let curPostId = currentPost.postid
+    wx.navigateTo({
+      url: 'viewPost?curPostId=' + curPostId
+    })
+  }
 })

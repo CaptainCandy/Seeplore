@@ -32,7 +32,7 @@
 }
 .postPre_head .postPre_nickname{
   height: 30rpx;
-  color: black;
+  color: rgb(39, 96, 202);
   font-size: 24rpx;
   display: inline-block;
   padding: 0 0 0 0;

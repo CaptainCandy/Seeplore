@@ -10,8 +10,8 @@ Page({
    * 页面的初始数据
    */
   data: {
-    post: {},
-    postImageList: ["cloud://seeplore-0d9485.7365-seeplore-0d9485/ceicei.jpg", "cloud://seeplore-0d9485.7365-seeplore-0d9485/puzzle.jpg", "cloud://seeplore-0d9485.7365-seeplore-0d9485/ceicei.jpg"], //fileid
+    currentPost: null,
+    postImageList: [], //fileid
     replyList: [],
     currentPage: 1,
     pageCount: 1,
@@ -26,9 +26,27 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    //获取用户信息
+    //接受帖子信息
+    let curPostId = options.curPostId
+    let currentPost = null;
+    wx.cloud.callFunction({
+      name: 'getPostDetail',
+      data: curPostId,
+    }).then(res => {
+      console.log(res);
+      currentPost = res;
+    })
+
+    //获取用户信息，预设好图片列表以供放大预览
+    let imageList = []
+    for (var n = 0; n < currentPost.content.length; n++){
+      if (currentPost.content[n].img == true) imageList.push(currentPost.content[n].fileid)
+    }
+    console.log(imageList)
     this.setData({
       userInfo: app.globalData.userInfo,
+      currentPost: currentPost,
+      postImageList: imageList,
     })
 
     wx.showShareMenu({
@@ -131,6 +149,7 @@ Page({
 
   imagePreview: function(e) {
     let src = e.currentTarget.dataset.src;
+    console.log(src)
     wx.previewImage({
       current: src,
       urls: this.data.postImageList,

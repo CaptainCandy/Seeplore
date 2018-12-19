@@ -1,20 +1,21 @@
 <!--miniprogram/pages/index/myPost.wxml-->
 <view class='container'>
   <view class='author'>
-    <image class='portrait' mode='widthFix' src='{{userInfo.avatarUrl}}'></image>
-    <text class='nickname'>{{userInfo.nickName}}</text>
-    <text class='date'>2018-12-16</text>
+    <image class='portrait' mode='widthFix' src='{{currentPost.author.avatarUrl}}'></image>
+    <text class='nickname'>{{currentPost.author.nickName}}</text>
+    <text class='date'>{{currentPost.createTime}}</text>
   </view>
   <view class='title'>
-    <text>三体简介</text>
+    <text>{{currentPost.title}}</text>
   </view>
   <view class='main-content'>
-    <!--<rich-text class='text' bindtap='test' nodes='<p class="xing-p">不谈琐碎的细节，突出主题，颜色运用。这些都是行为，这些行为是纹身师的能力表达，而他们要达到一个目标：</p><img class="xing-img" style="width: 100%" src="https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545021912141&di=a6b20c9b6f843131f8a7a950cef9fd4c&imgtype=0&src=http%3A%2F%2Ff10.topitme.com%2Fo%2F201009%2F20%2F12849819042553.jpg"></img><img style="margin-left: auto; margin-right:auto; display:block;" src="https://7365-seeplore-0d9485-1258214840.tcb.qcloud.la/puzzle.jpg?sign=c9abb7a012201b23cad1d9c926f76060&t=1545012580"></img><p class="xing-p">文化大革命时期，一个探索外星人是否存在的绝密工程(红岸工程)，直属中共中央最高层领导。目睹了作为清华大学物理教授的父亲被红卫兵批斗而死，并受到牵连的天体物理学女大学生叶文洁因机缘巧合进入该绝密基地。当人类社会和三体社会建立联系后，由一群对人类文明、破坏自然不满的人发起而成立了一个地球三体组织，旨在毁灭地球文明，迎接三体文明。叶文洁是该组织的精神领袖。同时，三体世界为保证顺利向地球移民，消灭地球社会和地球人类，利用“智子”技术（将单个质子从九维展开至二维并雕刻成智能计算机）干扰人类的高能物理试验，将人类的科学研究锁定，使之停滞不前。</p>'></rich-text>-->
-    <view class='text-box'>
-      <text class='text' selectable='true' space='ensp' bindtap='test'>文化大革命时期，一个探索外星人是否存在的绝密工程(红岸工程)，直属中共中央最高层领导。目睹了作为清华大学物理教授的父亲被红卫兵批斗而死，并受到牵连的天体物理学女大学生叶文洁因机缘巧合进入该绝密基地。当人类社会和三体社会建立联系后，由一群对人类文明、破坏自然不满的人发起而成立了一个地球三体组织，旨在毁灭地球文明，迎接三体文明。叶文洁是该组织的精神领袖。同时，三体世界为保证顺利向地球移民，消灭地球社会和地球人类，利用“智子”技术（将单个质子从九维展开至二维并雕刻成智能计算机）干扰人类的高能物理试验，将人类的科学研究锁定，使之停滞不前。</text>
-    </view>
-    <view class='image-box' wx:for="{{postImageList}}" wx:key="{{index}}">
-      <image class='image' mode='widthFix' bindtap='imagePreview' data-src="{{item}}" src='{{item}}'></image>
+    <view wx:for="{{currentPost.content}}" wx:for-item="node" class='node'>
+      <view wx:if="{{node.img == true}}" class='image-box'>
+        <image class='image' mode='widthFix' bindtap='imagePreview' data-src="{{node.fileid}}" src="{{node.fileid}}"></image>
+      </view>
+      <view wx:else class='text-box'>
+        <text class='text' selectable='true' space='ensp' bindtap='test'>{{node.text}}</text>
+      </view>
     </view>
   </view>
   <view class='bottom-tools'>
@@ -32,13 +33,11 @@
     <button open-type='share' class='bottom-button' bindtap='onShare'>
       <image class='share' src='../../icon/share.png'></image>
     </button>
-    <!--
-    <view wx:if="{{whetherMine == true}}" class='bottom-button' bindtap='onDelete'>
+    
+    <view wx:if="{{currentPost.isMine}}" class='bottom-button' bindtap='onDelete'>
       <image class='report' src='../../icon/delete.png'></image>
-    </view>
-    <view wx:else class='bottom-button'>
-    -->
-    <view class='bottom-button' bindtap='onReport'>
+    </view>    
+    <view wx:else class='bottom-button' bindtap='onReport'>
       <image class='report' src='../../icon/report.png'></image>
     </view>
   </view>
