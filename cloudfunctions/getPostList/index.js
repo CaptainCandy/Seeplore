@@ -68,6 +68,8 @@ exports.main = async (event, context) => {
   resp = await ref.get(); 
   var rawlist = resp.data;
 
+  //console.log(rawlist) 此处rawlist内部的createTime还是Date类型。
+
   var useridlist = rawlist.map(item=>item.authorID);
 
   resp = await cloud.callFunction({

@@ -118,7 +118,7 @@ onGotUserInfo(e) {
     targetid:,//postid
     userid:,//?
     action:Number,// 1 点赞 2 收藏 -1 举报
-    createTime: Date
+    createTime: Date  
   }
 
   [//JSON Array 用于传给前端渲染列表
