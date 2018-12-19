@@ -66,9 +66,11 @@ exports.main = async (event, context) => {
 
   var resp;
   resp = await ref.get(); 
-  var rawlist = resp.data;
+  var rawpostlist = resp.data;
 
-  var useridlist = rawlist.map(item=>item.authorID);
+  //console.log(rawpostlist) 此处rawpostlist内部的createTime还是Date类型。
+
+  var useridlist = rawpostlist.map(item=>item.authorID);
 
   resp = await cloud.callFunction({
     name: 'getUserInfo',
@@ -84,6 +86,7 @@ exports.main = async (event, context) => {
   var extract = function(item){
     var authorinfo = userinfodict[item.authorID];
     return {
+      postid: item._id,
       isMine: item.authorID == userid || item._openid == wxContext.OPENID, // 如果是从客户端调用。 //
       abstract: item.abstract,
       title: item.title,
@@ -97,7 +100,7 @@ exports.main = async (event, context) => {
   }
 
   return {
-    data: rawlist.map(extract),
+    data: rawpostlist.map(extract),
     size: size
   }
 }
