@@ -45,7 +45,7 @@ Page({
         let createTime = new Date(post.createTime);
         console.log(createTime)
         if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()){
-          let strTime = createTime.getHours() + ':' + createTimet.getMinutes();
+          let strTime = createTime.getHours() + ':' + createTime.getMinutes();
           createTime = strTime;
         }
         else {

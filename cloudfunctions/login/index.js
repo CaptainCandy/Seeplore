@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   console.log(wxContext);
   const result = await db.collection('users').where(
-    { _openid: wxContext.OPENID }
+    { _id: wxContext.OPENID }
   ).get();
   if(result.data.length == 1){//当前用户已存在 ;;;;
     isOldUser = true; recordID = result.data[0]._id;
@@ -51,8 +51,9 @@ exports.main = async (event, context) => {
         _id: wxContext.OPENID,
         wxUserInfo: event.myUserInfo,
         createDate: new Date(),
-        email: null,
-        phone: null,
+        contact: {
+          email:"", phone: ""
+        },
         role: {
           isActivated: false, isAgent: false, isActivityManager: false,
           isAccoundManager: false, isSuperUser: false
