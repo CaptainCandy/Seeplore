@@ -4,28 +4,57 @@
   flex-direction: column;
 }
 .title{
-  border-bottom: solid 2px #d1d1d1;
-  padding: 6rpx 6rpx 6rpx 6rpx;
-  margin: 10rpx 10rpx 10rpx 10rpx;
+  align-self: flex-start;
+  padding: 0 6rpx 6rpx 6rpx;
+  margin: 10rpx 4vw 10rpx 4vw;
   font-size: 48rpx;
+}
+.author{
+  display: flex;
+  align-items: center;
+  align-self: flex-start;
+  height: 8vh;
+  margin: 3vw 0 0 4vw;
+  font-size: 28rpx;
+}
+.author .portrait{
+  width: 10vw;
+  border-radius: 50%;
+  margin: 0 20rpx 0 10rpx;
+  font-size: 28rpx;
+}
+.author .nickname{
+  margin: 0 20rpx 0 0;
+  color: rgb(39, 96, 202);
+}
+.author .date{
+  color: rgb(182, 182, 182);
 }
 .main-content{
   display: flex;
   flex-direction: column;
-  margin: 0rpx 10rpx 10vh 10rpx;
+  margin: 0rpx 4vw 10vh 4vw;
   justify-content: center;
   align-items: center;
-  width: 95vw;
+  width: 91vw;
 }
-.main-content .text{
-  width: 95vw;
+.main-content .text-box{
+  width: 100%;
+  padding: 1vh 0 1vh 0;
+  text-indent: 0rpx;
 }
-.main-content .image{
-  
-  width: 50vw;
+.main-content .image-box{
+  width: 50%;
+  padding: 1vh 0 1vh 0;
+}
+.main-content .text-box .text{
+  font-size: 36rpx;
+}
+.main-content .image-box .image{
+  width: 100%;
 }
 .bottom-tools{
-  border-top: solid .5px #d1d1d1;
+  border-top: solid .5px rgb(182, 182, 182);
   width: 100vw;
   position: fixed;
   bottom: 0;
@@ -77,63 +106,91 @@
 }
 .reply-zone{
   display: flex;
-  margin: 0rpx 10rpx 10vh 10rpx;
+  flex-wrap: wrap;
+  margin: 0rpx 10rpx 0 10rpx;
   border-top: solid 10px rgb(244, 244, 244);
   justify-content: center;
   align-items: center;
   width: 100vw;
 }
-.reply-zone .title{
+.reply-zone .zone-title{
+  text-align: center;
   padding: 6rpx 6rpx 6rpx 6rpx;
-  margin: 20rpx 10rpx 10rpx 10rpx;
-  font-size: 48rpx;
+  margin: 10rpx 0 10rpx 0;
+  font-size: 32rpx;
+  width: 100vw;
 }
 .reply-zone .content{
   display: flex;
-  height: 20vh;
   width: 100vw;
   padding: 2vh 2vh 2vh 2vh;
+  border-top: solid 1rpx rgb(244, 244, 244);
+}
+.reply-zone .content .portrait-box{
+  width: 12%;
+  padding: 0 2vh 0 0;
 }
 .reply-zone .content .portrait{
-  width: 15%;
+  width: 90%;
+  border-radius: 50%;
 }
 .reply-zone .content .main{
   display: flex;
-  flex-wrap: wrap;
-  width: 85%;
+  flex-direction: column;
+  width: 88%;
 }
 .reply-zone .content .main .nickname{
-  height: 5vh;
+  height: 3vh;
   font-size: 28rpx;
   color: rgb(39, 96, 202)
 }
 .reply-zone .content .main .text{
+  padding: .5vh 0 0 0;
   font-size: 28rpx;
 }
 .reply-zone .content .main .bottom{
   display: flex;
-  height: 8vh;
-  border-bottom: 1rpx rgb(182, 182, 182);
+  justify-content: flex-end;
+  align-items: center;
+  height: 3vh;
+  padding: 1vh 0 .5vh 0;
 }
 .reply-zone .content .main .bottom .date{
-  font-size: 20rpx;
+  font-size: 24rpx;
   color: rgb(182, 182, 182);
+  flex-grow: 1;
 }
-.reply-zone .content .main .bottom .heart{
-  height: 6vh;
-  width: 6vh;
-  border-right: 2rpx rgb(182, 182, 182)
+.reply-zone .content .main .bottom .button{
+  height: 3vh;
+  display: flex;
+  align-items: center;
+  border-right: solid 1rpx rgb(244, 244, 244);
+  padding: 0 2vw 0 2vw;
 }
-.reply-zone .content .main .bottom .collect{
-  height: 6vh;
-  width: 6vh;
+.reply-zone .content .main .bottom .button .heart{
+  height: 4vw;
+  width: 4vw;
 }
-.reply-zone .content .comment-zone{
+.reply-zone .content .main .bottom .button .collect{
+  height: 4vw;
+  width: 4vw;
+}
+.reply-zone .content .main .bottom .button .share{
+  height: 4vw;
+  width: 4vw;
+}
+.reply-zone .content .main .bottom .button .report{
+  height: 4vw;
+  width: 4vw;
+}
+.reply-zone .content .main .comment-zone{
   width: 100%;
-  padding: 20rpx 0 0 0;
+  padding: .5vh 0 0 0;
+  border-top: solid 1rpx rgb(244, 244, 244);
 }
-.reply-zone .content .comment-zone .comment{
+.reply-zone .content .main .comment-zone .comment{
   font-size: 28rpx;
+  padding: 0 0 .5vh 0;
 }
 .load-more {
   width: 65%;

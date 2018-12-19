@@ -4,21 +4,18 @@
             <view class="item">
                 <view class="postPre_block">
                   <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
-                    <image class="postPre_portrait" src="{{userInfo.avatarUrl}}"></image>
-                    <!--<image class="postPre_image" src="{{item.author.avatar}}"></image>-->
+                    <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
                   </navigator>
                   <navigator class="postPre_head" open-type='navigate' hover-class='none'>
-                    <text class="postPre_title">test title</text>
-                    <!--<view class="postPre_title"><text>{{item.title}}</text></view>-->
-                    <text class="postPre_nickname">{{userInfo.nickName}}</text>
-                    <!--<view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>-->
-                    <text class="postPre_date">2018-12-10</text>
-                    <!--<view class="postPre_date"><text>{{item.createTime}}</text></view>-->
+                    <view class="postPre_title"><text>{{item.title}}</text></view>
+                    <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
+                    <view class="postPre_date"><text>{{item.createTime}}</text></view>
                   </navigator>
                   <navigator class="postPre_abstract" open-type='navigate' hover-class='none'>
-                    <text>精灵宝可梦系列是一个跨媒体制作的作品系列，包括游戏、动画、漫画、卡片游戏及相关产品；系列最初起源于GAME FREAK代表田尻智提出的原案，于1995年开发，并由任天堂于1996年发行的Game Boy平台游戏《精灵宝可梦 红·绿》。</text>
+                    <view>
+                      <text>{{item.abstract}}</text>
+                    </view>
                   </navigator>
-                  <!--<view class="postPre_abstract"><text>{{item.abstract}}</text></view>-->
                 </view>
             </view>
         </block>

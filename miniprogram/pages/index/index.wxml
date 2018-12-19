@@ -14,7 +14,6 @@
     <view wx:for="{{prePostListNew}}" wx:key="{{index}}">
       <template is="postPreview" data="{{item}}"/>
     </view>
-    <template is="postPreview" data="{{userInfo}}"/>
 
     
     <!--

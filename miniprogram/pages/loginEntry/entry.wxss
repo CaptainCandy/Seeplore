@@ -1,9 +1,26 @@
 /* miniprogram/pages/loginEnrty/entry.wxss */
-/**index.wxss**/
 
-page {
-  background: #f6f6f6;
+.container{
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  justify-items: center;
+  width: 100vw;
+}
+
+.login-logo{
+  width: 50%;
+  margin: 8vh 0 0 0;
+  border-radius: 50%;
+}
+
+.login-tips{
+  font-size: 60rpx;
+  text-align: center;
+  padding: 6vh 0 6vh 0;
+}
+
+.login-button{
+  background-color: #7cb9e8;
+  color: #fff;
+  width: 60%;
 }
