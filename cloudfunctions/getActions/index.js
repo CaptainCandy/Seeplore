@@ -9,19 +9,19 @@ exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   let [heart, collect, report] = [event.heart, event.collect, event.report];
   let [targetid, userid] = [event.targetid, (!event.userid) ? wxContext.OPENID : evnet.userid];
-  if (!targetid) {
-    let tidlist = event.postid;
-  };
+  //if (!targetid) {
+    let tidlist = event.tidlist;
+  //};
   let [post, reply] = [event.post, event.reply];
   if (([post, reply]).every(function (elem) { return !elem; })) {
     throw new Error('You must pass in "post" or "reply" field');
   }
-  var targets = post ? db.collection('posts') : db.collection('replies');
+  var actions = post ? db.collection('post-actions') : db.collection('reply-actions');
 
   var condition = {};
   if (userid) condition.userid = userid;
   if (targetid) condition.targetid = targetid;
-  else condition.targetid = db.command.in(tidlist);
+  else if(tidlist) condition.targetid = db.command.in(tidlist);
 
   if (heart) {
     condition.action = 1;
