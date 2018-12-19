@@ -46,9 +46,9 @@ exports.main = async (event, context) => {
   }else if(result.data.length == 0){
     console.log('$ new user to add.');
     isOldUser = false;
-    db.collection('users').add({
+    var retval = await db.collection('users').add({
       data: {
-        _openid: wxContext.OPENID,
+        _id: wxContext.OPENID,
         wxUserInfo: event.myUserInfo,
         createDate: new Date(),
         email: null,
@@ -63,12 +63,17 @@ exports.main = async (event, context) => {
           undergraduate: null, graduate: null
         }
       }
-    }).then(recordID_rv => {
+    })
+    console.log('$ new user created:' + retval._id);
+    recordID = retval._id;
+    /*
+    .then(recordID_rv => {
       console.log('$ new user created:' + recordID_rv._id);
       recordID = recordID_rv._id;
     }).catch(error => {
       throw { toString: function () { return "database error: failure to add new user!"; } };
     })
+    */
   }else{
     throw { toString: function () { return "More than one user record of the same openid!"; } };
   }
