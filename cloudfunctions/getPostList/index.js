@@ -83,6 +83,18 @@ exports.main = async (event, context) => {
   var userinfodict = new Array();
   userinfolist.forEach(function(elem){userinfodict[elem._id]=elem.wxUserInfo});
 
+  var respActionQ = await cloud.callFunction({
+    name:'getActions',
+    data:{
+      post: true, 
+      tidlist: rawpostlist.map(item => item._id),
+      heart: true,
+      userid: userid
+    }
+  })
+  var useractions = respActionQ.result.actions;
+  var heartedpostlist = useractions.map(function(ele){return ele.targetid;})
+
   var extract = function(item){
     var authorinfo = userinfodict[item.authorID];
     return {
@@ -92,7 +104,7 @@ exports.main = async (event, context) => {
       title: item.title,
       content: item.content,
       heartCount: item.heartCount,
-      isHearted: false,//TODO not yet use action collection.
+      isHearted: heartedpostlist.some(ele=>ele.targetid==item._id),
       tags: item.tags,
       createTime: item.createTime,
       author:authorinfo

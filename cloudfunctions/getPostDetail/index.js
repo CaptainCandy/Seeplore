@@ -26,13 +26,25 @@ exports.main = async (event, context) => {
       }
     })).result.data;
 
+    var respActionQ = await cloud.callFunction({
+      name: 'getActions',
+      data: {
+        post: true,
+        targetid: postid,
+        heart: true,
+        userid: userid,
+        count:true
+      }
+    })
+    var userheartcount = respActionQ.result.count;
+
     var detailpost = {
       postid: thepost._id,
       isMine: thepost.authorID == userid, 
       title: thepost.title,
       content: thepost.content,
       heartCount: thepost.heartCount,
-      isHearted: false,//TODO not yet use action collection.
+      isHearted: userheartcount==1,
       tags: thepost.tags,
       createTime: thepost.createTime,
       author: authorInfo
