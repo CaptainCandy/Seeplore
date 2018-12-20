@@ -5,8 +5,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    curReply: null,
-    replyBuffer: "",
+
   },
 
   /**
@@ -63,21 +62,5 @@ Page({
    */
   onShareAppMessage: function () {
 
-  },
-
-  /**
-     * 事件：回帖内容输入
-     */
-  onReplyInput: function (e) {
-    let replyBuffer = this.data.replyBuffer;
-    replyBuffer = e.detail.value;
-    this.setData({
-      replyBuffer,
-    })
-  },
-
-  onReply: function(e) {
-    console.log(this.data.replyBuffer);
-    
   }
 })
