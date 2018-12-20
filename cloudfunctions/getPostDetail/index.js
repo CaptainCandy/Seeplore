@@ -19,12 +19,15 @@ exports.main = async (event, context) => {
     var thepost = qresult.data;
     console.log(thepost);
 
-    var authorInfo = (await cloud.callFunction({
+    var respAuthorQ = await cloud.callFunction({
       name: 'getUserInfo',
       data: {
-        userid: userid
+        userid: thepost.authorID
       }
-    })).result.data;
+    });
+    console.log('HERE: GET author user info RESPONSE')
+    console.log(respAuthorQ.result);
+    var authorInfo = respAuthorQ.result.wxUserInfo;
 
     var respActionQ = await cloud.callFunction({
       name: 'getActions',

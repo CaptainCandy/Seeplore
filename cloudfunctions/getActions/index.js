@@ -8,7 +8,7 @@ const db = cloud.database();
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
   let [heart, collect, report] = [event.heart, event.collect, event.report];
-  let [targetid, userid] = [event.targetid, (!event.userid) ? wxContext.OPENID : evnet.userid];
+  let [targetid, userid] = [event.targetid, (!event.userid) ? wxContext.OPENID : event.userid];
   //if (!targetid) {
     let tidlist = event.tidlist;
   //};
