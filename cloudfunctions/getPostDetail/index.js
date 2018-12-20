@@ -9,7 +9,7 @@ const db = cloud.database();
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
 
-  let [postid, userid] = [event.postid, (!event.userid) ? wxContext.OPENID : evnet.userid];
+  let [postid, userid] = [event.postid, (!event.userid) ? wxContext.OPENID : event.userid];
 
   var posts = db.collection('posts');
 
