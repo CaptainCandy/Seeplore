@@ -256,8 +256,12 @@ onGotUserInfo(e) {
 
 - overall
   - customized tabbar
+  - 美化G宁的登录界面
+  - seeplore放中间 //无法实现，微信不提供这样的功能，要实现的话顶部导航栏全部要自己重写
+  - acquire user authorization popup //用G宁的方法实现
 - index
   - pre-post list templete: dataformat, style
+  - viewPost页面布局已完成
 - category
 - post
   - richtext editor
@@ -267,11 +271,9 @@ onGotUserInfo(e) {
 ### Unsolved
 
 - overall
-  - seeplore放中间 //无法实现，微信不提供这样的功能，要实现的话顶部导航栏全部要自己重写
-  - acquire user authorization popup //用G宁的方法实现
-  - 美化G宁的登录界面
+
 - index
-  - post查看页面style, heart\reply etc. button
+  - post查看页面逻辑, heart\reply etc. button
 - category
   - 类目-标签的 templete
 - post
