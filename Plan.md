@@ -166,7 +166,7 @@ onGotUserInfo(e) {
   _id:,postid:,
   parentid:,//if reply: 0, if comment: !0
   text:String,
-  image:Array,// if comment: null
+  heartCount:0,
   authorid:,createTime:,status:
 }
 {//保存事件 reply-action
@@ -202,6 +202,86 @@ onGotUserInfo(e) {
   {...},
   ...
 ]
+```
+
+### 前端操作数据库
+
+```js
+///前端连接数据库。
+wx.cloud.database().collection('posts').add({
+  data:{
+    title: e.detail.title,
+    abstract: e.detail.abstract,
+    content: e.detail.content,
+    tags: "",//? 仅保存至tag collection;; String可用db.RegExp
+    authorID: app.globalData.userid, //_id in 'user' collection
+    createTime: new Date(),
+    heartCount: 0,
+    status: 1 // 0 草稿 1 发布 -1 隐藏
+  }
+}).then(function(resp){
+  console.log(resp.result);//TODO 此时应当跳转发帖结束页面。
+},function(err){
+  console.log(err)
+});
+```
+
+```js
+//删除Post
+wx.cloud.database().collection('posts').doc('post-id').remove().then(
+  function(resp){
+    resp.result.stats.removed == 1; //说明删除成功，否则 removed == 0.
+  },
+  function(err){
+    //错误处理。
+  }
+)
+
+//删除reply
+wx.cloud.database().collection('replies').doc('reply-id').remove().then(
+  function(resp){
+    resp.result.stats.removed == 1; //说明删除成功，否则 removed == 0.
+  },
+  function(err){
+    //错误处理。
+  }
+)
+
+//新增reply
+wx.cloud.database().collection('replies').add({
+  authorid: userid,
+  postid:,
+  text:,//content
+  heartCount:0,
+  parentid:,//若是comment，填入回复对象的reply id；否则，null。
+  createTime:new Date(),
+  status:1
+}).then(
+  function(resp){
+    resp.result._id; //新增回复或回帖的reply ID
+  },
+  function(err){
+    //错误处理。
+  }
+)
+
+//撤销点赞帖子。
+wx.cloud.callFunction({
+  name:'doPostAction',
+  data:{
+    heart:true,
+    undo:true,
+    postid:, userid:
+  }
+}).then(
+  function(resp){console.log(resp.result)},//result 三个属性中只有一个true；unmatched表示“撤销不存在的赞”或者“收藏已收藏的帖子”。
+  /*result = {
+      added:true,
+      removed: true,
+      unmatched: true
+    }*/
+  function(err){}//错误需要处理：可能是“撤销不存在的赞”或者“收藏已收藏的帖子”。;;
+)
 ```
 
 ## Doubt & Know
