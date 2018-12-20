@@ -41,9 +41,9 @@ Page({
     }).then(res => {
       console.log(res);
       res.result.data.map(post => {
+        //控制时间的展示样式，当天的帖子真是小时分钟，非当天的显示日期
         let now = new Date();
         let createTime = new Date(post.createTime);
-        //控制时间的展示样式，当天的帖子真是小时分钟，非当天的显示日期
         if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()){
           let strTime = null;
           if (createTime.getMinutes() <= 9 && createTime.getMinutes()>=0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();

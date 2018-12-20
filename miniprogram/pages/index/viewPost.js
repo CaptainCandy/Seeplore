@@ -27,28 +27,51 @@ Page({
    */
   onLoad: function (options) {
     //接受帖子信息
+    wx.showLoading({
+      title: '正在获取...',
+    })
     let curPostId = options.curPostId
     let currentPost = null;
+    let imageList = []
     wx.cloud.callFunction({
       name: 'getPostDetail',
-      data: curPostId,
+      data: {
+        postid: curPostId,
+      },
     }).then(res => {
       console.log(res);
-      currentPost = res;
+      currentPost = res.result;
+      //控制时间的展示样式，当天的帖子真是小时分钟，非当天的显示日期
+      let now = new Date();
+      let createTime = new Date(currentPost.createTime);
+      if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+        let strTime = null;
+        if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+        else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+        createTime = strTime;
+      }
+      else {
+        let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+        createTime = strTime;
+      }
+      currentPost.createTime = createTime;
+      //预设好图片列表以供放大预览
+      for (var n = 0; n < currentPost.content.length; n++) {
+        if (currentPost.content[n].img == true) imageList.push(currentPost.content[n].fileid)
+      }
+      
+      this.setData({
+        currentPost: currentPost,
+        postImageList: imageList,
+      })
+      wx.hideLoading()
     })
 
-    //获取用户信息，预设好图片列表以供放大预览
-    let imageList = []
-    for (var n = 0; n < currentPost.content.length; n++){
-      if (currentPost.content[n].img == true) imageList.push(currentPost.content[n].fileid)
-    }
-    console.log(imageList)
+    //获取用户信息
     this.setData({
       userInfo: app.globalData.userInfo,
-      currentPost: currentPost,
-      postImageList: imageList,
     })
-
+    
     wx.showShareMenu({
       // 要求小程序返回分享目标信息
       withShareTicket: true
