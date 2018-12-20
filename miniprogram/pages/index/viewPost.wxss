@@ -1,7 +1,11 @@
 /* miniprogram/pages/index/myPost.wxss */
+page{
+  min-height: 100vh;
+}
 .container{
   display: flex;
   flex-direction: column;
+  min-height: 105vh;
 }
 .title{
   align-self: flex-start;

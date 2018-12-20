@@ -1,2 +1,16 @@
 <!--miniprogram/pages/reply/reply.wxml-->
-<text>miniprogram/pages/reply/reply.wxml</text>
+<view class='container'>
+  <view class='post-info'>
+    <text>在 </text>
+    <text style='color: rgb(39, 96, 202)'>Gning </text>
+    <text>发表的帖子 </text>
+    <text style='color: rgb(39, 96, 202)'>我是去CMU好还是去NYU好 </text>
+    <text>下面回帖：</text>
+  </view>
+  <view>
+    <textarea class='textarea' bindinput='onReplyInput' placeholder='回帖：' placeholder-style='color: rgb(182, 182, 182)'></textarea>
+  </view>
+  <view class='finish-button' bindtap='onReply'>
+    <text>发表</text>
+  </view>
+</view>
