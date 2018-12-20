@@ -29,9 +29,12 @@ exports.main = async (event, context) => {
   var actions = cloud.database().collection('post-actions');
   var ref = actions.where(condition);
 
-  var count = await ref.count();
+  var count = (await ref.count()).total;
+  console.log(condition);
+  console.log(!undo);
+  console.log(count);
 
-  if(count==0 && !undo){
+  if (count == 0 && !undo) {
     actions.add({
       data:{
         userid:userid,
@@ -40,12 +43,23 @@ exports.main = async (event, context) => {
         createTIme: new Date()
       }
     });
-  }else if(count==1 && undo){
+    //return 'action added';
+    return {
+      added:true
+    }
+  } 
+  else if (count == 1 && undo) {
     ref.remove();
-  }else{
-    throw new Error('action count not match.')
+    //return 'action removed';
+    return {
+      removed: true
+    }
+  }
+  else{
+    //throw new Error('action count not match.')
+    return {
+      unmatched: true
+    }
   }
 
-
-  return condition;
 }
