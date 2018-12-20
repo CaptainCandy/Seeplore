@@ -3,7 +3,7 @@
   <view class='author'>
     <image class='portrait' mode='widthFix' src='{{currentPost.author.avatarUrl}}'></image>
     <text class='nickname'>{{currentPost.author.nickName}}</text>
-    <text class='date'>发表于 {{currentPost.createTime}}</text>
+    <text class='date'>{{currentPost.createTime}}</text>
   </view>
   <view class='title'>
     <text>{{currentPost.title}}</text>

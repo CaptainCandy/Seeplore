@@ -40,7 +40,7 @@
 }
 .postPre_head .postPre_date{
   height: 30rpx;
-  color: rgb(182, 182, 182);
+  color: gray;
   font-size: 24rpx;
   display: inline-block;
   padding: 0 0 0 0;
@@ -54,7 +54,7 @@
   margin: 0 0 0 0;
 }
 .postPre_abstract{
-  color: #000;
-  font-size: 32rpx;
+  color: #666666;
+  font-size: 36rpx;
   margin: 10rpx 0 0 0;
 }

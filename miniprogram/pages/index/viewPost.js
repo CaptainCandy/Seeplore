@@ -33,7 +33,6 @@ Page({
     let curPostId = options.curPostId
     let currentPost = null;
     let imageList = []
-    console.log(curPostId)
     wx.cloud.callFunction({
       name: 'getPostDetail',
       data: {
@@ -42,7 +41,7 @@ Page({
     }).then(res => {
       console.log(res);
       currentPost = res.result;
-      //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+      //控制时间的展示样式，当天的帖子真是小时分钟，非当天的显示日期
       let now = new Date();
       let createTime = new Date(currentPost.createTime);
       if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
@@ -139,20 +138,15 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function (e) {
-    if (e.from === 'menu') {
+    if (e.from === 'button') {
       // 来自页面内转发按钮
       console.log(e.target)
     }
     return {
-      title: this.data.currentPost.title,
-      path: '/miniprogram/pages/index/viewPost?curPostId=' + this.data.currentPost.postid,
+      title: 'test title',
       success: function (res) {
         // 转发成功
         console.log("转发成功:" + JSON.stringify(res));
-        wx.showToast({
-          title: '转发成功！',
-          duration: 2000,
-        })
         var shareTickets = res.shareTickets;
         // if (shareTickets.length == 0) {
         //   return false;
@@ -168,11 +162,6 @@ Page({
       fail: function (res) {
         // 转发失败
         console.log("转发失败:" + JSON.stringify(res));
-        wx.showToast({
-          title: '转发失败！\n请检查网络后重新尝试',
-          icon: 'none',
-          duration: 2000,
-        })
       }
     }
   },
