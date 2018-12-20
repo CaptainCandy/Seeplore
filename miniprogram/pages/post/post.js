@@ -91,9 +91,27 @@ Page({
         status: 1 // 0 草稿 1 发布 -1 隐藏
       }
     }).then(function(resp){
-      console.log(resp.result);//TODO 此时应当跳转发帖结束页面。
-    },function(err){
+      console.log(resp._id);//TODO 此时应当跳转发帖结束页面。
+      //返回上一层的界面并刷新
+      wx.redirectTo
+      ({
+        url: '../index/viewPost?curPostId=' + resp._id,
+        success: function () {
+          // 暂时不需要
+        },
+        fail: function(){
+          wx.switchTab({
+            url: '../index/index',
+          })
+        }
+      })
+    },
+    function(err){
       console.log(err)
+      wx.showToast({
+        title: '发帖失败！',
+        duration: 2000
+      })
     });
   }
 })
