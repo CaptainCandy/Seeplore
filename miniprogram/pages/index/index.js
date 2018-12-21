@@ -212,7 +212,6 @@ Page({
 
   onPostList: function(e) {
     console.log(e.currentTarget.dataset.currentindex)
-    console.log(typeof(e.currentTarget.dataset))
     let curNav = e.currentTarget.dataset.currentnavtab
     let currentPost = null
     if (curNav == 1) //因为在0的时候显示的是undefined，所以不能用0来判断

@@ -2,9 +2,9 @@
 <view class='container'>
   <view class='post-info'>
     <text>在 </text>
-    <text style='color: rgb(39, 96, 202)'>Gning </text>
+    <text style='color: rgb(39, 96, 202)'>{{curPostAuthor}} </text>
     <text>发表的帖子 </text>
-    <text style='color: rgb(39, 96, 202)'>我是去CMU好还是去NYU好 </text>
+    <text style='color: rgb(39, 96, 202)'>{{curPostTitle}} </text>
     <text>下面回帖：</text>
   </view>
   <view>

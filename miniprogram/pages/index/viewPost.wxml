@@ -19,21 +19,23 @@
     </view>
   </view>
   <view class='bottom-tools'>
-    <navigator class='bottom-button'>
+    <view class='bottom-button' bindtap='onReply'>
       <view class='reply-box'>
         <text class='reply'>我也说点儿什么吧</text>
       </view>
-    </navigator>
-    <view class='bottom-button' bindtap='onHeart'>
+    </view>
+    <view wx:if="{{!currentPost.isHearted}}" class='bottom-button' bindtap='onHeart'>
         <image class='heart' src='../../icon/heart_false.png'></image>
+    </view>
+    <view wx:else class='bottom-button' bindtap='onHeart'>
+        <image class='heart' src='../../icon/heart_true.png'></image>
     </view>
     <view class='bottom-button' bindtap='onCollect'>
       <image class='collect' src='../../icon/collect_false.png'></image>
     </view>
-    <button open-type='share' class='bottom-button' bindtap='onShare'>
+    <button open-type='share' class='bottom-button'>
       <image class='share' src='../../icon/share.png'></image>
     </button>
-    
     <view wx:if="{{currentPost.isMine}}" class='bottom-button' bindtap='onDelete'>
       <image class='report' src='../../icon/delete.png'></image>
     </view>    
@@ -44,15 +46,15 @@
 
   <view wx:if="{{isPullUp}}" class='reply-zone'>
     <text class='zone-title' style=''>评论区</text>
-    <view class='content' wx:for="{{[0,1]}}">
+    <view wx:for="{{replyList}}" wx:for-index="rindex" wx:key="rindex" data-rindex='{{rindex}}' class='content'>
       <view class='portrait-box'>
-        <image class='portrait' mode="widthFix" src='cloud://seeplore-0d9485.7365-seeplore-0d9485/post/XBZaE3ffS3SWC8Z8/微信图片_20181218194237.png'></image>
+        <image class='portrait' mode="widthFix" src='{{item.replier.avatarUrl}}'></image>
       </view>
       <view class='main'>
-        <view class='nickname'>{{userInfo.nickName}}</view>
-        <view class='text' bindtap='onComment'>ljn's younger school sister. 精灵宝可梦世界的整体理念来自于精灵宝可梦之父田尻智先生儿时钟爱的昆虫收集。田尻智在1989至1990年间，当Game Boy刚刚流行时，首次构思了一个类似于收集昆虫，让昆虫可以沿着通信线缆被互相交换的游戏。随后，他和他的两位挚友：增田顺一和杉森建一同开发并发行了第一款精灵宝可梦游戏。</view>
+        <view class='nickname'>{{item.replier.nickName}}</view>
+        <view class='text' bindtap='onComment'>{{item.content}}</view>
         <view class='bottom'>
-          <view class='date'>2018-12-18</view>
+          <view class='date'>{{item.createTime}}</view>
           <view class='button' bindtap='onReplyHeart'>
             <image class='heart' src='../../icon/heart_false.png'></image>
           </view>
@@ -62,25 +64,20 @@
           <view class='button' bindtap='onReplyshare'>
             <image class='share' src='../../icon/share.png'></image>
           </view>
-          <view class='button' bindtap='onReplyReport' style='border: none;'>
+          <view wx:if="{{item.isMine}}" class='button' bindtap='onReplyDelete' style='border: none;' data-curreplyid='{{item._id}}'>
+            <image class='collect' src='../../icon/delete.png'></image>
+          </view>
+          <view wx:else class='button' bindtap='onReplyReport' style='border: none;'>
             <image class='report' src='../../icon/report.png'></image>
           </view>
-          <!--<view class='button' bindtap='onReplyDelete' style='border: none;'>
-            <image class='collect' src='../../icon/delete.png'></image>
-          </view>-->
         </view>
         <view class='comment-zone'>
-          <view class='comment'>
-            <text style='color: rgb(39, 96, 202)'>Wanglaoqun: </text>
-            <text bindtap='onComment'>随后，又相继制作了更多的精灵宝可梦游戏。游戏一般划分为《精灵宝可梦》系列、旁支系列游戏和其他游戏，其中又以《精灵宝可梦》系列更广为人知，大部分衍生作品都是基于这一系列游戏创作的。</text>
-            <text style='font-size: 24rpx; color: rgb(182, 182, 182)'>2018-12-19</text>
-          </view>
-          <view class='comment'>
-            <text style='color: rgb(39, 96, 202)'>糖十四 </text>
+          <view wx:for="{{item.comments}}" wx:for-item="comment" wx:for-index="cindex" wx:key="cindex" data-cindex='{{cindex}}' class='comment'>
+            <text style='color: rgb(39, 96, 202)'>{{comment.replier.nickName}} </text>
             <text>回复 </text>
-            <text style='color: rgb(39, 96, 202)'>Wanglaoqun: </text>
-            <text bindtap='onComment'>同时，精灵宝可梦系列游戏因为数量过多而被划分为不同的世代，主要以其涵盖的宝可梦数量来决定。</text>
-            <text style='font-size: 24rpx; color: rgb(182, 182, 182)'>2018-12-20</text>
+            <text style='color: rgb(39, 96, 202)'>{{comment.parentNickname}}: </text>
+            <text bindtap='onComment'>{{comment.content}}</text>
+            <text style='font-size: 24rpx; color: rgb(182, 182, 182)'>{{comment.createTime}}</text>
           </view>
         </view>
       </view>
@@ -88,11 +85,11 @@
   </view>
 
   <!--显示加载-->
-  <view class="load-more" hidden="{{!loading}}">
+  <!--<view class="load-more" hidden="{{!loading}}">
     <view class="load-loading"></view>
     <view class="load-tips">正在加载……</view>
-  </view>
-  <view class="load-end" hidden="{{!loaded}}">没有更多数据了……</view>
+  </view>-->
+  <view class="load-end" hidden="{{!loaded}}">来抢沙发吧！</view>
   
   <!--抵消底部按钮栏高度的影响-->
   <view style='margin-bottom: 10vh'></view>

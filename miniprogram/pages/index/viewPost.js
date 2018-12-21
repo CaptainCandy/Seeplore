@@ -119,19 +119,85 @@ Page({
   onReachBottom: function () {
     let that = this;
 
-    utils.showLoading();
+    wx.showLoading({
+      title: '加载中',
+    })
     that.setData({
       isPullUp: true,
       isFirstLoading: false, // 上拉触发后，不再是初始数据加载，按页码加载
       loading: true //把"上拉加载"的变量设为false，显示 
     });
     //获取帖子
-    this.fetchReply();
-    utils.hideLoading();
-    that.setData({
-      currentPage: that.data.currentPage + 8, 
-      //loading: false
+    new Promise(function (resolve, reject) {
+      let currentPage = that.data.currentPage;
+      let replyList = that.data.replyList
+      console.log("currentPage == ", currentPage);
+      wx.cloud.callFunction({
+        name: 'getReplies',
+        data: {
+          postid: that.data.currentPost.postid,
+          userid: app.globalData.userInfo.userid,
+        }
+      }).then(resp => {
+        console.log(resp.result.data)
+        let replyList = resp.result.data
+        replyList.map(reply => {
+          //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+          let now = new Date();
+          let createTime = new Date(reply.createTime);
+          if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+            let strTime = null;
+            if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+            else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+            createTime = strTime;
+          }
+          else {
+            let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+            createTime = strTime;
+          }
+          reply.createTime = createTime;
+          reply.comments.map(comment => {
+            //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+            let now = new Date();
+            let createTime = new Date(comment.createTime);
+            if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+              let strTime = null;
+              if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+              else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+              createTime = strTime;
+            }
+            else {
+              let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+              createTime = strTime;
+            }
+            comment.createTime = createTime;
+            //存入每一个回复回复的楼层的人的nickName
+            for (var i = reply.comments.length - 1; i > 0; i--) {
+              if (comment.parentid == reply.comments[i]._id) {
+                comment.parentNickname = reply.comments[i].replier.nickName
+                console.log('parentNickname found.')
+                break
+              }
+            }
+          })
+        })
+        that.setData({
+          replyList: replyList.reverse(),
+        })
+        resolve()
+      }
+      )
+    }).then(res => {
+      utils.hideLoading();
+      that.setData({
+        currentPage: that.data.currentPage + 8,
+        loading: false
+      })
+      if (that.data.replyList.length == 0) that.setData({ loaded: true })
+      console.log(that.data.loaded)
+      wx.hideLoading()
     })
+    //this.fetchReply();
   }, 
 
   /**
@@ -144,7 +210,7 @@ Page({
     }
     return {
       title: this.data.currentPost.title,
-      path: '/miniprogram/pages/index/viewPost?curPostId=' + this.data.currentPost.postid,
+      path: '/pages/index/viewPost?curPostId=' + this.data.currentPost.postid,
       success: function (res) {
         // 转发成功
         console.log("转发成功:" + JSON.stringify(res));
@@ -189,16 +255,85 @@ Page({
     })
   },
 
+  onReply: function(e) {
+    //先进行特殊字符的转义
+    let postid = escape(this.data.currentPost.postid)
+    let title = escape(this.data.currentPost.title)
+    let author = escape(this.data.currentPost.author.nickName)
+    wx.navigateTo({
+      url: '../reply/reply?curPostId=' + postid + '&curPostTitle=' + title + '&curPostAuthor=' + author,
+    })
+  },
+
   onHeart: function(e) {
-    
+    let undo = false;
+    let currentPost = this.data.currentPost
+    if (this.data.currentPost.isHearted) {
+      undo = true
+      currentPost.isHearted = false
+      this.setData({
+        currentPost: currentPost
+      })
+      wx.showToast({
+        title: '取消成功！',
+        duration: 1000,
+      })
+    }
+    else {
+      currentPost.isHearted = true
+      this.setData({
+        currentPost: currentPost
+      })
+      wx.showToast({
+        title: '点赞成功！',
+        duration: 1000,
+      })
+    }
+    console.log('undo '+undo)
+    console.log('currentPost.isHearted ' + currentPost.isHearted)
+    wx.cloud.callFunction({
+      name: 'doPostAction',
+      data: {
+        heart: true,
+        undo: undo,
+        postid: this.data.currentPost.postid,
+        userid: app.globalData.userInfo.userid,
+      }
+    }).then(
+      function (resp) {
+        if (resp.result.added)
+          console.log("heart added")
+        else if (resp.result.removed)
+          console.log("heart removed")
+        else{
+          console.log("unmatched")
+          if (currentPost.isHearted) currentPost.isHearted = false
+          else currentPost.isHearted = true
+          console.log(currentPost.isHearted)
+        }
+        this.setData({
+          currentPost: currentPost
+        })
+      },//result 三个属性中只有一个true；unmatched表示“撤销不存在的赞”或者“收藏已收藏的帖子”。
+      /*result = {
+          added:true,
+          removed: true,
+          unmatched: true
+        }*/
+      function (err) {
+        console.log("heart error")
+        if (currentPost.isHearted) currentPost.isHearted = false
+        else currentPost.isHearted = true
+        console.log(currentPost.isHearted)
+        this.setData({
+          currentPost: currentPost
+        })
+       }//错误需要处理：可能是“撤销不存在的赞”或者“收藏已收藏的帖子”。;;
+    )
   },
 
   onCollect: function(e) {
 
-  },
-
-  onShare: function(e) {
-    console.log("onshare clicked.");
   },
 
   onReport: function(e) {
@@ -206,14 +341,106 @@ Page({
   },
 
   onDelete: function(e) {
-    
+    wx.showModal({
+      title: '删除帖子',
+      content: '确定要删除这篇帖子吗？',
+      success: res => {
+        if (res.confirm) {
+          wx.cloud.database().collection('posts').doc(this.data.currentPost.postid).remove().then(
+            function (resp) {
+              console.log(resp)
+              //说明删除成功，否则 removed == 0.
+              if (resp.stats.removed == 1) {
+                wx.showToast({
+                  title: '删除成功',
+                  duration: 2000
+                })
+                setTimeout(function () {
+                  wx.navigateBack({
+                    delta: 1,
+                  })
+                }, 2200)
+              }
+              else
+                wx.showToast({
+                  title: '删除失败\n请检查网络后重试',
+                  duration: 2000,
+                  icon: 'none'
+                })
+            },
+            function (err) {
+              //错误处理。
+              wx.showToast({
+                title: '删除失败\n请检查网络后重试',
+                duration: 2000,
+                icon: 'none'
+              })
+            }
+          )
+        }
+      }
+    })
   },
 
-  fetchReply: function () {
-    let that = this;
-    let currentPage = that.data.currentPage;
+  /*fetchReply: function () {
+    let currentPage = this.data.currentPage;
+    let replyList = this.data.replyList
     console.log("currentPage == ", currentPage);
-  },
+    wx.cloud.callFunction({
+      name: 'getReplies',
+      data: {
+        postid: this.data.currentPost.postid,
+        userid: app.globalData.userInfo.userid,
+      }
+    }).then(resp => {
+      console.log(resp.result.data)
+      let replyList = resp.result.data
+      replyList.map(reply => {
+        //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+        let now = new Date();
+        let createTime = new Date(reply.createTime);
+        if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+          let strTime = null;
+          if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+          else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+          createTime = strTime;
+        }
+        else {
+          let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+          createTime = strTime;
+        }
+        reply.createTime = createTime;
+        reply.comments.map(comment => {
+          //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+          let now = new Date();
+          let createTime = new Date(comment.createTime);
+          if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+            let strTime = null;
+            if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+            else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+            createTime = strTime;
+          }
+          else {
+            let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+            createTime = strTime;
+          }
+          comment.createTime = createTime;
+          //存入每一个回复回复的楼层的人的nickName
+          for (var i = reply.comments.length - 1; i > 0; i--){
+            if (comment.parentid == reply.comments[i]._id) {
+              comment.parentNickname = reply.comments[i].replier.nickName
+              console.log('parentNickname found.')
+              break
+              }
+          }
+        })
+      })
+      this.setData({
+        replyList: replyList,
+      })
+      }
+    )
+  },*/
 
   onComment: function(e){
 
@@ -236,6 +463,56 @@ Page({
   },
 
   onReplyDelete: function (e) {
-
+    let that = this
+    let curreplyid = e.currentTarget.dataset.curreplyid
+    let replyList = this.data.replyList
+    console.log(e.currentTarget)
+    wx.showModal({
+      title: '删除回帖',
+      content: '确定要删除这篇回帖吗？',
+      success: res => {
+        if (res.confirm) {
+          wx.cloud.database().collection('replies').doc(curreplyid).remove().then(
+            function (resp) {
+              console.log(resp)
+              //说明删除成功，否则 removed == 0.
+              if (resp.stats.removed == 1) {
+                wx.showToast({
+                  title: '删除成功',
+                  duration: 2000
+                })
+                setTimeout(function () {
+                  //TODO 移除reply列表中的当前回帖
+                  console.log(replyList)
+                  for (var i = 0; i < replyList.length; i++){
+                    if (replyList[i]._id = curreplyid) {
+                      replyList.splice(replyList.length-2-i, 1)
+                      console.log(i)
+                      that.setData({ replyList: replyList})
+                      break
+                      }
+                  }
+                }, 2200)
+              }
+              else
+                wx.showToast({
+                  title: '删除失败\n请检查网络后重试',
+                  duration: 2000,
+                  icon: 'none'
+                })
+            },
+            function (err) {
+              //错误处理。
+              console.log(err)
+              wx.showToast({
+                title: '删除失败\n请检查网络后重试',
+                duration: 2000,
+                icon: 'none'
+              })
+            }
+          )
+        }
+      }
+    })
   },
 })

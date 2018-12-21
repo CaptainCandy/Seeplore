@@ -77,7 +77,21 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-
+    /*wx.showModal({
+      title: '提示',
+      content: '你还未登录，登录后可获得完整体验 ',
+      confirmText: '一键登录',
+      success(res) {
+        // 点击一键登录，去授权页面
+        if (res.confirm) {
+          wx.navigateTo({
+            url: 'entry',
+          })
+        }
+      },
+      fail: res => {
+      }
+    })*/
   },
 
   /**
