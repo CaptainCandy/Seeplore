@@ -75,7 +75,21 @@
   </view>
   <view class="container" hidden="{{currentNavtab==1 ? '' : true}}">
     <view wx:for="{{prePostListHot}}" wx:key="{{index}}">
-      <template is="postPreview" data="{{item}}"/>
+      <view class="postList">
+        <view class="postPre_block">
+          <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
+            <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
+          </navigator>
+          <navigator class="postPre_head" open-type='navigate' hover-class='none'>
+            <view class="postPre_title"><text>{{item.title}}</text></view>
+            <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
+            <view class="postPre_date"><text>{{item.createTime}}</text></view>
+          </navigator>
+          <view class="postPre_abstract" bindtap='onPostList' data-currentnavtab='{{currentNavtab}}' data-currentindex='{{index}}'>
+            <text>{{item.abstract}}</text>
+          </view>
+        </view>
+      </view>
     </view>
   </view>
 </scroll-view>
