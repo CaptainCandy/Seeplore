@@ -271,7 +271,8 @@ wx.cloud.callFunction({
   data:{
     heart:true,
     undo:true,
-    postid:, userid:
+    postid:, 
+    userid:
   }
 }).then(
   function(resp){console.log(resp.result)},//result 三个属性中只有一个true；unmatched表示“撤销不存在的赞”或者“收藏已收藏的帖子”。
