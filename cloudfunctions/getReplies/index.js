@@ -8,27 +8,27 @@ const db = cloud.database();
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
-  let [postid, userid] = [event.postid, (!event.userid) ? wxContext.OPENID : event.userid];
+  let [postid, authorid] = [event.postid, event.authorid];
   let [skip, limit] = [event.skip, event.limit];
-  let authorid = event.authorid;
+  let userid = (!event.userid) ? wxContext.OPENID : event.userid;
   //let [replyid, ridlist] = [replyid, ridlist];
 
   var replies = db.collection('replies');
   var query = null;
   var rawlist = null;
 
-  if(postid){
+  if (postid) {
     query = replies.where({
       postid:postid  
     });
   }
-  else if (authorid) {
+  if (authorid) {
     query = replies.where({
       authorid: authorid
     });
   }
-  else{
-    throw new Error('You should specify query condtion.')
+  if(!postid && !authorid){
+    throw new Error('You should specify query condtion.');
   }
   /*
   else if(replyid){
@@ -42,6 +42,8 @@ exports.main = async (event, context) => {
   if (limit) query = query.limit(limit);
   rawlist = (await query.get()).data;
 
+  console.log('raw reply list get');
+  console.log(rawlist);
 
   var aidlist = rawlist.map(elem=>elem.authorid);
   var authorlist = (await cloud.callFunction({
@@ -69,23 +71,44 @@ exports.main = async (event, context) => {
   var heartedlist = useractions.map(function (ele) { return ele.targetid; })
 
   //function
-  var extract = elem => {
+  var extract_reply = elem => {
     return {
+      _id: elem._id,
       replier: userinfodict[elem.authorid],//回帖者的userinfo
       content: elem.text,
       heartCount: elem.heartCount,
       isHearted: heartedlist.some(ele => ele.targetid == item._id),
       isMine: elem.authorid == userid,
       createTime: elem.createTime,
+      postid: elem.postid,
+      comments:[]
+    }
+  }
+
+  var extract_comment = elem => {
+    return {
+      _id: elem._id,
+      replier: userinfodict[elem.authorid],//回帖者的userinfo
+      content: elem.text,
+      createTime: elem.createTime,
       parentid: elem.parentid,
       postid: elem.postid
     }
   }
 
-  var replylist = rawlist.map(extract).filter(elem=>elem.parentid);
-  var commentlist = rawlist.map(extract).filter(elem => elem.parentid);
+  var replylist = rawlist.filter(elem => !elem.parentid).map(extract_reply);
+  var commentlist = rawlist.filter(elem => elem.parentid).map(extract_comment);
+  console.log(replylist);
+  console.log(commentlist);
 
-  // TODO 递归完成投射。
+  // Put the comments inside the replies.
+  var dict_replycomments = Object();
+  replylist.forEach(elem => {
+    dict_replycomments[elem._id] = elem.comments;
+  });
+  commentlist.forEach(elem => {
+    dict_replycomments[elem.parentid].push(elem);
+  })
 
   return {
     data: replylist
