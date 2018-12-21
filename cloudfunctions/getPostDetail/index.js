@@ -7,6 +7,10 @@ const db = cloud.database();
 
 // 云函数入口函数
 exports.main = async (event, context) => {
+
+  console.log(event);
+  console.log('参数传入如上。');
+
   const wxContext = cloud.getWXContext();
 
   let [postid, userid] = [event.postid, (!event.userid) ? wxContext.OPENID : event.userid];
@@ -29,7 +33,8 @@ exports.main = async (event, context) => {
     console.log(respAuthorQ.result);
     var authorInfo = respAuthorQ.result.wxUserInfo;
 
-    var respActionQ = await cloud.callFunction({
+    var respActionQ;
+    respActionQ = await cloud.callFunction({
       name: 'getActions',
       data: {
         post: true,
@@ -40,6 +45,19 @@ exports.main = async (event, context) => {
       }
     })
     var userheartcount = respActionQ.result.count;
+    console.log('userheartcount' + userheartcount);
+
+    respActionQ = await cloud.callFunction({
+      name: 'getActions',
+      data: {
+        post: true,
+        targetid: postid,
+        collect: true,
+        userid: userid,
+        count: true
+      }
+    })
+    var usercollectcount = respActionQ.result.count;
 
     var detailpost = {
       postid: thepost._id,
@@ -47,7 +65,8 @@ exports.main = async (event, context) => {
       title: thepost.title,
       content: thepost.content,
       heartCount: thepost.heartCount,
-      isHearted: userheartcount==1,
+      isHearted: userheartcount == 1,
+      isCollected: usercollectcount == 1,
       tags: thepost.tags,
       createTime: thepost.createTime,
       author: authorInfo
