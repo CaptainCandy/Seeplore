@@ -1,21 +1,17 @@
 <template name="postPreview">
   <view class="postList">
-    <block>
-        <view>
-            <view class="postPre_block">
-              <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
-                <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
-              </navigator>
-              <navigator class="postPre_head" open-type='navigate' hover-class='none'>
-                <view class="postPre_title"><text>{{item.title}}</text></view>
-                <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
-                <view class="postPre_date"><text>{{item.createTime}}</text></view>
-              </navigator>
-              <view class="postPre_abstract" bindtap='onPostList' data-currentPost='{{index}}'>
-                <text>{{item.abstract}}</text>
-              </view>
-            </view>
-        </view>
-    </block>
+    <view class="postPre_block">
+      <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
+        <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
+      </navigator>
+      <navigator class="postPre_head" open-type='navigate' hover-class='none'>
+        <view class="postPre_title"><text>{{item.title}}</text></view>
+        <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
+        <view class="postPre_date"><text>{{item.createTime}}</text></view>
+      </navigator>
+      <view class="postPre_abstract" bindtap='onPostList' data-currentPost='{{index}}'>
+        <text>{{item.abstract}}</text>
+      </view>
+    </view>
   </view>
 </template>

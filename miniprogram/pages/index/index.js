@@ -32,35 +32,8 @@ Page({
       userInfo: app.globalData.userInfo,
     })
 
-    //获取最新帖子列表
-    wx.cloud.callFunction({
-      name: 'getPostList',
-      data: {
-        recent: true
-      }
-    }).then(res => {
-      console.log(res);
-      res.result.data.map(post => {
-        //控制时间的展示样式，当天的帖子真是小时分钟，非当天的显示日期
-        let now = new Date();
-        let createTime = new Date(post.createTime);
-        if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()){
-          let strTime = null;
-          if (createTime.getMinutes() <= 9 && createTime.getMinutes()>=0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
-          else strTime = createTime.getHours() + ':' + createTime.getMinutes();
-          createTime = strTime;
-        }
-        else {
-          let strTime = (createTime.getMonth()+1) + '-' + createTime.getDate();
-          createTime = strTime;
-        }
-        post.createTime = createTime;
-      })
-      this.setData({
-        prePostListNew: res.result.data,
-        prePostListHot: res.result.data,
-      });
-    })
+    // 加载最新帖子列表
+    //this.fetchPostListNew()
   },
 
   /**
@@ -74,7 +47,8 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    // 加载最新帖子列表
+    this.fetchPostListNew()
   },
 
   /**
@@ -109,6 +83,43 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
+
+  },
+
+  //加载最新帖子列表
+  fetchPostListNew() {
+    wx.cloud.callFunction({
+      name: 'getPostList',
+      data: {
+        recent: true
+      }
+    }).then(res => {
+      console.log(res);
+      res.result.data.map(post => {
+        //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+        let now = new Date();
+        let createTime = new Date(post.createTime);
+        if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+          let strTime = null;
+          if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+          else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+          createTime = strTime;
+        }
+        else {
+          let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+          createTime = strTime;
+        }
+        post.createTime = createTime;
+      })
+      this.setData({
+        prePostListNew: res.result.data,
+        prePostListHot: res.result.data,
+      });
+    })
+  },
+
+  //TODO: 加载最热帖子列表
+  fetchPostListHot() {
 
   },
 
@@ -202,7 +213,11 @@ Page({
   onPostList: function(e) {
     console.log(e.currentTarget.dataset.currentindex)
     console.log(typeof(e.currentTarget.dataset))
-    let currentPost = this.data.prePostListNew[e.currentTarget.dataset.currentindex]
+    let curNav = e.currentTarget.dataset.currentnavtab
+    let currentPost = null
+    if (curNav == 1) //因为在0的时候显示的是undefined，所以不能用0来判断
+      currentPost = this.data.prePostListHot[e.currentTarget.dataset.currentindex]
+    else currentPost = this.data.prePostListNew[e.currentTarget.dataset.currentindex]
     let curPostId = currentPost.postid
     wx.navigateTo({
       url: 'viewPost?curPostId=' + curPostId
