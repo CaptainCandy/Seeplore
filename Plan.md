@@ -283,6 +283,15 @@ wx.cloud.callFunction({
     }*/
   function(err){}//错误需要处理：可能是“撤销不存在的赞”或者“收藏已收藏的帖子”。;;
 )
+
+//获取回复
+wx.cloud.callFunction({
+  name:'getReplies',
+  data:{
+    postid: '',
+    userid: '当前用户'
+  }
+}).then(resp=>{console.log(resp.result.data)})//返回的是reply的array
 ```
 
 ## Doubt & Know

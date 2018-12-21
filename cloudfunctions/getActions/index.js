@@ -35,7 +35,7 @@ exports.main = async (event, context) => {
 
   var ref = actions.where(condition);
 
-  var count = await ref.count();
+  var count = (await ref.count()).total;
 
   if(!event.count){
     var resp = await ref.get();
