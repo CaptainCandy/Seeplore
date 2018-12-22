@@ -4,19 +4,14 @@
 
 ### post control
 
-- [ ] `Cloud Function` create post
+- [x] `Cloud Function` create post
   - 将编辑器保存的数据，转换格式，提交到数据库。
-- [ ] `CF` get single post in detail by post id
-  - [ ] retrive metadata from cloud db
-  - [ ] get replies and comment
-  - [ ] update popularity
-  - [ ] check 是否点过赞
-    - 客户端存储临时数据：该用户是否曾经在当前post进行过 like，collect 等操作。
-- [ ] `CF` touch single post: including like, collect, follow
+- [x] `CF` get single post in detail by post id
+  - [x] check 是否点过赞
+- [x] `CF` touch single post: including like, collect, follow
   - 参数传递
     - 操作名称： like,follow,collect
     - 操作状态： 新增，撤销
-  - [ ] 在该post的对应字段的数组添加用户的post id
 - `comparison` 点赞单独存储/作为用户与帖子的数字型字段
   - 单独存储
     - 查看某用户的点赞记录：拉取与当前_openid相匹配的“点赞”记录（post id）；调用getPostList(id列表) operation array => arr.map(ret postid) ~~// 使用field指定所返回的字段~~ => post array
@@ -34,11 +29,11 @@
 - [x] `discuss` post JSON数据格式
   - 依赖于编辑器产生的数据格式 @CaptainCandy
   - 依赖于前端渲染template可以使用的内容格式
-- [ ] post 是否保存作者头像fileID? 如果每次查看帖子都需要根据openid从数据库查找昵称头像，返回列表后会比较复杂。
+- [x] post 是否保存作者头像fileID? 如果每次查看帖子都需要根据openid从数据库查找昵称头像，返回列表后会比较复杂。
   - 保存时从user collection读取昵称、头像、_id。*读取方式与头像的保存方式解耦*
   - 但若仅在发帖时保存昵称、头像至post集合，它们将无法自动随用户更改头像而变化。
-- [ ] 展示帖子列表时：传给bindtap回调的event参数需要包含 post-id
-- [ ] `issue` post content: 图片保存
+- [x] 展示帖子列表时：传给bindtap回调的event参数需要包含 post-id
+- [x] `issue` post content: 图片保存
   - 现有editor是将图片上传到服务器，返回URL
   - wx.cloud.uploadFile则是返回fileID
   - rich-text组件应当可以处理fileID [文档：组件支持](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-client-api/component/index.html) 退而求其次，也可以使用image组件
@@ -62,20 +57,11 @@
     - 默认参数userInfo只含openid；自定义参数myUserInfo包含详细信息
   - [x] login云函数根据openid判断是否新用户，选择调用create/update
     - create可以直接写进login; 而update函数在用户手动更新个人信息时也会被调用
-  - [ ] 保存到globalData: openid, userid, wxUserInfo
+  - [x] 保存到globalData: openid, userid, wxUserInfo
 
-```html
-<button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
-获取用户信息</button>
-<button open-type="openSetting">打开授权设置页</button>
-```
+### tag control
 
-```js
-onGotUserInfo(e) {
-  console.log(e.detail.errMsg); console.log(e.detail.userInfo);
-  console.log(e.detail.rawData)
-}
-```
+- 两张表？分别存放“标签”
 
 ## Protocol
 
@@ -207,7 +193,6 @@ onGotUserInfo(e) {
 ### 前端操作数据库
 
 ```js
-///前端连接数据库。
 wx.cloud.database().collection('posts').add({
   data:{
     title: e.detail.title,
@@ -277,9 +262,7 @@ wx.cloud.callFunction({
 }).then(
   function(resp){console.log(resp.result)},//result 三个属性中只有一个true；unmatched表示“撤销不存在的赞”或者“收藏已收藏的帖子”。
   /*result = {
-      added:true,
-      removed: true,
-      unmatched: true
+      added:true,      removed: true,      unmatched: true
     }*/
   function(err){}//错误需要处理：可能是“撤销不存在的赞”或者“收藏已收藏的帖子”。;;
 )
