@@ -136,7 +136,7 @@ Page({
         name: 'getReplies',
         data: {
           postid: that.data.currentPost.postid,
-          userid: app.globalData.userInfo.userid,
+          userid: app.globalData.userid,
         }
       }).then(resp => {
         console.log(resp.result.data)
@@ -184,11 +184,11 @@ Page({
         that.setData({
           replyList: replyList.reverse(),
         })
+        console.log(that.data.replyList)
         resolve()
       }
       )
     }).then(res => {
-      utils.hideLoading();
       that.setData({
         currentPage: that.data.currentPage + 8,
         loading: false
@@ -466,7 +466,6 @@ Page({
     let that = this
     let curreplyid = e.currentTarget.dataset.curreplyid
     let replyList = this.data.replyList
-    console.log(e.currentTarget)
     wx.showModal({
       title: '删除回帖',
       content: '确定要删除这篇回帖吗？',
@@ -474,25 +473,19 @@ Page({
         if (res.confirm) {
           wx.cloud.database().collection('replies').doc(curreplyid).remove().then(
             function (resp) {
-              console.log(resp)
               //说明删除成功，否则 removed == 0.
               if (resp.stats.removed == 1) {
                 wx.showToast({
                   title: '删除成功',
                   duration: 2000
                 })
-                setTimeout(function () {
-                  //TODO 移除reply列表中的当前回帖
-                  console.log(replyList)
-                  for (var i = 0; i < replyList.length; i++){
-                    if (replyList[i]._id = curreplyid) {
-                      replyList.splice(replyList.length-2-i, 1)
-                      console.log(i)
-                      that.setData({ replyList: replyList})
-                      break
-                      }
-                  }
-                }, 2200)
+                for (var i = 0; i < replyList.length; i++){
+                  if (replyList[i]._id == curreplyid) {
+                    replyList.splice(i, 1)
+                    that.setData({ replyList: replyList })
+                    break
+                    }
+                }
               }
               else
                 wx.showToast({
