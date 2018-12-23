@@ -108,12 +108,33 @@ Page({
     }).then(
       function (resp) {
         console.log(resp._id); //新增回复或回帖的reply ID
-        /*wx.navigateBack({
-          delta: 1,
-        })*/
-        wx.navigateTo({
-          url: '../index/viewPost?curPostId=' + that.data.curPostId,
+        let pages = getCurrentPages()
+        let prePage = pages[pages.length - 2]
+        let replyList = prePage.data.replyList
+        replyList.push({
+          _id: resp._id,
+          replier :{
+            nickName: app.globalData.userInfo.nickName,
+            avatarUrl: app.globalData.userInfo.avatarUrl
+          },
+          content: that.data.replyBuffer,
+          heartCount: 0,
+          isHearted: false,
+          isMine: true,
+          createTime: '刚刚',
+          postid: that.data.curPostId,
+          comments: []
         })
+        console.log(replyList)
+        prePage.setData({
+          replyList: replyList
+        })
+        wx.navigateBack({
+          delta: 1,
+        })
+        /*wx.navigateTo({
+          url: '../index/viewPost?curPostId=' + that.data.curPostId,
+        })*/
       },
       function (err) {
         //错误处理。
