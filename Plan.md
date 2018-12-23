@@ -61,7 +61,27 @@
 
 ### tag control
 
-- 两张表？分别存放“标签”
+- 数据结构
+  - tag: name, category; id, name
+    - 如何处理同义跳转? 比如，UCB和伯克利是同义词，id应该只有一个...不处理了吧，哪有那么多运管... 键入标签时，
+    - post-tags: 每个帖子可以有多个标签，标签只能由发布者和管理员添加//标签可以由所有人维护
+    - user-tags: 每位用户各自关注的标签。
+- 用例图
+  - 浏览者：搜索特定tag的帖子。发现所关心的标签的帖子（最新）
+  - 创作者：发帖时选择tag。
+    - 选择tag时根据当前输入，自动pop out
+  - 管理者：合并、标记tag。
+    - tag有分类，比如：地理位置、目标院校、标化考试
+    - 特殊标签：院校标签可以跟院校库绑定；活动贴都需要入口
+- 功能
+  - doPostTags 增删post的标签
+    - 输入：postid, tagname, remove
+    - 输出：added, removed, unmatched, primary
+  - doUserTags 增删user的标签
+    - 输入：postid, tagname, remove
+    - 输出：added, removed, unmatched, primary
+  - manageTagsInfo 管理标签的分类
+    - 输入：tagname, setcategory, setprimary
 
 ## Protocol
 
@@ -256,7 +276,7 @@ wx.cloud.callFunction({
   data:{
     heart:true,
     undo:true,
-    postid:, 
+    postid:,
     userid:
   }
 }).then(
@@ -275,6 +295,14 @@ wx.cloud.callFunction({
     userid: '当前用户'
   }
 }).then(resp=>{console.log(resp.result.data)})//返回的是reply的array
+
+//新增或删除某个post的标签
+var promise = wx.cloud.callFunction({name:'doPostTag',data:{postid:'test',tagname:'测试',remove:true}})
+promise.then(resp=>console.log(resp.result))//result = {removed: true, added: undefined, unmatched: undefined}
+
+//新增或删除某个user的标签
+var promise = wx.cloud.callFunction({name:'doUserTag',data:{postid:'test',tagname:'测试',remove:true}})
+promise.then(resp=>console.log(resp.result))//result = {removed: true, added: undefined, unmatched: undefined}
 ```
 
 ## Doubt & Know
