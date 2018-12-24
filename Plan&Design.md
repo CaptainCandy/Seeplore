@@ -83,6 +83,16 @@
   - manageTagsInfo 管理标签的分类
     - 输入：tagname, setcategory, setprimary
 
+### Activity control
+
+- 设计
+  - 报名界面有多个入口？好像只有查看活动贴详情才有。
+  - post增加一个可选字段：“活动报名链接？”
+  - 如何避免重复报名：显示是否报名字段。如何查询已报名活动。根据userid唯一匹配报名。
+  - 活动报名表字段
+    - 管理员设置：数组（每个对象包括字段名和字段验证方式）
+    - 报名时：数组（每个元素包括字段名和内容）
+
 ## Protocol
 
 ### Data Format
