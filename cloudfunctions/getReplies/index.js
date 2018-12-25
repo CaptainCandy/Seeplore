@@ -61,14 +61,22 @@ exports.main = async (event, context) => {
   var respActionQ = await cloud.callFunction({
     name: 'getActions',
     data: {
-      post: true,
+      reply: true,
       tidlist: rawlist.map(item => item._id),
       heart: true,
       userid: userid
     }
   })
   var useractions = respActionQ.result.actions;
-  var heartedlist = useractions.map(function (ele) { return ele.targetid; })
+  var heartedlist = useractions.map(function (ele) { return ele.targetid; });
+  var collectedlist = (await cloud.callFunction({
+    name:'getActions',data:{
+      reply: true,
+      tidlist: rawlist.map(item => item._id),
+      collect: true,
+      userid: userid
+    }
+  })).result.actions.map(function (ele) { return ele.targetid; });
 
   //function
   var extract_reply = elem => {
@@ -79,6 +87,7 @@ exports.main = async (event, context) => {
       heartCount: elem.heartCount,
       isHearted: heartedlist.some(ele => ele.targetid == item._id),
       isMine: elem.authorid == userid,
+      isCollected: collectedlist.some(ele => ele.targetid == item._id),
       createTime: elem.createTime,
       postid: elem.postid,
       comments:[]
@@ -98,17 +107,25 @@ exports.main = async (event, context) => {
 
   var replylist = rawlist.filter(elem => !elem.parentid).map(extract_reply);
   var commentlist = rawlist.filter(elem => elem.parentid).map(extract_comment);
-  console.log(replylist);
-  console.log(commentlist);
+  //console.log(replylist);
+  //console.log(commentlist);
 
   // Put the comments inside the replies.
   var dict_replycomments = Object();
+  var dict_commentparent = Object();
   replylist.forEach(elem => {
     dict_replycomments[elem._id] = elem.comments;
   });
   commentlist.forEach(elem => {
-    dict_replycomments[elem.parentid].push(elem);
-  })
+    dict_commentparent[elem._id] = elem.parentid;
+  });
+  commentlist.forEach(elem => {
+    let parent = elem.parentid;
+    while(!(parent in dict_replycomments)){
+      parent = dict_commentparent[parent];//if parentid is the same as _id, while-loop will not stop.
+    }
+    dict_replycomments[parent].push(elem);
+  });
 
   return {
     data: replylist
