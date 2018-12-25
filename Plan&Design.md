@@ -267,7 +267,7 @@ wx.cloud.database().collection('replies').doc('reply-id').update({
 )
 
 //新增reply
-wx.cloud.database().collection('replies').add({
+wx.cloud.database().collection('replies').add({data:{
   authorid: userid,
   postid:,
   text:,//content
@@ -275,7 +275,7 @@ wx.cloud.database().collection('replies').add({
   parentid:,//若是comment，填入回复对象的reply id；否则，null。
   createTime:new Date(),
   status:1 // 0 隐藏
-}).then(
+}}).then(
   function(resp){
     resp.result._id; //新增回复或回帖的reply ID
   },

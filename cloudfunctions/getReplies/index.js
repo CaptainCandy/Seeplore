@@ -13,6 +13,8 @@ exports.main = async (event, context) => {
   let userid = (!event.userid) ? wxContext.OPENID : event.userid;
   //let [replyid, ridlist] = [replyid, ridlist];
 
+  console.log(event);
+
   var replies = db.collection('replies');
   var query = null;
   var rawlist = null;
@@ -43,7 +45,7 @@ exports.main = async (event, context) => {
   rawlist = (await query.get()).data;
 
   console.log('raw reply list get');
-  console.log(rawlist);
+  //console.log(rawlist);
 
   var aidlist = rawlist.map(elem=>elem.authorid);
   var authorlist = (await cloud.callFunction({
@@ -78,6 +80,9 @@ exports.main = async (event, context) => {
     }
   })).result.actions.map(function (ele) { return ele.targetid; });
 
+  console.log('heartedlist');
+  console.log(heartedlist);
+
   //function
   var extract_reply = elem => {
     return {
@@ -85,9 +90,9 @@ exports.main = async (event, context) => {
       replier: userinfodict[elem.authorid],//回帖者的userinfo
       content: elem.text,
       heartCount: elem.heartCount,
-      isHearted: heartedlist.some(ele => ele.targetid == item._id),
+      isHearted: heartedlist.some(item => item == elem._id),
       isMine: elem.authorid == userid,
-      isCollected: collectedlist.some(ele => ele.targetid == item._id),
+      isCollected: collectedlist.some(item => item == elem._id),
       createTime: elem.createTime,
       postid: elem.postid,
       status: elem.status,
@@ -125,6 +130,9 @@ exports.main = async (event, context) => {
   commentlist.forEach(elem => {
     let parent = elem.parentid;
     while(!(parent in dict_replycomments)){
+      if(!parent){
+        throw new Error('||the parent of this comment is undefined.||')
+      }
       parent = dict_commentparent[parent];//if parentid is the same as _id, while-loop will not stop.
     }
     dict_replycomments[parent].push(elem);
