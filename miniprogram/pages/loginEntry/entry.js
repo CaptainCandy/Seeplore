@@ -33,65 +33,38 @@ Page({
     })
   },
 
-  onTap: function(event){
-    console.log(event)
-    wx.cloud.callFunction({
-      name:'updateUserInfo',
-      data:{
-        userid: null,
-        updates: {
-          email: 'sos@fuckme.com'
-        }
-      }
-    }).then(retval=>{
-      console.log(retval)
-      console.log('We make it!!!!!!!')
-    }).catch(retval=>{
-      console.log('someting wrong.')
-      console.log(retval)
-    })
-  },
-
-  onTest:function(e){
-    console.log('onTest');
-    wx.cloud.callFunction({
-      name: 'test',
-      data: {
-        myUserInfo: e.detail.userInfo,
-        whereFrom: 'client'
-      }
-    }).then(retval => console.log(retval.result))
-  },
-
-  onHelpMe:function(e){
-    console.log('onTap');
-    wx.cloud.callFunction({
-      name: 'updateUserInfo',
-      data: {
-        myUserInfo: e.detail.userInfo
-      }
-    }).then(retval => console.log(retval.result))
-  },
-
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    /*wx.showModal({
-      title: '提示',
-      content: '你还未登录，登录后可获得完整体验 ',
-      confirmText: '一键登录',
-      success(res) {
-        // 点击一键登录，去授权页面
-        if (res.confirm) {
-          wx.navigateTo({
-            url: 'entry',
+    //是否有获取信息的权限。;;
+    wx.getSetting({
+      success(resp) {
+        if (resp.authSetting["scope.userInfo"]){
+          wx.getUserInfo({
+            success(resp){
+              wx.cloud.callFunction({
+                name: 'login',
+                data: {
+                  myUserInfo: resp.userInfo
+                }
+              }).then(retval => {
+                console.log(retval);
+                app.globalData.openid = retval.result.openid;
+                app.globalData.userid = retval.result.userid;
+                wx.switchTab({
+                  url: '../index/index',
+                })
+              },
+                error => {
+                  console.log(error);
+                  throw error;
+                });
+            }
           })
         }
-      },
-      fail: res => {
       }
-    })*/
+    })
   },
 
   /**
