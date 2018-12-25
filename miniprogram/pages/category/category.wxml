@@ -1,3 +1,4 @@
 <!--miniprogram/pages/category/category.wxml-->
-<text>miniprogram/pages/category/category.wxml</text>
+<text>别瞅了，还没写完呢。</text>
+
 <tabbar tabbar="{{tabbar}}"></tabbar>
