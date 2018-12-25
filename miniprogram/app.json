@@ -1,17 +1,16 @@
 {
   "pages": [
     "pages/loginEntry/entry",
-        
+    "pages/reply/comment",
+    "pages/reply/reply",
     "pages/index/viewPost",
     "pages/index/index",
     "pages/userConsole/userConsole",
     "pages/storageConsole/storageConsole",
     "pages/submitForm/submitForm",
     "pages/mine/mine",
-
     "pages/collegeLib/collegeLib",
     "pages/category/category",
-    "pages/reply/reply",
     "pages/reply/viewReply"
   ],
   "window": {
@@ -20,7 +19,8 @@
     "navigationBarBackgroundColor": "#ffc0cb",
     "navigationBarTitleText": "Seeplore",
     "navigationBarTextStyle": "black",
-    "onReachBottomDistance": 0
+    "onReachBottomDistance": 0,
+    "enablePullDownRefresh": true
   },
   "tabBar": {
     "color": "#999999",
