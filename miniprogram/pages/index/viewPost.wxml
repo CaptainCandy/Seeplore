@@ -84,7 +84,7 @@
             <image class='report' src='../../icon/report.png'></image>
           </view>
         </view>
-        <view wx:if='{{item.comments.length == 0}}'>
+        <view wx:if='{{!item.isCommentOnShow}}'>
         </view>
         <view wx:else class='comment-zone'>
           <view wx:for="{{item.comments}}" wx:if="{{comment.status === 1}}" wx:for-item="comment" wx:for-index="cindex" wx:key="cindex" data-cindex='{{cindex}}' class='comment'>

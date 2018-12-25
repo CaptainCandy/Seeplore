@@ -13,6 +13,7 @@ Page({
     _id: "", //指的是回复的对象的_id，可能是回帖也可能是回复，下面代码中要注意区分
     curReplyContent: "",
     curReplyAuthor: "",
+    author_logic: "" //用来判断局部更新上一层的页面需不需要显示作者
   },
 
   /**
@@ -24,12 +25,14 @@ Page({
     let _id = unescape(options._id)
     let content = unescape(options.curReplyContent)
     let author = unescape(options.curReplyAuthor)
-    if (options.parentid === 'undefined') author = ""
+    let author_logic = author
+    if (options.parentid === 'undefined') author_logic = ""
     this.setData({
       curPostId: postid,
       _id: _id,
       curReplyContent: content,
       curReplyAuthor: author,
+      author_logic: author_logic
     })
   },
 
@@ -123,7 +126,6 @@ Page({
             break;
           }
         }
-
         replyList[index].comments.push({
           _id: resp._id, //当前回复的_id
           replier: {
@@ -134,9 +136,9 @@ Page({
           createTime: '刚刚',
           parentid: _id, //回复的对象的_id
           postid: that.data.curPostId,
-          parentNickname: that.data.curReplyAuthor,
+          parentNickname: that.data.author_logic,
           status: 1,
-          isMine: true
+          isMine: true,
         })
         console.log(replyList)
         prePage.setData({

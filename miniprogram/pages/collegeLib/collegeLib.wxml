@@ -1,3 +1,4 @@
 <!--pages/collegeLib/collegeLib.wxml-->
-<text>pages/collegeLib/collegeLib.wxml</text>
+<text>哎呀都说了叫你别看了。。</text>
+
 <tabbar tabbar="{{tabbar}}"></tabbar>

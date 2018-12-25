@@ -89,7 +89,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    
+
   },
 
   /**
@@ -156,6 +156,14 @@ Page({
             createTime = strTime;
           }
           reply.createTime = createTime;
+          //增加用于判断当前回帖是否有未隐藏回复的字段
+          let isCommentOnShow = false
+          for (var i = 0; i < reply.comments.length - 1; i++) {
+            if (reply.comments[i].status === 1) {
+              isCommentOnShow = true
+              }
+          }
+          reply.isCommentOnShow = isCommentOnShow
           reply.comments = reply.comments.reverse()
           reply.comments.map(comment => {
             //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
