@@ -1,0 +1,16 @@
+<!--miniprogram/pages/reply/comment.wxml-->
+<view class='container'>
+  <view class='reply-info'>
+    <text>在 </text>
+    <text style='color: rgb(39, 96, 202)'>{{curReplyAuthor}} </text>
+    <text>说的 </text>
+    <text style='color: rgb(39, 96, 202)'>{{curReplyContent}} </text>
+    <text>下面回复：</text>
+  </view>
+  <view>
+    <textarea class='textarea' bindinput='onCommentInput' placeholder='回复：' placeholder-style='color: rgb(182, 182, 182)'></textarea>
+  </view>
+  <view class='finish-button' bindtap='onComment'>
+    <text>回复</text>
+  </view>
+</view>
