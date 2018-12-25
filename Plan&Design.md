@@ -247,7 +247,7 @@ wx.cloud.database().collection('posts').doc('post-id').update({
   data:{status:0}
 }).then(
   function(resp){
-    console.log(resp.result.stats.updated == 1); //说明删除成功
+    console.log(resp.stats.updated === 1); //说明删除成功
   },
   function(err){
     //错误处理。
@@ -259,7 +259,7 @@ wx.cloud.database().collection('replies').doc('reply-id').update({
   data:{status:0}
 }).then(
   function(resp){
-    console.log(resp.result.stats.updated == 1); //说明删除成功
+    console.log(resp.stats.updated === 1); //说明删除成功
   },
   function(err){
     //错误处理。
