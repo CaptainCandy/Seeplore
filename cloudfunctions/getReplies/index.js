@@ -90,6 +90,7 @@ exports.main = async (event, context) => {
       isCollected: collectedlist.some(ele => ele.targetid == item._id),
       createTime: elem.createTime,
       postid: elem.postid,
+      status: elem.status,
       comments:[]
     }
   }
@@ -98,9 +99,11 @@ exports.main = async (event, context) => {
     return {
       _id: elem._id,
       replier: userinfodict[elem.authorid],//回帖者的userinfo
+      isMine: elem.authorid == userid,
       content: elem.text,
       createTime: elem.createTime,
       parentid: elem.parentid,
+      status: elem.status,
       postid: elem.postid
     }
   }

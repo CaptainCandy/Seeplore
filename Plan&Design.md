@@ -117,7 +117,7 @@
     authorID: String, //_id in 'user' collection
     createTime: Date,
     heartCount: Number,
-    status: Number// 0 草稿 1 发布 -1 隐藏
+    status: Number// -1 草稿 1 发布 0 隐藏
   }
 
   {//保存事件 action
@@ -232,7 +232,7 @@ wx.cloud.database().collection('posts').add({
     authorID: app.globalData.userid, //_id in 'user' collection
     createTime: new Date(),
     heartCount: 0,
-    status: 1 // 0 草稿 1 发布 -1 隐藏
+    status: 1 // -1 草稿 1 发布 0 隐藏
   }
 }).then(function(resp){
   console.log(resp.result);//TODO 此时应当跳转发帖结束页面。
@@ -243,9 +243,11 @@ wx.cloud.database().collection('posts').add({
 
 ```js
 //删除Post
-wx.cloud.database().collection('posts').doc('post-id').remove().then(
+wx.cloud.database().collection('posts').doc('post-id').update({
+  data:{status:0}
+}).then(
   function(resp){
-    resp.result.stats.removed == 1; //说明删除成功，否则 removed == 0.
+    console.log(resp.result.stats.updated == 1); //说明删除成功
   },
   function(err){
     //错误处理。
@@ -253,9 +255,11 @@ wx.cloud.database().collection('posts').doc('post-id').remove().then(
 )
 
 //删除reply
-wx.cloud.database().collection('replies').doc('reply-id').remove().then(
+wx.cloud.database().collection('replies').doc('reply-id').update({
+  data:{status:0}
+}).then(
   function(resp){
-    resp.result.stats.removed == 1; //说明删除成功，否则 removed == 0.
+    console.log(resp.result.stats.updated == 1); //说明删除成功
   },
   function(err){
     //错误处理。
@@ -270,7 +274,7 @@ wx.cloud.database().collection('replies').add({
   heartCount:0,
   parentid:,//若是comment，填入回复对象的reply id；否则，null。
   createTime:new Date(),
-  status:1
+  status:1 // 0 隐藏
 }).then(
   function(resp){
     resp.result._id; //新增回复或回帖的reply ID
