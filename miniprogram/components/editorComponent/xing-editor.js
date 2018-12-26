@@ -55,7 +55,7 @@ Component({
         text: '',
       }]
     },
-    anstract: '',
+    anstract: '[有人没在第一个文本框写东西，不过点开说不定有东西呢~]',
     nodeList: [],
     titleBuffer: '',
     textBufferPool: [],
@@ -212,26 +212,39 @@ Component({
     setAbstract: function (e){
       var i = 0;
       const nodeList = this.data.nodeList
-      while (nodeList[i].name === 'p'){
-        this.setData({
-          abstract: nodeList[i].children[0].text.slice(0,50),
-        });
-        return;
+      for (i; i < nodeList.length; i++) {
+        if (nodeList[i].name === 'p') {
+          if (nodeList[i].children[0].text !== "") {
+            this.setData({
+              abstract: nodeList[i].children[0].text.slice(0, 50),
+            });
+            return;
+          }
+        }
+        else {
+          this.setData({
+            abstract: "[图片]",
+          })
+        }
       }
-      this.setData({
-        abstract: "[图片]",
-      })
     },
 
     /**
      * 事件：提交内容
      */
     onFinish: function (e) {
+      if (this.data.titleBuffer === ""){
+        wx.showModal({
+          title: '错误信息',
+          content: '标题不能为空哦！',
+        })
+        return;
+      }
       wx.showLoading({
         title: '正在保存',
       })
       try {
-        this.writeTextToNode({fromMethod: "onFinish"});
+        this.writeTextToNode({ fromMethod: "onFinish" });
       }
       catch (err) {
         console.log(err)
@@ -242,6 +255,7 @@ Component({
         })
       }
       this.setAbstract();
+      console.log('abs没问题')
       this.handleOutput();
     },
 
