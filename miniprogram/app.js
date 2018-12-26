@@ -38,7 +38,7 @@ App({
             "pagePath": "/pages/post/post",
             "iconPath": "icon/post_icon.png",
             "isSpecial": true,
-            "text": "发布"
+            "text": "发帖"
           },
           {
             "pagePath": "/pages/collegeLib/collegeLib",
