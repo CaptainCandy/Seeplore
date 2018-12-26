@@ -158,7 +158,7 @@ Page({
           reply.createTime = createTime;
           //增加用于判断当前回帖是否有未隐藏回复的字段
           let isCommentOnShow = false
-          for (var i = 0; i < reply.comments.length - 1; i++) {
+          for (var i = 0; i < reply.comments.length; i++) {
             if (reply.comments[i].status === 1) {
               isCommentOnShow = true
               }
@@ -201,7 +201,6 @@ Page({
         loading: false
       })
       if (that.data.replyList.length == 0) that.setData({ loaded: true })
-      console.log(that.data.loaded)
       wx.hideLoading()
     })
     //this.fetchReply();
@@ -217,7 +216,7 @@ Page({
     }
     return {
       title: this.data.currentPost.title,
-      path: '/pages/index/viewPost?curPostId=' + this.data.currentPost.postid,
+      path: '/pages/index/index?curPostId=' + this.data.currentPost.postid + '&isPostShare=' + true,
       success: function (res) {
         // 转发成功
         console.log("转发成功:" + JSON.stringify(res));

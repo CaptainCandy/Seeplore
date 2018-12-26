@@ -226,4 +226,5 @@ page{
   margin: 20rpx auto;
   font-size: 14px;
   text-align: center;
+  color: rgb(182, 182, 182);
 }

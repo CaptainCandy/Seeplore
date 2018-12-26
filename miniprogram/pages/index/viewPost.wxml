@@ -49,7 +49,7 @@
 
   <view wx:if="{{isPullUp}}" class='reply-zone'>
     <text class='zone-title' style=''>评论区</text>
-    <view wx:for="{{replyList}}" wx:if="{{item.status === 1}}" wx:for-index="rindex" wx:key="rindex" data-rindex='{{rindex}}' class='content'>
+    <view wx:for="{{replyList}}" wx:if="{{item.status === 1}}" wx:for-index="rindex" wx:key="index" data-rindex='{{rindex}}' class='content'>
       <view class='portrait-box'>
         <image class='portrait' mode="widthFix" src='{{item.replier.avatarUrl}}'></image>
       </view>
@@ -87,7 +87,7 @@
         <view wx:if='{{!item.isCommentOnShow}}'>
         </view>
         <view wx:else class='comment-zone'>
-          <view wx:for="{{item.comments}}" wx:if="{{comment.status === 1}}" wx:for-item="comment" wx:for-index="cindex" wx:key="cindex" data-cindex='{{cindex}}' class='comment'>
+          <view wx:for="{{item.comments}}" wx:if="{{comment.status === 1}}" wx:for-item="comment" wx:for-index="cindex" wx:key="index" data-cindex='{{cindex}}' class='comment'>
             <text style='color: rgb(39, 96, 202)'>{{comment.replier.nickName}} </text>
             <text wx:if="{{comment.parentNickname}}">回复 </text>
             <text style='color: rgb(39, 96, 202)'>{{comment.parentNickname}}: </text>

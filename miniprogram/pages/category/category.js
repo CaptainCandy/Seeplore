@@ -7,7 +7,59 @@ Page({
    * 页面的初始数据
    */
   data: {
-    tabbar:{}
+    tabbar:{},
+    tagList: [
+      {
+        category: '国家',
+        tags: [
+          {
+            name: "美国",
+            url: '../../images/usa.png'
+          },
+          {
+            name: "英国",
+            url: '../../images/uk.png'
+          },
+          {
+            name: "澳大利亚",
+            url: '../../images/aus.png'
+          },
+          {
+            name: "香港",
+            url: '../../images/hk.png'
+          },
+          {
+            name: "加拿大",
+            url: '../../images/ca.png'
+          },
+          {
+            name: "新加坡",
+            url: '../../images/sg.png'
+          }]
+      },
+      {
+        category: '考试',
+        tags: [
+          {
+            name: "托福",
+            url: '../../images/toefl.png'
+          },
+          {
+            name: "雅思",
+            url: '../../images/ielts.png'
+          },
+        ]
+      },
+      {
+        category: '求职',
+        tags: [
+          {
+            name: "任天堂",
+            url: '../../images/pikachu.jpg'
+          },
+        ]
+      },
+    ]
   },
 
   /**
@@ -64,5 +116,9 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  test: function(e) {
+    console.log(e.currentTarget)
   }
 })
