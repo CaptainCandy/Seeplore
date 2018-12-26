@@ -43,6 +43,7 @@ Page({
         if (resp.authSetting["scope.userInfo"]){
           wx.getUserInfo({
             success(resp){
+              app.globalData.userInfo = resp.userInfo;
               wx.cloud.callFunction({
                 name: 'login',
                 data: {
