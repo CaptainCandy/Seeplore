@@ -118,8 +118,8 @@ exports.main = async (event, context) => {
       title: item.title,
       content: item.content,
       heartCount: item.heartCount,
-      isHearted: heartedpostlist.some(ele=>ele.targetid==item._id),
-      isCollected: collectedpostlist.some(ele => ele.targetid == item._id),
+      isHearted: heartedpostlist.some(ele=>ele==item._id),
+      isCollected: collectedpostlist.some(ele => ele == item._id),
       tags: item.tags,
       createTime: item.createTime,
       author:authorinfo

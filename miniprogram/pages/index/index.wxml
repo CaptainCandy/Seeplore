@@ -17,7 +17,7 @@
           <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
             <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
           </navigator>
-          <navigator class="postPre_head" open-type='navigate' hover-class='none'>
+          <navigator class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}' hover-class='none'>
             <view class="postPre_title"><text>{{item.title}}</text></view>
             <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
             <view class="postPre_date"><text>{{item.createTime}}</text></view>

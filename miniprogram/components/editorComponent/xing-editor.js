@@ -55,7 +55,7 @@ Component({
         text: '',
       }]
     },
-    anstract: '',
+    anstract: '[有人没在第一个文本框写东西，不过点开说不定有东西呢~]',
     nodeList: [],
     titleBuffer: '',
     textBufferPool: [],
@@ -102,7 +102,7 @@ Component({
      * 事件：添加文本
      */
     addText: function (e) {
-      this.writeTextToNode();
+      this.writeTextToNode({ fromMethod: "addText" });
       let index = this.data.currentIndex;
       const node = {
         name: 'p',
@@ -131,7 +131,7 @@ Component({
      * 事件：添加图片
      */
     addImage: function (e) {
-      this.writeTextToNode();
+      this.writeTextToNode({ fromMethod: "addImage" });
       let index = this.data.currentIndex;
       wx.chooseImage({
         success: resp => {
@@ -169,7 +169,7 @@ Component({
      * 事件：删除节点
      */
     deleteNode: function (e) {
-      this.writeTextToNode();
+      this.writeTextToNode({ fromMethod: "deleteNode" });
       const index = e.currentTarget.dataset.index;
       let curIndex = this.data.currentIndex;
       let nodeList = this.data.nodeList;
@@ -212,26 +212,50 @@ Component({
     setAbstract: function (e){
       var i = 0;
       const nodeList = this.data.nodeList
-      while (nodeList[i].name === 'p'){
-        this.setData({
-          abstract: nodeList[i].children[0].text.slice(0,20),
-        });
-        return;
+      for (i; i < nodeList.length; i++) {
+        if (nodeList[i].name === 'p') {
+          if (nodeList[i].children[0].text !== "") {
+            this.setData({
+              abstract: nodeList[i].children[0].text.slice(0, 50),
+            });
+            return;
+          }
+        }
+        else {
+          this.setData({
+            abstract: "[图片]",
+          })
+        }
       }
-      this.setData({
-        abstract: "[图片]",
-      })
     },
 
     /**
      * 事件：提交内容
      */
     onFinish: function (e) {
+      if (this.data.titleBuffer === ""){
+        wx.showModal({
+          title: '错误信息',
+          content: '标题不能为空哦！',
+        })
+        return;
+      }
       wx.showLoading({
         title: '正在保存',
       })
-      this.writeTextToNode();
+      try {
+        this.writeTextToNode({ fromMethod: "onFinish" });
+      }
+      catch (err) {
+        console.log(err)
+        wx.hideLoading()
+        wx.showModal({
+          title: '错误信息',
+          content: '请添加至少一个文字或图片框才可发帖！',
+        })
+      }
       this.setAbstract();
+      console.log('abs没问题')
       this.handleOutput();
     },
 
@@ -275,6 +299,7 @@ Component({
       const textBufferPool = this.data.textBufferPool;
       const titleNode = this.data.titleNode
       const nodeList = this.data.nodeList;
+      if (e.fromMethod === 'onFinish' && nodeList.length === 0) throw "emptyPostError"
       titleNode.children[0].text = titleBuffer;
       nodeList.forEach((node, index) => {
         if (node.name === 'p') {
@@ -389,11 +414,11 @@ Component({
       if (index >= nodeList.length) {
         wx.hideLoading();
         console.log(nodeList);
-        this.triggerEvent('create',{
+        this.triggerEvent('create', {
           abstract: this.data.abstract,
-          content: nodeList.map(n=>{
-            if(n.name === 'img')return {img:true,fileid:n.attrs.src};
-            else return {img:false,text:n.children[0].text};
+          content: nodeList.map(n => {
+            if (n.name === 'img') return { img: true, fileid: n.attrs.src };
+            else return { img: false, text: n.children[0].text };
           }),
           title: this.data.titleBuffer
         });

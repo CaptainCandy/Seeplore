@@ -13,6 +13,8 @@ exports.main = async (event, context) => {
   let userid = (!event.userid) ? wxContext.OPENID : event.userid;
   //let [replyid, ridlist] = [replyid, ridlist];
 
+  console.log(event);
+
   var replies = db.collection('replies');
   var query = null;
   var rawlist = null;
@@ -43,7 +45,7 @@ exports.main = async (event, context) => {
   rawlist = (await query.get()).data;
 
   console.log('raw reply list get');
-  console.log(rawlist);
+  //console.log(rawlist);
 
   var aidlist = rawlist.map(elem=>elem.authorid);
   var authorlist = (await cloud.callFunction({
@@ -61,14 +63,25 @@ exports.main = async (event, context) => {
   var respActionQ = await cloud.callFunction({
     name: 'getActions',
     data: {
-      post: true,
+      reply: true,
       tidlist: rawlist.map(item => item._id),
       heart: true,
       userid: userid
     }
   })
   var useractions = respActionQ.result.actions;
-  var heartedlist = useractions.map(function (ele) { return ele.targetid; })
+  var heartedlist = useractions.map(function (ele) { return ele.targetid; });
+  var collectedlist = (await cloud.callFunction({
+    name:'getActions',data:{
+      reply: true,
+      tidlist: rawlist.map(item => item._id),
+      collect: true,
+      userid: userid
+    }
+  })).result.actions.map(function (ele) { return ele.targetid; });
+
+  console.log('heartedlist');
+  console.log(heartedlist);
 
   //function
   var extract_reply = elem => {
@@ -77,10 +90,12 @@ exports.main = async (event, context) => {
       replier: userinfodict[elem.authorid],//回帖者的userinfo
       content: elem.text,
       heartCount: elem.heartCount,
-      isHearted: heartedlist.some(ele => ele.targetid == item._id),
+      isHearted: heartedlist.some(item => item == elem._id),
       isMine: elem.authorid == userid,
+      isCollected: collectedlist.some(item => item == elem._id),
       createTime: elem.createTime,
       postid: elem.postid,
+      status: elem.status,
       comments:[]
     }
   }
@@ -89,26 +104,39 @@ exports.main = async (event, context) => {
     return {
       _id: elem._id,
       replier: userinfodict[elem.authorid],//回帖者的userinfo
+      isMine: elem.authorid == userid,
       content: elem.text,
       createTime: elem.createTime,
       parentid: elem.parentid,
+      status: elem.status,
       postid: elem.postid
     }
   }
 
   var replylist = rawlist.filter(elem => !elem.parentid).map(extract_reply);
   var commentlist = rawlist.filter(elem => elem.parentid).map(extract_comment);
-  console.log(replylist);
-  console.log(commentlist);
+  //console.log(replylist);
+  //console.log(commentlist);
 
   // Put the comments inside the replies.
   var dict_replycomments = Object();
+  var dict_commentparent = Object();
   replylist.forEach(elem => {
     dict_replycomments[elem._id] = elem.comments;
   });
   commentlist.forEach(elem => {
-    dict_replycomments[elem.parentid].push(elem);
-  })
+    dict_commentparent[elem._id] = elem.parentid;
+  });
+  commentlist.forEach(elem => {
+    let parent = elem.parentid;
+    while(!(parent in dict_replycomments)){
+      if(!parent){
+        throw new Error('||the parent of this comment is undefined.||')
+      }
+      parent = dict_commentparent[parent];//if parentid is the same as _id, while-loop will not stop.
+    }
+    dict_replycomments[parent].push(elem);
+  });
 
   return {
     data: replylist

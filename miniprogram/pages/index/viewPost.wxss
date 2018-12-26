@@ -59,7 +59,7 @@ page{
   width: 100%;
 }
 .bottom-tools{
-  border-top: solid .5px rgb(182, 182, 182);
+  border-top: solid .5px rgb(244, 244, 244);
   width: 100vw;
   position: fixed;
   bottom: 0;
@@ -128,7 +128,7 @@ page{
 .reply-zone .content{
   display: flex;
   width: 100vw;
-  padding: 2vh 2vh 2vh 2vh;
+  padding: 2vh 2vh 0 2vh;
   border-top: solid 1rpx rgb(244, 244, 244);
 }
 .reply-zone .content .portrait-box{
@@ -190,7 +190,7 @@ page{
 }
 .reply-zone .content .main .comment-zone{
   width: 100%;
-  padding: .5vh 0 0 0;
+  padding: .5vh 0 2vh 0;
   border-top: solid 1rpx rgb(244, 244, 244);
 }
 .reply-zone .content .main .comment-zone .comment{
@@ -226,4 +226,5 @@ page{
   margin: 20rpx auto;
   font-size: 14px;
   text-align: center;
+  color: rgb(182, 182, 182);
 }

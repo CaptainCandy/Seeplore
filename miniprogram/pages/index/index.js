@@ -14,7 +14,7 @@ Page({
     prePostListHot: [],
   },
 
-  onLoad: function() {
+  onLoad: function(options) {
     if (!wx.cloud) {
       wx.redirectTo({
         url: '../chooseLib/chooseLib',
@@ -34,6 +34,13 @@ Page({
 
     // 加载最新帖子列表
     //this.fetchPostListNew()
+
+    //判断是否是分享链接
+    if (options.isPostShare === 'true') {
+      wx.navigateTo({
+        url: 'viewPost?curPostId=' + options.curPostId,
+      })
+    }
   },
 
   /**

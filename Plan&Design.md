@@ -4,19 +4,14 @@
 
 ### post control
 
-- [ ] `Cloud Function` create post
+- [x] `Cloud Function` create post
   - 将编辑器保存的数据，转换格式，提交到数据库。
-- [ ] `CF` get single post in detail by post id
-  - [ ] retrive metadata from cloud db
-  - [ ] get replies and comment
-  - [ ] update popularity
-  - [ ] check 是否点过赞
-    - 客户端存储临时数据：该用户是否曾经在当前post进行过 like，collect 等操作。
-- [ ] `CF` touch single post: including like, collect, follow
+- [x] `CF` get single post in detail by post id
+  - [x] check 是否点过赞
+- [x] `CF` touch single post: including like, collect, follow
   - 参数传递
     - 操作名称： like,follow,collect
     - 操作状态： 新增，撤销
-  - [ ] 在该post的对应字段的数组添加用户的post id
 - `comparison` 点赞单独存储/作为用户与帖子的数字型字段
   - 单独存储
     - 查看某用户的点赞记录：拉取与当前_openid相匹配的“点赞”记录（post id）；调用getPostList(id列表) operation array => arr.map(ret postid) ~~// 使用field指定所返回的字段~~ => post array
@@ -34,11 +29,11 @@
 - [x] `discuss` post JSON数据格式
   - 依赖于编辑器产生的数据格式 @CaptainCandy
   - 依赖于前端渲染template可以使用的内容格式
-- [ ] post 是否保存作者头像fileID? 如果每次查看帖子都需要根据openid从数据库查找昵称头像，返回列表后会比较复杂。
+- [x] post 是否保存作者头像fileID? 如果每次查看帖子都需要根据openid从数据库查找昵称头像，返回列表后会比较复杂。
   - 保存时从user collection读取昵称、头像、_id。*读取方式与头像的保存方式解耦*
   - 但若仅在发帖时保存昵称、头像至post集合，它们将无法自动随用户更改头像而变化。
-- [ ] 展示帖子列表时：传给bindtap回调的event参数需要包含 post-id
-- [ ] `issue` post content: 图片保存
+- [x] 展示帖子列表时：传给bindtap回调的event参数需要包含 post-id
+- [x] `issue` post content: 图片保存
   - 现有editor是将图片上传到服务器，返回URL
   - wx.cloud.uploadFile则是返回fileID
   - rich-text组件应当可以处理fileID [文档：组件支持](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-client-api/component/index.html) 退而求其次，也可以使用image组件
@@ -62,20 +57,41 @@
     - 默认参数userInfo只含openid；自定义参数myUserInfo包含详细信息
   - [x] login云函数根据openid判断是否新用户，选择调用create/update
     - create可以直接写进login; 而update函数在用户手动更新个人信息时也会被调用
-  - [ ] 保存到globalData: openid, userid, wxUserInfo
+  - [x] 保存到globalData: openid, userid, wxUserInfo
 
-```html
-<button open-type="getUserInfo" lang="zh_CN" bindgetuserinfo="onGotUserInfo">
-获取用户信息</button>
-<button open-type="openSetting">打开授权设置页</button>
-```
+### tag control
 
-```js
-onGotUserInfo(e) {
-  console.log(e.detail.errMsg); console.log(e.detail.userInfo);
-  console.log(e.detail.rawData)
-}
-```
+- 数据结构
+  - tag: name, category; id, name
+    - 如何处理同义跳转? 比如，UCB和伯克利是同义词，id应该只有一个...不处理了吧，哪有那么多运管... 键入标签时，
+    - post-tags: 每个帖子可以有多个标签，标签只能由发布者和管理员添加//标签可以由所有人维护
+    - user-tags: 每位用户各自关注的标签。
+- 用例图
+  - 浏览者：搜索特定tag的帖子。发现所关心的标签的帖子（最新）
+  - 创作者：发帖时选择tag。
+    - 选择tag时根据当前输入，自动pop out
+  - 管理者：合并、标记tag。
+    - tag有分类，比如：地理位置、目标院校、标化考试
+    - 特殊标签：院校标签可以跟院校库绑定；活动贴都需要入口
+- 功能
+  - doPostTags 增删post的标签
+    - 输入：postid, tagname, remove
+    - 输出：added, removed, unmatched, primary
+  - doUserTags 增删user的标签
+    - 输入：postid, tagname, remove
+    - 输出：added, removed, unmatched, primary
+  - manageTagsInfo 管理标签的分类
+    - 输入：tagname, setcategory, setprimary
+
+### Activity control
+
+- 设计
+  - 报名界面有多个入口？好像只有查看活动贴详情才有。
+  - post增加一个可选字段：“活动报名链接？”
+  - 如何避免重复报名：显示是否报名字段。如何查询已报名活动。根据userid唯一匹配报名。
+  - 活动报名表字段
+    - 管理员设置：数组（每个对象包括字段名和字段验证方式）
+    - 报名时：数组（每个元素包括字段名和内容）
 
 ## Protocol
 
@@ -101,7 +117,7 @@ onGotUserInfo(e) {
     authorID: String, //_id in 'user' collection
     createTime: Date,
     heartCount: Number,
-    status: Number// 0 草稿 1 发布 -1 隐藏
+    status: Number// -1 草稿 1 发布 0 隐藏
   }
 
   {//保存事件 action
@@ -207,7 +223,6 @@ onGotUserInfo(e) {
 ### 前端操作数据库
 
 ```js
-///前端连接数据库。
 wx.cloud.database().collection('posts').add({
   data:{
     title: e.detail.title,
@@ -217,7 +232,7 @@ wx.cloud.database().collection('posts').add({
     authorID: app.globalData.userid, //_id in 'user' collection
     createTime: new Date(),
     heartCount: 0,
-    status: 1 // 0 草稿 1 发布 -1 隐藏
+    status: 1 // -1 草稿 1 发布 0 隐藏
   }
 }).then(function(resp){
   console.log(resp.result);//TODO 此时应当跳转发帖结束页面。
@@ -228,9 +243,11 @@ wx.cloud.database().collection('posts').add({
 
 ```js
 //删除Post
-wx.cloud.database().collection('posts').doc('post-id').remove().then(
+wx.cloud.database().collection('posts').doc('post-id').update({
+  data:{status:0}
+}).then(
   function(resp){
-    resp.result.stats.removed == 1; //说明删除成功，否则 removed == 0.
+    console.log(resp.stats.updated === 1); //说明删除成功
   },
   function(err){
     //错误处理。
@@ -238,9 +255,11 @@ wx.cloud.database().collection('posts').doc('post-id').remove().then(
 )
 
 //删除reply
-wx.cloud.database().collection('replies').doc('reply-id').remove().then(
+wx.cloud.database().collection('replies').doc('reply-id').update({
+  data:{status:0}
+}).then(
   function(resp){
-    resp.result.stats.removed == 1; //说明删除成功，否则 removed == 0.
+    console.log(resp.stats.updated === 1); //说明删除成功
   },
   function(err){
     //错误处理。
@@ -248,15 +267,15 @@ wx.cloud.database().collection('replies').doc('reply-id').remove().then(
 )
 
 //新增reply
-wx.cloud.database().collection('replies').add({
+wx.cloud.database().collection('replies').add({data:{
   authorid: userid,
   postid:,
   text:,//content
   heartCount:0,
   parentid:,//若是comment，填入回复对象的reply id；否则，null。
   createTime:new Date(),
-  status:1
-}).then(
+  status:1 // 0 隐藏
+}}).then(
   function(resp){
     resp.result._id; //新增回复或回帖的reply ID
   },
@@ -271,15 +290,13 @@ wx.cloud.callFunction({
   data:{
     heart:true,
     undo:true,
-    postid:, 
+    postid:,
     userid:
   }
 }).then(
   function(resp){console.log(resp.result)},//result 三个属性中只有一个true；unmatched表示“撤销不存在的赞”或者“收藏已收藏的帖子”。
   /*result = {
-      added:true,
-      removed: true,
-      unmatched: true
+      added:true,      removed: true,      unmatched: true
     }*/
   function(err){}//错误需要处理：可能是“撤销不存在的赞”或者“收藏已收藏的帖子”。;;
 )
@@ -292,6 +309,14 @@ wx.cloud.callFunction({
     userid: '当前用户'
   }
 }).then(resp=>{console.log(resp.result.data)})//返回的是reply的array
+
+//新增或删除某个post的标签
+var promise = wx.cloud.callFunction({name:'doPostTag',data:{postid:'test',tagname:'测试',remove:true}})
+promise.then(resp=>console.log(resp.result))//result = {removed: true, added: undefined, unmatched: undefined}
+
+//新增或删除某个user的标签
+var promise = wx.cloud.callFunction({name:'doUserTag',data:{postid:'test',tagname:'测试',remove:true}})
+promise.then(resp=>console.log(resp.result))//result = {removed: true, added: undefined, unmatched: undefined}
 ```
 
 ## Doubt & Know

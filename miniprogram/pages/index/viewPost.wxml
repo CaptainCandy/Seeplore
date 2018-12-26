@@ -30,8 +30,11 @@
     <view wx:else class='bottom-button' bindtap='onHeart'>
         <image class='heart' src='../../icon/heart_true.png'></image>
     </view>
-    <view class='bottom-button' bindtap='onCollect'>
+    <view wx:if="{{!currentPost.isCollected}}" class='bottom-button' bindtap='onCollect'>
       <image class='collect' src='../../icon/collect_false.png'></image>
+    </view>
+    <view wx:else class='bottom-button' bindtap='onCollect'>
+      <image class='collect' src='../../icon/collect_true.png'></image>
     </view>
     <button open-type='share' class='bottom-button'>
       <image class='share' src='../../icon/share.png'></image>
@@ -46,38 +49,55 @@
 
   <view wx:if="{{isPullUp}}" class='reply-zone'>
     <text class='zone-title' style=''>评论区</text>
-    <view wx:for="{{replyList}}" wx:for-index="rindex" wx:key="rindex" data-rindex='{{rindex}}' class='content'>
+    <view wx:for="{{replyList}}" wx:if="{{item.status === 1}}" wx:for-index="rindex" wx:key="index" data-rindex='{{rindex}}' class='content'>
       <view class='portrait-box'>
         <image class='portrait' mode="widthFix" src='{{item.replier.avatarUrl}}'></image>
       </view>
       <view class='main'>
         <view class='nickname'>{{item.replier.nickName}}</view>
-        <view class='text' bindtap='onComment'>{{item.content}}</view>
+        <view>
+          <text class='text' bindtap='onComment' data-curreplyid='{{item._id}}' data-author='{{item.replier.nickName}}' data-content='{{item.content}}'>{{item.content}}</text>
+        </view>
         <view class='bottom'>
           <view class='date'>{{item.createTime}}</view>
-          <view class='button' bindtap='onReplyHeart'>
+          <view wx:if="{{!item.isHearted}}" class='button' bindtap='onReplyHeart' data-curreplyid='{{item._id}}'>
             <image class='heart' src='../../icon/heart_false.png'></image>
           </view>
-          <view class='button' bindtap='onReplyCollect'>
+          <view wx:else class='button' bindtap='onReplyHeart' data-curreplyid='{{item._id}}'>
+            <image class='heart' src='../../icon/heart_true.png'></image>
+          </view>
+          <view wx:if="{{!item.isCollected}}" class='button' bindtap='onReplyCollect' data-curreplyid='{{item._id}}'>
             <image class='collect' src='../../icon/collect_false.png'></image>
           </view>
+          <view wx:else class='button' bindtap='onReplyCollect' data-curreplyid='{{item._id}}'>
+            <image class='collect' src='../../icon/collect_true.png'></image>
+          </view>
+          <!--
           <view class='button' bindtap='onReplyshare'>
             <image class='share' src='../../icon/share.png'></image>
           </view>
+          -->
           <view wx:if="{{item.isMine}}" class='button' bindtap='onReplyDelete' style='border: none;' data-curreplyid='{{item._id}}'>
             <image class='collect' src='../../icon/delete.png'></image>
           </view>
-          <view wx:else class='button' bindtap='onReplyReport' style='border: none;'>
+          <view wx:else class='button' bindtap='onReplyReport' style='border: none;' data-curreplyid='{{item._id}}'>
             <image class='report' src='../../icon/report.png'></image>
           </view>
         </view>
-        <view class='comment-zone'>
-          <view wx:for="{{item.comments}}" wx:for-item="comment" wx:for-index="cindex" wx:key="cindex" data-cindex='{{cindex}}' class='comment'>
+        <view wx:if='{{!item.isCommentOnShow}}'>
+        </view>
+        <view wx:else class='comment-zone'>
+          <view wx:for="{{item.comments}}" wx:if="{{comment.status === 1}}" wx:for-item="comment" wx:for-index="cindex" wx:key="index" data-cindex='{{cindex}}' class='comment'>
             <text style='color: rgb(39, 96, 202)'>{{comment.replier.nickName}} </text>
-            <text>回复 </text>
+            <text wx:if="{{comment.parentNickname}}">回复 </text>
             <text style='color: rgb(39, 96, 202)'>{{comment.parentNickname}}: </text>
-            <text bindtap='onComment'>{{comment.content}}</text>
-            <text style='font-size: 24rpx; color: rgb(182, 182, 182)'>{{comment.createTime}}</text>
+            <text bindtap='onComment' 
+                  data-curreplyid='{{comment._id}}' 
+                  data-parentid='{{item._id}}'
+                  data-author='{{comment.replier.nickName}}' 
+                  data-ismine='{{comment.isMine}}'
+                  data-content='{{comment.content}}'>{{comment.content}}</text>
+            <text style='font-size: 24rpx; color: rgb(182, 182, 182); padding-left: 1vw'>{{comment.createTime}}</text>
           </view>
         </view>
       </view>

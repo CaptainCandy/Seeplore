@@ -1,3 +1,4 @@
 <!--miniprogram/pages/mine/mine.wxml-->
-<text>miniprogram/pages/mine/mine.wxml</text>
+<text>还看，你是不是有点问题？</text>
+
 <tabbar tabbar="{{tabbar}}"></tabbar>

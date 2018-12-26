@@ -1,4 +1,4 @@
-// miniprogram/pages/reply/reply.js
+// miniprogram/pages/reply/comment.js
 const app = getApp()
 
 Page({
@@ -7,11 +7,13 @@ Page({
    * 页面的初始数据
    */
   data: {
-    curReply: null,
-    replyBuffer: "",
+    curComment: null,
+    commentBuffer: "",
     curPostId: "",
-    curPostTitle: "",
-    curPostAuthor: "",
+    _id: "", //指的是回复的对象的_id，可能是回帖也可能是回复，下面代码中要注意区分
+    curReplyContent: "",
+    curReplyAuthor: "",
+    author_logic: "" //用来判断局部更新上一层的页面需不需要显示作者
   },
 
   /**
@@ -20,12 +22,17 @@ Page({
   onLoad: function (options) {
     //先把特殊字符转义回来
     let postid = unescape(options.curPostId)
-    let title = unescape(options.curPostTitle)
-    let author = unescape(options.curPostAuthor)
+    let _id = unescape(options._id)
+    let content = unescape(options.curReplyContent)
+    let author = unescape(options.curReplyAuthor)
+    let author_logic = author
+    if (options.parentid === 'undefined') author_logic = ""
     this.setData({
       curPostId: postid,
-      curPostTitle: title,
-      curPostAuthor: author,
+      _id: _id,
+      curReplyContent: content,
+      curReplyAuthor: author,
+      author_logic: author_logic
     })
   },
 
@@ -33,7 +40,7 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    
   },
 
   /**
@@ -81,30 +88,30 @@ Page({
   /**
     * 事件：回帖内容输入
     */
-  onReplyInput: function (e) {
-    let replyBuffer = this.data.replyBuffer;
-    replyBuffer = e.detail.value;
+  onCommentInput: function (e) {
+    let commentBuffer = this.data.commentBuffer;
+    commentBuffer = e.detail.value;
     this.setData({
-      replyBuffer,
+      commentBuffer,
     })
   },
 
   /**
     * 事件：发表按钮点击
     */
-  onReply: function (e) {
-    console.log(this.data.replyBuffer);
+  onComment: function (e) {
+    console.log(this.data.commentBuffer);
     let that = this
     wx.showLoading({
       title: '正在保存',
     })
     wx.cloud.database().collection('replies').add({
-      data:{
+      data: {
         authorid: app.globalData.userid,
-        postid: this.data.curPostId,
-        text: this.data.replyBuffer,//content
+        postid: that.data.curPostId,
+        text: that.data.commentBuffer,//content
         heartCount: 0,
-        parentid: null, //若是comment，填入回复对象的reply id；否则，null。
+        parentid: that.data._id, //若是comment，填入回复对象的reply id；否则，null。
         createTime: new Date(),
         status: 1
       }
@@ -114,32 +121,38 @@ Page({
         let pages = getCurrentPages()
         let prePage = pages[pages.length - 2]
         let replyList = prePage.data.replyList
-        replyList.push({
-          _id: resp._id,
-          replier :{
+        let _id = that.data._id //回复的对象的_id
+        let index = 0;
+        for (var i = 0; i < replyList.length; i++) {
+          if (replyList[i]._id == _id) {
+            index = i;
+            replyList[index].isCommentOnShow = true
+            break;
+          }
+        }
+        replyList[index].comments.push({
+          _id: resp._id, //当前回复的_id
+          replier: {
             nickName: app.globalData.userInfo.nickName,
             avatarUrl: app.globalData.userInfo.avatarUrl
           },
-          content: that.data.replyBuffer,
-          heartCount: 0,
-          isHearted: false,
-          isMine: true,
+          content: that.data.commentBuffer,
           createTime: '刚刚',
+          parentid: _id, //回复的对象的_id
           postid: that.data.curPostId,
+          parentNickname: that.data.author_logic,
           status: 1,
-          comments: []
+          isMine: true,
         })
         console.log(replyList)
         prePage.setData({
+          loaded: false, 
           replyList: replyList
         })
         wx.hideLoading()
         wx.navigateBack({
           delta: 1,
         })
-        /*wx.navigateTo({
-          url: '../index/viewPost?curPostId=' + that.data.curPostId,
-        })*/
       },
       function (err) {
         //错误处理。
