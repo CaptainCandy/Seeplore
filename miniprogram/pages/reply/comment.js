@@ -102,6 +102,9 @@ Page({
   onComment: function (e) {
     console.log(this.data.commentBuffer);
     let that = this
+    wx.showLoading({
+      title: '正在保存',
+    })
     wx.cloud.database().collection('replies').add({
       data: {
         authorid: app.globalData.userid,
@@ -123,6 +126,7 @@ Page({
         for (var i = 0; i < replyList.length; i++) {
           if (replyList[i]._id == _id) {
             index = i;
+            replyList[index].isCommentOnShow = true
             break;
           }
         }
@@ -142,8 +146,10 @@ Page({
         })
         console.log(replyList)
         prePage.setData({
+          loaded: false, 
           replyList: replyList
         })
+        wx.hideLoading()
         wx.navigateBack({
           delta: 1,
         })

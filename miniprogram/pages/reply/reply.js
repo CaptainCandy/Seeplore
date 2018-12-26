@@ -95,6 +95,9 @@ Page({
   onReply: function (e) {
     console.log(this.data.replyBuffer);
     let that = this
+    wx.showLoading({
+      title: '正在保存',
+    })
     wx.cloud.database().collection('replies').add({
       data:{
         authorid: app.globalData.userid,
@@ -130,6 +133,7 @@ Page({
         prePage.setData({
           replyList: replyList
         })
+        wx.hideLoading()
         wx.navigateBack({
           delta: 1,
         })
