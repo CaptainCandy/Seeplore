@@ -81,7 +81,14 @@
     - 输入：postid, tagname, remove
     - 输出：added, removed, unmatched, primary
   - manageTagsInfo 管理标签的分类
-    - 输入：tagname, setcategory, setprimary
+    - 输入：tagname, category, alias, description
+    - 直接前端调用数据库更好。
+
+```js
+wx.cloud.database().collection('tags').add({
+  _id:'tagname', category:1
+})
+```
 
 ### Activity control
 
@@ -218,6 +225,46 @@
   {...},
   ...
 ]
+```
+
+- tags
+  - category
+    - 0 类型；1 主题； 2 国家； 3 考试； 4 工作； 5 院校； 6 生活
+
+```js
+{
+  _id:'心灵之约',
+  category: 1,
+  description: '畅所欲言'
+}
+```
+
+### 前端调用云函数
+
+```js
+wx.cloud.callFunction({//发帖。
+  name: "createPost",
+  data: {
+    title: e.detail.title,
+    abstract: e.detail.abstract,
+    content: e.detail.content,
+    tags: ["心灵之约","似水流年"],
+    authorID: app.globalData.userid //_id in 'user' collection
+  }
+}).then(
+  resp => console.log(resp.result.postid),
+  err => console.log('发帖失败')
+)
+
+wx.cloud.callFunction({//管理员管理标签。
+  name: "manageTagInfo",
+  data: {
+    tag: '心灵之约',
+    alias: ["心灵"],
+    description: "随便聊聊",
+    //category: 设置一位数字。
+  }
+})//没有返回值。
 ```
 
 ### 前端操作数据库
