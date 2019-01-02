@@ -6,12 +6,13 @@ cloud.init()
 // 云函数入口函数
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
-  console.error(event.userInfo);
-  console.error(event.myUserInfo);
-  console.log(event.myUserInfo);
+
+  var resp = await cloud.database().collection('tags').update({data:{
+    checked:true
+  }})
+  console.log(resp)
 
   return {
-    status: event.whereFrom,
     wxContext,
     context
   }

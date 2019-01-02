@@ -83,22 +83,95 @@
   - manageTagsInfo 管理标签的分类
     - 输入：tagname, category, alias, description
     - 直接前端调用数据库更好。
+- [ ] 添加checked字段
+- 权限控制
+  - 小程序端可以任意读取tag
+  - 管理tag必须通过云函数
 
 ```js
 wx.cloud.database().collection('tags').add({
   _id:'tagname', category:1
-})
+});
+wx.cloud.database().collection('tags').where({//获取标签
+  category: 5
+}).get().then(
+  resp=>console.log(resp.data)
+);
+[{_id:'浙江大学',category:5,description:'标签说明。'}]//resp.data
+```
+
+### institution control
+
+- [ ] 院校与tag的链接如何实现？
+  - Solution 1: 院校将name作为ID，tag不做处理
+  - solution 2：tag新增字段：link
+
+```js
+wx.cloud.database().collection('institutions').add({//添加院校
+  data:{
+    _id:'浙江大学',
+    engname:'Zhejiang University',
+    region:'中国大陆',
+    website:'www.zju.edu.cn',
+    introduction:'坐落在风景优美的杭州市。'
+  }
+}).then(
+  resp=>console.log(resp._id),//入库成功，院校名称
+  err=>{}
+);
+wx.cloud.database().collection('institutions').doc('加州大学洛杉矶分校').update({//更新院校   这个无法执行：因为小程序端没有权限
+  data:{
+    introduction:'坐落在风景优美的洛杉矶的西木村。'
+  }
+}).then(
+  resp=>console.log(resp.stats.updated),//若更新成功，updated==1
+  err=>{console.log(err);}//doc()的院校名称输入错误。
+);
+//读取院校数据
+const db = wx.cloud.database();
+let rankingType = 'rankusnews';// "ranktimes" "rankqs"
+db.collection('institutions').orderBy(rankingType, 'asc').get().then(
+  resp => {
+    let lsInstitutions = resp.data.map(
+      elem => {
+        return {
+          ranking: elem[rankingType],
+          name: elem.name, engname: elem.engname,
+          country: elem.country, location: elem.location,
+          introduction: elem.introduction, website: elem.website
+        }
+      }
+    );
+    console.log(lsInstitutions);
+  },
+  err => { throw err });
 ```
 
 ### Activity control
 
 - 设计
-  - 报名界面有多个入口？好像只有查看活动贴详情才有。
-  - post增加一个可选字段：“活动报名链接？”
-  - 如何避免重复报名：显示是否报名字段。如何查询已报名活动。根据userid唯一匹配报名。
+  - [ ] post新增字段：activityid
+  - [ ] 传给前端 isSignedup 从user-activities查询报名记录。
+  - 如何临时关闭报名？
+  - 页面使用逻辑：帖子详情，活动详情，报名表
   - 活动报名表字段
     - 管理员设置：数组（每个对象包括字段名和字段验证方式）
     - 报名时：数组（每个元素包括字段名和内容）
+- 数据
+  - activities
+    - status
+    - description
+    - openTime
+    - closeTime
+  - user-activities
+  - 报名表
+    - 活动信息：标题、描述、详情、类型（是否付费）
+    - 活动状态：开始报名、结束报名
+  - 用户报名表
+- 实现
+  - [ ] manageActivities
+    - 输入：
+      - basics: title
 
 ## Protocol
 
@@ -229,7 +302,8 @@ wx.cloud.database().collection('tags').add({
 
 - tags
   - category
-    - 0 类型；1 主题； 2 国家； 3 考试； 4 工作； 5 院校； 6 生活
+    - 0 系统； 1 主题； 2 地理； 3 考试； 4 工作； 5 院校； 6 生活
+  - checked: Boolean
 
 ```js
 {
@@ -238,6 +312,13 @@ wx.cloud.database().collection('tags').add({
   description: '畅所欲言'
 }
 ```
+
+- institutions
+  - name / _id
+  - engname
+  - region
+  - website
+  - introduction
 
 ### 前端调用云函数
 
