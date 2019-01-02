@@ -1,5 +1,5 @@
 // pages/collegeLib/collegeLib.js
-var app = getApp()
+const app = getApp()
 
 Page({
 
@@ -7,7 +7,12 @@ Page({
    * 页面的初始数据
    */
   data: {
-    tabbar:{}
+    tabbar:{},
+    countryPicker: ['全部', '美国', '英国', '香港'],
+    rankPicker: ['U.S.News', 'QS', 'Times'],
+    countryIndex: 0,
+    rankIndex: 0,
+    collegeList: []
   },
 
   /**
@@ -15,6 +20,7 @@ Page({
    */
   onLoad: function (options) {
     app.editTabbar()
+    this.fetchCollegeList(this.data.rankIndex)
   },
 
   /**
@@ -64,5 +70,68 @@ Page({
    */
   onShareAppMessage: function () {
 
-  }
+  },
+
+  countryChange: function(e) {
+    this.setData({
+      countryIndex: e.detail.value
+    })
+  },
+
+  rankChange: function(e) {
+    this.setData({
+      rankIndex: e.detail.value
+    })
+  },
+
+  filter: function(e) {
+    wx.showLoading({
+      title: '正在筛选',
+    })
+    let country = this.data.countryPicker[this.data.countryIndex]
+    let rank = this.data.rankIndex
+    let that = this
+    that.fetchCollegeList(rank)
+    setTimeout(function(){
+      if (country !== '全部') {
+        let collegeList = that.data.collegeList
+        let collegeListAfter = collegeList.filter(function (college) {
+          return college.country === country
+        })
+        console.log(collegeListAfter)
+        that.setData({
+          collegeList: collegeListAfter
+        })
+      }
+      console.log(that.data)
+      wx.hideLoading()
+    }, 1000)
+  },
+
+  fetchCollegeList: function(rankIndex) {
+    //读取院校数据
+    const db = wx.cloud.database();
+    let that = this;
+    let rankType = ['rankusnews', "ranktimes", "rankqs"]
+    let rankingType = rankType[rankIndex]; // "ranktimes" "rankqs" 'rankusnews'
+    db.collection('institutions').orderBy(rankingType, 'asc').get().then(
+      resp => {
+        let lsInstitutions = resp.data.map(
+          elem => {
+            return {
+              ranking: elem[rankingType],
+              name: elem.name, engname: elem.engname,
+              country: elem.country, location: elem.location,
+              introduction: elem.introduction, website: elem.website
+            }
+          }
+        );
+        console.log(lsInstitutions);
+        that.setData({
+          collegeList: lsInstitutions,
+        })
+      },
+      err => { throw err }
+    );
+  },
 })

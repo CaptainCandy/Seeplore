@@ -1,1 +1,91 @@
 /* pages/collegeLib/collegeLib.wxss */
+page{
+
+}
+.container{
+  width: 100%;
+}
+.head{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 92vw;
+  border-bottom: solid 1vh rgb(244, 244, 244);
+  padding: 3vw 3vw 3vw 3vw;
+}
+.head .pickers{
+  display: flex;
+  align-items: center;
+  padding: 0 1vw 0 0;
+}
+.head .pickers .pickerName{
+  font-size: 32rpx;
+  padding: 0 3vw 0 2vw;
+}
+.head .pickers .picker{
+  padding: 0 2vw 0 0;
+  border-right: solid 1rpx rgb(182, 182, 182);
+}
+.head .pickers .picker .content{
+  font-size: 32rpx;
+}
+.head .buttons{
+  align-self: flex-end;
+  display: flex;
+  align-items: center;
+  padding: 0 3vw 0 0;
+}
+.head .buttons .button{
+  height: 4vh;
+  padding: 0 2vw 0 1.5vw;
+  font-size: 32rpx;
+  color: rgb(39, 96, 202);
+}
+.body{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15vh;
+}
+.body .list-item{
+  border-top: solid 1rpx rgb(244, 244, 244);
+  width: 98%;
+  display: flex;
+  align-items: center;
+}
+.body .list-item .rank-box{
+  width: 15%;
+  text-align: center;
+  padding: 0 2vw 0 2vw;
+}
+.body .list-item .rank-box .rank{
+  font-size: 48rpx;
+  color: rgb(39, 96, 202);
+}
+.body .list-item .info{
+  width: 82%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2vw 1vw 2vw 1vw;
+}
+.body .list-item .info .name{
+  font-size: 40rpx;
+  padding-bottom: 1vw;
+  text-align: center;
+}
+.body .list-item .info .intro{
+  font-size: 32rpx;
+}
+.body .list-item .button-box{
+  width: 8%;
+  padding: 0 2vw 0 1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.body .list-item .button-box .collect{
+  width: 4vh;
+  height: 4vh;
+}
