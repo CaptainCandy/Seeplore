@@ -131,6 +131,7 @@ Page({
         })
         console.log(replyList)
         prePage.setData({
+          loaded: false, 
           replyList: replyList
         })
         wx.hideLoading()
