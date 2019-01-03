@@ -7,6 +7,8 @@ const db = cloud.database();
  * tag的属性包括：_id, description, category, redirect
  * _id是中文键名，即tag name
  * unsolved: 更新taginfo失败的情况下，同样会新建redirect；由于异步，return value是无效的。
+ * 
+ * !!!!!!!!!!!! 后台使用then可能是有问题的，需要改成await。
  */
 
 exports.main = async(event, context) => {

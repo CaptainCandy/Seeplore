@@ -46,13 +46,25 @@ exports.main = async (event, context) => {
     ref = posts.where({
       authorID:db.command.in(ids)
     });
+  }else{
+    ref = posts;
   }
 
   if(words){
     //TODO
-  }
-  if(tags){
-    //TODO
+  } else if(tags){
+    if(!(tags instanceof Array)){
+      throw new Error('tags should be an array.');
+    }else{
+      let res = await db.collection('post-tags').where({
+        tag:db.command.in(tags)
+      }).get();
+      let postsTagged = new Set(res.data.map(elem=>elem.postid));
+      ref = ref.where(
+        {_id:db.command.in(Array.from(postsTagged))}
+      );
+      //不需要在list页面呈现每个post拥有的全部tag，只需要取出不重复的post列表
+    }
   }
 
   const size = await ref.count();

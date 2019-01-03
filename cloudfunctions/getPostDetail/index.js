@@ -33,6 +33,11 @@ exports.main = async (event, context) => {
     console.log(respAuthorQ.result);
     var authorInfo = respAuthorQ.result.wxUserInfo;
 
+    var respTagQ = await db.collection('post-tags').where({
+      postid:postid
+    }).get();
+    console.log('|| Tags are : ', respTagQ.data);
+
     var respActionQ;
     respActionQ = await cloud.callFunction({
       name: 'getActions',
@@ -67,7 +72,7 @@ exports.main = async (event, context) => {
       heartCount: thepost.heartCount,
       isHearted: userheartcount == 1,
       isCollected: usercollectcount == 1,
-      tags: thepost.tags,
+      tags: respTagQ.data,
       createTime: thepost.createTime,
       author: authorInfo
     }

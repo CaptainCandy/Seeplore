@@ -67,10 +67,11 @@ exports.main = async(event, context) => {
     if (tags) {
       console.log('现在向数据库添加标签帖子联系。');
       for (let tag of tags) {
-        db.collection('post-tags').add({
+        console.log(tag);
+        await db.collection('post-tags').add({
           data: {
-            postid,
-            tag
+            postid: postid,
+            tag: tag
           }
         })
       }
@@ -79,9 +80,7 @@ exports.main = async(event, context) => {
   } catch (error) {
     console.error('|| we caught an error. ||');
     console.error(error);
-    return {
-      error
-    }
+    throw error;
   } finally {
     return {
       postid
