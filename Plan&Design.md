@@ -130,7 +130,9 @@ wx.cloud.database().collection('institutions').doc('加州大学洛杉矶分校'
 //读取院校数据
 const db = wx.cloud.database();
 let rankingType = 'rankusnews';// "ranktimes" "rankqs"
-db.collection('institutions').orderBy(rankingType, 'asc').get().then(
+db.collection('institutions').orderBy(rankingType, 'asc').where({
+  country:'美国'
+}).get().then(
   resp => {
     let lsInstitutions = resp.data.map(
       elem => {
@@ -145,6 +147,48 @@ db.collection('institutions').orderBy(rankingType, 'asc').get().then(
     console.log(lsInstitutions);
   },
   err => { throw err });
+/*
+* 收藏院校库
+*/
+//函数定义。
+let collectInstitution = function(institutionName, userid){
+  const db = wx.cloud.database();
+  const actions = db.collection('institution-actions');
+  const cond = {target:institutionName,userid:userid}
+  const q = actions.where(cond);
+  return new Promise((resolve,reject)=>{
+    q.get().then(
+      res=>{
+        let collected = null;
+        let total = res.data.length;
+        if(total==1){
+          let id = res.data[0]._id;
+          actions.doc(id).remove().then(console.log);
+          collected = false;
+          resolve({collected});
+        }else if(total==0){
+          actions.add({data:cond}).then(console.log);
+          collected = true;
+          resolve({collected});
+        }else{
+          throw new Error('|| multiple collection records. ||')
+        }
+      }
+    )
+  });
+};
+//函数调用。
+const userid = app.globalData.userid;
+collectInstitution('哈佛大学',userid).then(
+  result=>{
+    if(collected){
+      //由未收藏变为已收藏状态
+    }else{
+      //相反
+    }
+  }
+  //缺少错误处理代码。
+)
 ```
 
 ### Activity control

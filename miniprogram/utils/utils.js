@@ -31,8 +31,36 @@ function progressTips(tips) {
   })
 }
 
+let collectInstitution = function (institutionName, userid) {
+  const db = wx.cloud.database();
+  const actions = db.collection('institution-actions');
+  const cond = { target: institutionName, userid: userid }
+  const q = actions.where(cond);
+  return new Promise((resolve, reject) => {
+    q.get().then(
+      res => {
+        let collected = null;
+        let total = res.data.length;
+        if (total == 1) {
+          let id = res.data[0]._id;
+          actions.doc(id).remove().then(console.log);
+          collected = false;
+          resolve({ collected });
+        } else if (total == 0) {
+          actions.add({ data: cond }).then(console.log);
+          collected = true;
+          resolve({ collected });
+        } else {
+          throw new Error('|| multiple collection records. ||')
+        }
+      }
+    )
+  });
+};
+
 module.exports = {
   showLoading: showLoading,
   hideLoading: hideLoading,
-  progressTips: progressTips
+  progressTips: progressTips,
+  collectInstitution
 }
