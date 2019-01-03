@@ -58,9 +58,47 @@ let collectInstitution = function (institutionName, userid) {
   });
 };
 
+function getInstitutionList(rankingType, userid){
+
+  const db = wx.cloud.database();
+  return new Promise(
+    (resolve,reject)=>{
+      db.collection('institution-actions').where({ userid }).get().then(
+        resp => {
+          let targets = new Set(resp.data.map(
+            elem => elem.target
+          ));
+          db.collection('institutions').orderBy(rankingType, 'asc').get().then(
+            resp => {
+              let lsInstitutions = resp.data.map(
+                elem => {
+                  return {
+                    ranking: elem[rankingType],
+                    name: elem.name, country: elem.country, location: elem.location,
+                    introduction: elem.introduction,
+                    collected: targets.has(elem.name)
+                  }
+                }
+              );
+              resolve({lsInstitutions});
+            },
+            err => reject
+          )
+        },
+        err => reject
+      )
+    }
+  )
+
+}
+
+const RANK_TYPE = { usnews: "rankusnews", times: "ranktimes", qs: "rankqs" };
+
 module.exports = {
   showLoading: showLoading,
   hideLoading: hideLoading,
   progressTips: progressTips,
-  collectInstitution: collectInstitution
+  collectInstitution,
+  getInstitutionList,
+  RANK_TYPE
 }

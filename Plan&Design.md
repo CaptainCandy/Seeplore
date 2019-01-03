@@ -74,7 +74,7 @@
     - tag有分类，比如：地理位置、目标院校、标化考试
     - 特殊标签：院校标签可以跟院校库绑定；活动贴都需要入口
 - 功能
-  - doPostTags 增删post的标签
+  - doPostTags 增删post的标签 `目前发帖并没有经过这个函数；这个函数没有处理redirect`
     - 输入：postid, tagname, remove
     - 输出：added, removed, unmatched, primary
   - doUserTags 增删user的标签

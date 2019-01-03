@@ -41,6 +41,11 @@ Page({
         url: 'viewPost?curPostId=' + options.curPostId,
       })
     }
+    else if (options.isCollegeShare === 'true') {
+      wx.navigateTo({
+        url: '../collegeLib/college?name=' + options.curCollegeName,
+      })
+    }
   },
 
   /**

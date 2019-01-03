@@ -1,5 +1,5 @@
 // miniprogram/pages/index/myPost.js
-var utils = require('../../utils/utils.js'); 
+const utils = require('../../utils/utils.js');
 const app = getApp();
 
 //使用严格模式，为了使用let

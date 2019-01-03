@@ -127,6 +127,9 @@ Page({
           }
         );
         console.log(lsInstitutions);
+        lsInstitutions.map(college => {
+          college.introduction = college.introduction.slice(0, 31) + '...'
+        })
         that.setData({
           collegeList: lsInstitutions,
         })
@@ -134,4 +137,10 @@ Page({
       err => { throw err }
     );
   },
+
+  onCollege: function(e) {
+    wx.navigateTo({
+      url: 'college?name=' + e.currentTarget.dataset.name,
+    })
+  }
 })

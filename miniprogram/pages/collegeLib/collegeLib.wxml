@@ -20,7 +20,7 @@
       <view class='rank-box'>
         <text class='rank' space="ensp">{{item.ranking}}</text>
       </view>
-      <view class='info'>
+      <view class='info' bindtap='onCollege' data-name='{{item.name}}'>
         <view class='name'>{{item.name}}</view>
         <view class='intro'>{{item.introduction}}</view>
       </view>
