@@ -181,12 +181,12 @@ let collectInstitution = function(institutionName, userid){
 const userid = app.globalData.userid;
 collectInstitution('哈佛大学',userid).then(
   result=>{
-    if(collected){
+    if(result.collected){
       //由未收藏变为已收藏状态
     }else{
       //相反
     }
-  }
+  }, err=>{}
   //缺少错误处理代码。
 )
 ```

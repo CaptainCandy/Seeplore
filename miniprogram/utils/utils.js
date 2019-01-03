@@ -62,5 +62,5 @@ module.exports = {
   showLoading: showLoading,
   hideLoading: hideLoading,
   progressTips: progressTips,
-  collectInstitution
+  collectInstitution: collectInstitution
 }
