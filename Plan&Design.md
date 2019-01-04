@@ -97,7 +97,7 @@ wx.cloud.callFunction({
         data: {
           heart: true, // 查看收藏列表 collect: true
           post: true, // 查看回复列表 reply: true
-          userid: targetUsetID // 所查看的目标用户的id ！！
+          userid: targetUserID // 所查看的目标用户的id ！！
         }
       }).then(
         res => {
