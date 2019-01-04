@@ -1,2 +1,36 @@
 <!--miniprogram/pages/collegeLib/college.wxml-->
-<text>miniprogram/pages/collegeLib/college.wxml</text>
+<view class='container'>
+  <view class='name'>
+    <text class='chinese'>{{currentCollege.name}}</text>
+    <text class='english'>{{currentCollege.engname}}</text>
+  </view>
+  <view class='infolist'>
+    <view class='info'>
+      <view class='title'>
+        <text space='ensp'> 地址</text>
+      </view>
+      <view class='content'>{{currentCollege.country}}，{{currentCollege.location}}</view>
+      <view class='content'>{{currentCollege.englocation}}</view>
+    </view>
+    <view class='info'>
+      <view class='title'>
+        <text space='ensp'> 排名</text>
+      </view>
+      <view class='content'><text space='ensp' selectable='true'>U.S.News: {{currentCollege.rankusnews}}</text></view>
+      <view class='content'><text space='ensp' selectable='true'>QS: {{currentCollege.rankqs}}</text></view>
+      <view class='content'><text space='ensp' selectable='true'>Times: {{currentCollege.ranktimes}}</text></view>
+    </view>
+    <view class='info'>
+      <view class='title'>
+        <text space='ensp'> 简介</text>
+      </view>
+      <view class='content'><text space='ensp' selectable='true'>{{currentCollege.introduction}}</text></view>
+    </view>
+    <view class='info'>
+      <view class='title'>
+        <text space='ensp'> 网站</text>
+      </view>
+      <view class='content'><text space='ensp' selectable='true'>{{currentCollege.website}}</text></view>
+    </view>
+  </view>
+</view>

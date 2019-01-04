@@ -23,7 +23,7 @@ Page({
         let institution = resp.data;
         console.log(institution);
         that.setData({
-          currentCollege: institution,
+          currentCollege: institution[0],
         })
       },
       err => { throw err }
@@ -116,6 +116,6 @@ Page({
   },
 
   onCollect: function(e) {
-    
+
   }
 })

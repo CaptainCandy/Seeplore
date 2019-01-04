@@ -25,7 +25,8 @@
         <view class='intro'>{{item.introduction}}</view>
       </view>
       <view class='button-box'>
-        <image class='collect' mode='widthFix' src='../../icon/collect_false.png'></image>
+        <image wx:if="{{item.collected}}" class='collect' mode='widthFix' src='../../icon/collect_true.png' bindtap='onCollect' data-index='{{index}}'></image>
+        <image wx:else class='collect' mode='widthFix' src='../../icon/collect_false.png' bindtap='onCollect' data-index='{{index}}'></image>
       </view>
     </view>
   </view>
