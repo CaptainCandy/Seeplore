@@ -140,6 +140,32 @@ wx.cloud.callFunction({
     操作页面的回调函数写在这里。
     */
   });
+
+/* demo-9 查看 院校收藏 */
+wx.cloud.database().collection('institution-actions').where({
+  userid: 'og8v64vuhRAlpyfBMkYkPPBhOy4Y'// 目标用户userid！！
+}).get().then(
+  res => {
+    let lsName = res.data.map(e => e.target);
+    let p = utils.getInstitutionList('usnews', 'og8v64vuhRAlpyfBMkYkPPBhOy4Y', lsName); // 第二个参数用当前用户userID替代！！
+    p.then(
+      resp => { // 回调开始
+        let lsInstitutions = resp.lsInstitutions
+        console.log(lsInstitutions);
+        lsInstitutions.map(college => {
+          college.introduction = college.introduction.slice(0, 31) + '...'
+        });
+        /*
+        that.setData({
+          collegeList: lsInstitutions,
+        })
+        */
+      },// 回调结束
+      err => { throw err }
+    );
+  }
+);
+
 ```
 
 ### tag control
