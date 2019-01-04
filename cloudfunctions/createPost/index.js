@@ -26,6 +26,9 @@ exports.main = async(event, context) => {
       }
       rtags = [];
       for (let i = 0; i < tags.length; ++i) {
+
+        /*
+        */
         try {
           let resp = await ctags.doc(tags[i]).get();
           if (resp.data.redirect) { //如果是redirect
@@ -39,14 +42,6 @@ exports.main = async(event, context) => {
               description: '这是一个用户产生的标签。'
             }
           });
-          /*
-          await cloud.callFunction({
-            name: 'manageTagInfo',
-            data: {
-              tag: tags[i]
-            }
-          })
-          */
         }
       };
     }
@@ -72,6 +67,20 @@ exports.main = async(event, context) => {
           data: {
             postid: postid,
             tag: tag
+          }
+        })
+      }
+    }
+
+    if (tags) {
+      console.log('现在向数据库添加标签帖子联系。');
+      for (let tag of tags) {
+        wx.cloud.callFunction({
+          name: 'doPostTag',
+          data: {
+            tag: tags[i],
+            postid,
+            undo: false
           }
         })
       }

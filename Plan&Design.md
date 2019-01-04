@@ -74,7 +74,7 @@
     - tag有分类，比如：地理位置、目标院校、标化考试
     - 特殊标签：院校标签可以跟院校库绑定；活动贴都需要入口
 - 功能
-  - doPostTags 增删post的标签 `目前发帖并没有经过这个函数；这个函数没有处理redirect`
+  - doPostTags 增删post的标签 `发帖没有经过这个函数；这个函数没有处理redirect`
     - 输入：postid, tagname, remove
     - 输出：added, removed, unmatched, primary
   - doUserTags 增删user的标签
@@ -189,6 +189,40 @@ collectInstitution('哈佛大学',userid).then(
   }
   //缺少错误处理代码。
 )
+```
+
+### Agent control
+
+```js
+// 机构用户提交表单 sumbitApplication demo12
+agentInfo = { userid: '', name: '', unicode: '', legalperson: '',
+address: '', introduction: '' };
+var utils = require('../../utils/utils.js');
+//userid = app.globalData.userid;//"当前用户uerid"
+utils.submitApplication(agentInfo).then(
+  res => res.isSubmitted // true: 提交成功 false: 提交失败（userid/name 重复）
+);
+// 机构用户查看自己的申请表
+var utils = require('../../utils/utils.js');
+utils.getMyApplication().then(
+  res => {
+    if(res.isSubmitted){
+      res.data // 用户申请表的数据，状态字段包括：isChecked, isApproved, message(管理员check时附上的消息)
+    }else{
+      //TODO 用户未曾提交过申请
+    }
+  }
+);
+// 管理员查看所有申请表
+wx.cloud.callFunction({
+  name: 'manageApplication',
+  data: {
+    toViewList: true, userid:'当前用户ID'
+  }
+}).then(
+  res => res // res是一个list
+)
+// 管理员处理申请表
 ```
 
 ### Activity control

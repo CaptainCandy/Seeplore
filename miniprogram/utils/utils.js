@@ -31,10 +31,13 @@ function progressTips(tips) {
   })
 }
 
-let collectInstitution = function (institutionName, userid) {
+let collectInstitution = function(institutionName, userid) {
   const db = wx.cloud.database();
   const actions = db.collection('institution-actions');
-  const cond = { target: institutionName, userid: userid }
+  const cond = {
+    target: institutionName,
+    userid: userid
+  }
   const q = actions.where(cond);
   return new Promise((resolve, reject) => {
     q.get().then(
@@ -45,11 +48,17 @@ let collectInstitution = function (institutionName, userid) {
           let id = res.data[0]._id;
           actions.doc(id).remove().then(console.log);
           collected = false;
-          resolve({ collected });
+          resolve({
+            collected
+          });
         } else if (total == 0) {
-          actions.add({ data: cond }).then(console.log);
+          actions.add({
+            data: cond
+          }).then(console.log);
           collected = true;
-          resolve({ collected });
+          resolve({
+            collected
+          });
         } else {
           throw new Error('|| multiple collection records. ||')
         }
@@ -58,12 +67,14 @@ let collectInstitution = function (institutionName, userid) {
   });
 };
 
-function getInstitutionList(rankingType, userid){
+function getInstitutionList(rankingType, userid) {
 
   const db = wx.cloud.database();
   return new Promise(
-    (resolve,reject)=>{
-      db.collection('institution-actions').where({ userid }).get().then(
+    (resolve, reject) => {
+      db.collection('institution-actions').where({
+        userid
+      }).get().then(
         resp => {
           let targets = new Set(resp.data.map(
             elem => elem.target
@@ -74,13 +85,17 @@ function getInstitutionList(rankingType, userid){
                 elem => {
                   return {
                     ranking: elem[rankingType],
-                    name: elem.name, country: elem.country, location: elem.location,
+                    name: elem.name,
+                    country: elem.country,
+                    location: elem.location,
                     introduction: elem.introduction,
                     collected: targets.has(elem.name)
                   }
                 }
               );
-              resolve({lsInstitutions});
+              resolve({
+                lsInstitutions
+              });
             },
             err => reject
           )
@@ -92,7 +107,66 @@ function getInstitutionList(rankingType, userid){
 
 }
 
-const RANK_TYPE = { usnews: "rankusnews", times: "ranktimes", qs: "rankqs" };
+const RANK_TYPE = {
+  usnews: "rankusnews",
+  times: "ranktimes",
+  qs: "rankqs"
+};
+
+let submitApplication = (agentInfo) => {
+  const app = getApp();
+  userid = app.globalData.userid;
+
+  const db = wx.cloud.database();
+  agentInfo.userid = userid;
+  agentInfo.isChecked = false;
+
+  return new Promise(
+    (resolve, reject) => {
+      db.collection('agent-applications').add({
+        data: agentInfo
+      }).then(
+        resp => {
+          console.log(resp._id);
+          resolve({
+            isSubmitted: true
+          });
+        },
+        err => {
+          console.error('|| ERROR! ||', err);
+          resolve({
+            isSubmitted: false
+          })
+        }
+      )
+    }
+  )
+
+};
+
+let getMyApplication = () => {
+  const app = getApp();
+  userid = app.globalData.userid;
+
+  return new Promise(
+    (resolve, reject) => {
+      wx.cloud.database().collection('agent-applications').where({
+        userid
+      }).get().then(
+        resp => {
+          if(resp.data.length == 1){
+            resolve({ data: resp.data[0], isSubmitted: true});
+          }
+          else if(resp.data.length == 0){
+            resolve({ isSubmitted: false });
+          }else{
+            reject(new Error('错误的application记数。'));
+          }
+        }
+      )
+    }
+  )
+};
 
 module.exports = {
   showLoading: showLoading,
@@ -100,5 +174,7 @@ module.exports = {
   progressTips: progressTips,
   collectInstitution,
   getInstitutionList,
-  RANK_TYPE
+  RANK_TYPE,
+  submitApplication,
+  getMyApplication
 }

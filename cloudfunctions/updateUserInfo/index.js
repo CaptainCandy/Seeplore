@@ -23,11 +23,12 @@ exports.main = async (event, context) => {
   }
 
   try{
-    return await ref.update({
+    return (await ref.update({
       data: updates
-    });
+    }));
   }catch(err){
     console.error(err);
+    throw err;
   }
 
 }
