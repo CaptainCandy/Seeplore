@@ -117,7 +117,7 @@ const RANK_TYPE = {
 
 let submitApplication = (agentInfo) => {
   const app = getApp();
-  userid = app.globalData.userid;
+  let userid = app.globalData.userid;
 
   const db = wx.cloud.database();
   agentInfo.userid = userid;
@@ -149,7 +149,7 @@ let submitApplication = (agentInfo) => {
 
 let getMyApplication = () => {
   const app = getApp();
-  userid = app.globalData.userid;
+  let userid = app.globalData.userid;
 
   return new Promise(
     (resolve, reject) => {
@@ -157,16 +157,12 @@ let getMyApplication = () => {
         userid
       }).get().then(
         resp => {
-          if (resp.data.length == 1) {
-            resolve({
-              data: resp.data[0],
-              isSubmitted: true
-            });
-          } else if (resp.data.length == 0) {
-            resolve({
-              isSubmitted: false
-            });
-          } else {
+          if(resp.data.length >= 1){
+            resolve({ data: resp.data, isSubmitted: true});
+          }
+          else if(resp.data.length === 0){
+            resolve({ isSubmitted: false });
+          }else{
             reject(new Error('错误的application记数。'));
           }
         }
