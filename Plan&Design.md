@@ -198,7 +198,7 @@ collectInstitution('哈佛大学',userid).then(
 agentInfo = { userid: '', name: '', unicode: '', legalperson: '',
 address: '', introduction: '' };
 var utils = require('../../utils/utils.js');
-//userid = app.globalData.userid;//"当前用户uerid"
+//userid = app.globalData.userid;//"当前用户userid"
 utils.submitApplication(agentInfo).then(
   res => res.isSubmitted // true: 提交成功 false: 提交失败（userid/name 重复）
 );
