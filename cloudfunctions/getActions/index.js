@@ -5,23 +5,29 @@ cloud.init()
 
 const db = cloud.database();
 // 云函数入口函数
-exports.main = async (event, context) => {
+exports.main = async(event, context) => {
+  console.log(event);
   const wxContext = cloud.getWXContext();
   let [heart, collect, report] = [event.heart, event.collect, event.report];
   let [targetid, userid] = [event.targetid, (!event.userid) ? wxContext.OPENID : event.userid];
-  //if (!targetid) {
-    let tidlist = event.tidlist;
-  //};
+  let tidlist = event.tidlist; // BUG tidlist莫名其妙变成一个[]而非undefined
+  console.log({tidlist: event.tidlist});
   let [post, reply] = [event.post, event.reply];
-  if (([post, reply]).every(function (elem) { return !elem; })) {
+  if (([post, reply]).every(function(elem) {
+      return !elem;
+    })) {
     throw new Error('You must pass in "post" or "reply" field');
   }
   var actions = post ? db.collection('post-actions') : db.collection('reply-actions');
 
-  var condition = {};
+  var condition = new Object();
   if (userid) condition.userid = userid;
-  if (targetid) condition.targetid = targetid;
-  else if(tidlist) condition.targetid = db.command.in(tidlist);
+  if (targetid) {
+    condition.targetid = targetid;
+  } else if (tidlist instanceof Array && tidlist.length > 0) {
+    console.log('you should not come in');
+    condition.targetid = db.command.in(tidlist);
+  }
 
   if (heart) {
     condition.action = 1;
@@ -37,12 +43,13 @@ exports.main = async (event, context) => {
 
   var count = (await ref.count()).total;
 
-  if(!event.count){
+  if (!event.count) {
     var resp = await ref.get();
     return {
-      actions:resp.data,count
+      actions: resp.data,
+      count
     }
-  }else{
+  } else {
     return {
       count
     }

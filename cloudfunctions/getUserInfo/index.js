@@ -58,7 +58,7 @@ exports.main = async(event, context) => {
   if (stats && userid) {
     // post count
     let post = (await db.collection('posts').where({
-      userid: userid
+      authorID: userid
     }).count()).total;
 
     // collect count
