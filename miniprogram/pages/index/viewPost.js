@@ -413,11 +413,13 @@ Page({
       content: '确定要删除这篇帖子吗？',
       success: res => {
         if (res.confirm) {
-          wx.cloud.database().collection('posts').doc(this.data.currentPost.postid).remove().then(
+          wx.cloud.database().collection('posts').doc(this.data.currentPost.postid).update({
+            data: { status: 0}
+          }).then(
             function (resp) {
               console.log(resp)
               //说明删除成功，否则 removed == 0.
-              if (resp.stats.removed == 1) {
+              if (resp.stats.updated === 1) {
                 wx.showToast({
                   title: '删除成功',
                   duration: 2000
