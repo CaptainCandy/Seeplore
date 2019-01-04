@@ -97,7 +97,7 @@ function getInstitutionList(rankingType, userid) {
                 lsInstitutions
               });
             },
-            err => reject
+            err => {console.log(err)}
           )
         },
         err => reject

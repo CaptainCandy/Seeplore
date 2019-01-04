@@ -13,7 +13,7 @@
 
     <view wx:for="{{prePostListNew}}" wx:key="{{index}}">
       <view class="postList">
-        <view class="postPre_block">
+        <view wx:if='{{item.status === 1}}' class="postPre_block">
           <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
             <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
           </navigator>

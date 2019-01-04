@@ -14,7 +14,7 @@
         <image class='image' mode='widthFix' bindtap='imagePreview' data-src="{{node.fileid}}" src="{{node.fileid}}"></image>
       </view>
       <view wx:else class='text-box'>
-        <text class='text' selectable='true' space='ensp' bindtap='test'>{{node.text}}</text>
+        <text class='text' selectable='true' space='ensp'>{{node.text}}</text>
       </view>
     </view>
   </view>

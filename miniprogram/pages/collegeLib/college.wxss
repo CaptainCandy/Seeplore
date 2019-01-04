@@ -1,0 +1,41 @@
+/* miniprogram/pages/collegeLib/college.wxss */
+page{
+
+}
+.container{
+  width: 100%;
+}
+.name{
+  padding: 2vh 0 2vh 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.name .chinese{
+  font-size: 48rpx;
+}
+.name .english{
+  font-size: 40rpx;
+}
+.infolist{
+  border-top: solid 2vh rgb(244, 244, 244);
+  width: 98%;
+  display: flex;
+  flex-direction: column;
+  padding-bottom: 4vh;
+}
+.infolist .info{
+  width: 100%;
+  border-top: solid 2rpx rgb(244, 244, 244);
+
+}
+.infolist .info .title{
+  margin: 2vw 0 3vw 2vw;
+  border-left: solid 1vw rgb(39, 96, 202);
+  font-size: 36rpx;
+}
+.infolist .info .content{
+  margin: 0 4vw 3vw 4vw;
+  font-size: 32rpx;
+}

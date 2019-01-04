@@ -1,5 +1,7 @@
 {
   "pages": [
+    "pages/collegeLib/collegeLib",
+    "pages/category/category",
     "pages/loginEntry/entry",
     "pages/reply/comment",
     "pages/reply/reply",
@@ -9,9 +11,8 @@
     "pages/storageConsole/storageConsole",
     "pages/submitForm/submitForm",
     "pages/mine/mine",
-    "pages/collegeLib/collegeLib",
-    "pages/category/category",
-    "pages/reply/viewReply"
+    "pages/reply/viewReply",
+    "pages/collegeLib/college"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
