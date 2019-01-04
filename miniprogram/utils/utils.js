@@ -82,7 +82,7 @@ function getInstitutionList(rankingType, userid){
               );
               resolve({lsInstitutions});
             },
-            err => reject
+            err => {console.log(err)}
           )
         },
         err => reject

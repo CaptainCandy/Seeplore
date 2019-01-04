@@ -84,7 +84,7 @@ Page({
         title: e.detail.title,
         abstract: e.detail.abstract,
         content: e.detail.content,
-        tags: "",//? 仅保存至tag collection;; String可用db.RegExp
+        tags: [],//? 仅保存至tag collection;; String可用db.RegExp
         authorID: app.globalData.userid, //_id in 'user' collection
         createTime: new Date(),
         heartCount: 0,
