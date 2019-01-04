@@ -18,11 +18,7 @@ exports.main = async (event, context) => {
   //TODO 验证用户的管理员身份。
 
   if (toViewList){
-    return await db.collection('agent-applications').get()
-    /*.then(
-      resp => { return resp.data; },
-      err => { reject(err); }
-    );*/
+    return await db.collection('agent-applications').get();
   };
 
   let data = {isChecked:true, isApproved, message};

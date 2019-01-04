@@ -58,6 +58,26 @@
   - [x] login云函数根据openid判断是否新用户，选择调用create/update
     - create可以直接写进login; 而update函数在用户手动更新个人信息时也会被调用
   - [x] 保存到globalData: openid, userid, wxUserInfo
+- “查看用户”
+  - 显示用户的post/collection/following/follower的count
+
+```js
+/* 查看 用户信息 demo-1 */
+wx.cloud.callFunction({
+  name: 'getUserInfo',
+  data: {
+    userid: 'og8v64qQg6Ws-71AGkdAAF-wXTTk',
+    fields: {
+      "wxUserInfo.nickName": true,
+      "wxUserInfo.avatarUrl": true,
+      contact: true, // object：字段有email/phone
+      createDate: true, // 注册时间 Datetime字符串
+      "introduction": true // 指定所需要的字段
+    },
+    stats: true // 客户端从 res.result.stats 获取统计结果。返回值里面的 stats：对象，字段包括post, heart, collect, follower, following，均为number。
+  }
+})
+```
 
 ### tag control
 
@@ -194,7 +214,7 @@ collectInstitution('哈佛大学',userid).then(
 ### Agent control
 
 ```js
-// 机构用户提交表单 sumbitApplication demo12
+// 机构用户提交表单 sumbitApplication demo-12
 agentInfo = { userid: '', name: '', unicode: '', legalperson: '',
 address: '', introduction: '' };
 var utils = require('../../utils/utils.js');
@@ -202,7 +222,7 @@ var utils = require('../../utils/utils.js');
 utils.submitApplication(agentInfo).then(
   res => res.isSubmitted // true: 提交成功 false: 提交失败（userid/name 重复）
 );
-// 机构用户查看自己的申请表
+// 机构用户查看自己的申请表 demo-13
 var utils = require('../../utils/utils.js');
 utils.getMyApplication().then(
   res => {
@@ -213,16 +233,27 @@ utils.getMyApplication().then(
     }
   }
 );
-// 管理员查看所有申请表
+// 管理员查看所有申请表 demo-14
 wx.cloud.callFunction({
   name: 'manageApplication',
   data: {
     toViewList: true, userid:'当前用户ID'
   }
 }).then(
-  res => res // res是一个list
+  res => res.data // res.data是一个list
 )
-// 管理员处理申请表
+// 管理员处理申请表 demo-15
+wx.cloud.callFunction({
+  name: 'manageApplication',
+  data: {
+    toViewList: false, userid:'当前用户ID',
+    isApproved: true,//管理员是否通过这个机构的申请。
+    appliactionid: '',//上一个函数的返回的list里面元素的_id
+    message: ''
+  }
+}).then(
+  res => res.data // res.data是一个list
+)
 ```
 
 ### Activity control
