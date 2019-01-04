@@ -209,6 +209,5 @@ module.exports = {
   getInstitutionList,
   RANK_TYPE,
   submitApplication,
-  getMyApplication,
-  getPostsHeartedByUser
+  getMyApplication
 }

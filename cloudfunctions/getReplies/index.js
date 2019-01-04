@@ -6,7 +6,7 @@ cloud.init();
 const db = cloud.database();
 
 // 云函数入口函数
-exports.main = async (event, context) => {
+exports.main = async(event, context) => {
   const wxContext = cloud.getWXContext();
   let [postid, authorid] = [event.postid, event.authorid];
   let [skip, limit] = [event.skip, event.limit];
@@ -21,7 +21,7 @@ exports.main = async (event, context) => {
 
   if (postid) {
     query = replies.where({
-      postid:postid  
+      postid: postid
     });
   }
   if (authorid) {
@@ -29,7 +29,7 @@ exports.main = async (event, context) => {
       authorid: authorid
     });
   }
-  if(!postid && !authorid){
+  if (!postid && !authorid) {
     throw new Error('You should specify query condtion.');
   }
   /*
@@ -39,7 +39,7 @@ exports.main = async (event, context) => {
     });
   }
   */
-  query = query.orderBy('createTime','desc');
+  query = query.orderBy('createTime', 'desc');
   if (skip) query = query.skip(skip);
   if (limit) query = query.limit(limit);
   rawlist = (await query.get()).data;
@@ -47,7 +47,7 @@ exports.main = async (event, context) => {
   console.log('raw reply list get');
   //console.log(rawlist);
 
-  var aidlist = rawlist.map(elem=>elem.authorid);
+  var aidlist = rawlist.map(elem => elem.authorid);
   var authorlist = (await cloud.callFunction({
     name: 'getUserInfo',
     data: {
@@ -55,10 +55,13 @@ exports.main = async (event, context) => {
     }
   })).result.data;
   var userinfodict = new Array();
-  authorlist.forEach(function (elem) { userinfodict[elem._id] = elem.wxUserInfo });
+  authorlist.forEach(function(elem) {
+    elem.wxUserInfo.role = elem.role;
+    userinfodict[elem._id] = elem.wxUserInfo;
+  });
 
   console.log('get author info.');
-  
+
   //reply actions
   var respActionQ = await cloud.callFunction({
     name: 'getActions',
@@ -70,15 +73,20 @@ exports.main = async (event, context) => {
     }
   })
   var useractions = respActionQ.result.actions;
-  var heartedlist = useractions.map(function (ele) { return ele.targetid; });
+  var heartedlist = useractions.map(function(ele) {
+    return ele.targetid;
+  });
   var collectedlist = (await cloud.callFunction({
-    name:'getActions',data:{
+    name: 'getActions',
+    data: {
       reply: true,
       tidlist: rawlist.map(item => item._id),
       collect: true,
       userid: userid
     }
-  })).result.actions.map(function (ele) { return ele.targetid; });
+  })).result.actions.map(function(ele) {
+    return ele.targetid;
+  });
 
   console.log('heartedlist');
   console.log(heartedlist);
@@ -87,7 +95,7 @@ exports.main = async (event, context) => {
   var extract_reply = elem => {
     return {
       _id: elem._id,
-      replier: userinfodict[elem.authorid],//回帖者的userinfo
+      replier: userinfodict[elem.authorid], //回帖者的userinfo
       content: elem.text,
       heartCount: elem.heartCount,
       isHearted: heartedlist.some(item => item == elem._id),
@@ -96,14 +104,14 @@ exports.main = async (event, context) => {
       createTime: elem.createTime,
       postid: elem.postid,
       status: elem.status,
-      comments:[]
+      comments: []
     }
   }
 
   var extract_comment = elem => {
     return {
       _id: elem._id,
-      replier: userinfodict[elem.authorid],//回帖者的userinfo
+      replier: userinfodict[elem.authorid], //回帖者的userinfo
       isMine: elem.authorid == userid,
       content: elem.text,
       createTime: elem.createTime,
@@ -129,11 +137,11 @@ exports.main = async (event, context) => {
   });
   commentlist.forEach(elem => {
     let parent = elem.parentid;
-    while(!(parent in dict_replycomments)){
-      if(!parent){
+    while (!(parent in dict_replycomments)) {
+      if (!parent) {
         throw new Error('||the parent of this comment is undefined.||')
       }
-      parent = dict_commentparent[parent];//if parentid is the same as _id, while-loop will not stop.
+      parent = dict_commentparent[parent]; //if parentid is the same as _id, while-loop will not stop.
     }
     dict_replycomments[parent].push(elem);
   });

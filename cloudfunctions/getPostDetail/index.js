@@ -32,6 +32,7 @@ exports.main = async (event, context) => {
     console.log('HERE: GET author user info RESPONSE')
     console.log(respAuthorQ.result);
     var authorInfo = respAuthorQ.result.wxUserInfo;
+    authorInfo.role = elem.role;
 
     var respTagQ = await db.collection('post-tags').where({
       postid:postid

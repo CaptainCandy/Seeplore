@@ -90,6 +90,17 @@ wx.cloud.callFunction({
     stats: true // 客户端从 res.result.stats 获取统计结果。返回值里面的 stats：对象，字段包括post, heart, collect, follower, following，均为number。
   }
 })
+
+/* 查看当前用户身份 demo-6 */
+wx.cloud.callFunction({
+  name: 'getUserInfo',
+  data: {
+    userid: 'og8v64qQg6Ws-71AGkdAAF-wXTTk',
+    fields: null // field为空时 默认返回头像与昵称、role字段。
+  }
+}).then(res => res.result.role.isAgent) // isAgent: false 若普通用户 "agentName" 若机构用户
+// 帖子列表的 authorInfo 同样会增加一个role.isAgent字段
+
 /* 查看 用户赞过的帖子/收藏列表 demo-7 */
 // getPostsHeartedByUser 获取用户赞过的帖子。 userid: 所查看用户的ID
 wx.cloud.callFunction({
@@ -115,6 +126,20 @@ wx.cloud.callFunction({
             */
           });
       )
+
+/* 查看 自己发布的帖子 列表 demo-8 */
+wx.cloud.callFunction({
+    name: 'getPostList',
+    data: {
+      authorid: targetUserID, // 所查看的目标用户的id ！！
+      userid: currentUserID // 当前登录用户的ID !
+    }
+  }).then(res => {
+    res.result.data // 帖子列表，不包含content
+    /*
+    操作页面的回调函数写在这里。
+    */
+  });
 ```
 
 ### tag control

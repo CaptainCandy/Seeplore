@@ -21,6 +21,7 @@ exports.main = async(event, context) => {
     fields = {
       ["wxUserInfo.nickName"]: true,
       "wxUserInfo.avatarUrl": true,
+      "role.isAgent": true,
       _id: true
     }
   }
