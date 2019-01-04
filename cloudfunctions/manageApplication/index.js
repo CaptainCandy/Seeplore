@@ -24,8 +24,17 @@ exports.main = async (event, context) => {
   let data = {isChecked:true, isApproved, message};
 
   try{
-    var res = await db.collection('agent-applications').doc(appliactionid).update({data});
-    if(res.stats.updated==1){
+    let res1 = await db.collection('agent-applications').doc(appliactionid).update({data});
+    if(res1.stats.updated==1){
+      let res3 = await db.collection('agent-applications').doc(appliactionid).get();
+      console.log(res3);
+      let res2 = await db.collection('users').doc(userid).update({
+        data:{
+          role: {
+            isAgent: res3.data.name
+          }
+        }
+      })
       return { updated: true };
     }else{
       return { updated: false };

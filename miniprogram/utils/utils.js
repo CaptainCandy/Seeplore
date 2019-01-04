@@ -36,7 +36,7 @@ let collectInstitution = function(institutionName, userid) {
   });
 };
 
-function getInstitutionList(rankingType, userid) {
+function getInstitutionList(rankingType, userid, namelist) {
 
   const db = wx.cloud.database();
   return new Promise(
@@ -48,7 +48,14 @@ function getInstitutionList(rankingType, userid) {
           let targets = new Set(resp.data.map(
             elem => elem.target
           ));
-          db.collection('institutions').orderBy(rankingType, 'asc').get().then(
+          let q = db.collection('institutions').orderBy(rankingType, 'asc');
+          if(namelist){
+            console.log('selecting name.', namelist);
+            q = q.where({
+              name: db.command.in(namelist)
+            });
+          }
+          q.get().then(
             resp => {
               let lsInstitutions = resp.data.map(
                 elem => {
@@ -76,7 +83,7 @@ function getInstitutionList(rankingType, userid) {
     }
   )
 
-}
+};
 
 const RANK_TYPE = {
   usnews: "rankusnews",
@@ -171,6 +178,5 @@ module.exports = {
   getInstitutionList,
   RANK_TYPE,
   submitApplication,
-  getMyApplication,
-  getPostsHeartedByUser
+  getMyApplication
 }
