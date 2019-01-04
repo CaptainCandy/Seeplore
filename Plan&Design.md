@@ -38,6 +38,19 @@
   - wx.cloud.uploadFile则是返回fileID
   - rich-text组件应当可以处理fileID [文档：组件支持](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-client-api/component/index.html) 退而求其次，也可以使用image组件
 
+```js
+/* demo-2 通过搜索获取帖子列表 */
+wx.cloud.callFunction({
+  name: 'getPostList',data:{
+    userid: 'og8v64qQg6Ws-71AGkdAAF-wXTTk',
+    //tags: ['心灵之约'], 关键词与标签检索不并存。
+    words: ['王逸群']
+  }
+}).then(
+  res => {console.log(res.result.data);} // .data is a list of posts.
+);
+```
+
 ### User control
 
 - 由于用户会更改头像和微信昵称，数据库保存的用户身份可能失效；因此，每次用户打开小程序时与后端数据库同步一次UserInfo；Post control需要显示发帖人昵称和头像时，从数据库User Collection调取。
@@ -58,6 +71,51 @@
   - [x] login云函数根据openid判断是否新用户，选择调用create/update
     - create可以直接写进login; 而update函数在用户手动更新个人信息时也会被调用
   - [x] 保存到globalData: openid, userid, wxUserInfo
+- “查看用户”
+  - 显示用户的post/collection/following/follower的count
+
+```js
+/* 查看 用户信息 demo-1 */
+wx.cloud.callFunction({
+  name: 'getUserInfo',
+  data: {
+    userid: 'og8v64qQg6Ws-71AGkdAAF-wXTTk',
+    fields: {
+      "wxUserInfo.nickName": true,
+      "wxUserInfo.avatarUrl": true,
+      contact: true, // object：字段有email/phone
+      createDate: true, // 注册时间 Datetime字符串
+      "introduction": true // 指定所需要的字段
+    },
+    stats: true // 客户端从 res.result.stats 获取统计结果。返回值里面的 stats：对象，字段包括post, heart, collect, follower, following，均为number。
+  }
+})
+/* 查看 用户赞过的帖子/收藏列表 demo-7 */
+// getPostsHeartedByUser 获取用户赞过的帖子。 userid: 所查看用户的ID
+wx.cloud.callFunction({
+        name: 'getActions',
+        data: {
+          heart: true, // 查看收藏列表 collect: true
+          post: true, // 查看回复列表 reply: true
+          userid: targetUsetID // 所查看的目标用户的id ！！
+        }
+      }).then(
+        res => {
+          let lsPostid = res.result.actions.map(e => e.targetid);
+          wx.cloud.callFunction({
+            name: 'getPostList',
+            data: {
+              ids: lsPostid,
+              userid: currentUserID // 当前登录用户的ID
+            }
+          }).then(res => {
+            res.result.data // 帖子列表，不包含content ！！
+            /*
+            操作页面的回调函数写在这里。
+            */
+          });
+      )
+```
 
 ### tag control
 
@@ -194,7 +252,7 @@ collectInstitution('哈佛大学',userid).then(
 ### Agent control
 
 ```js
-// 机构用户提交表单 sumbitApplication demo12
+// 机构用户提交表单 sumbitApplication demo-12
 agentInfo = { userid: '', name: '', unicode: '', legalperson: '',
 address: '', introduction: '' };
 var utils = require('../../utils/utils.js');
@@ -202,7 +260,7 @@ var utils = require('../../utils/utils.js');
 utils.submitApplication(agentInfo).then(
   res => res.isSubmitted // true: 提交成功 false: 提交失败（userid/name 重复）
 );
-// 机构用户查看自己的申请表
+// 机构用户查看自己的申请表 demo-13
 var utils = require('../../utils/utils.js');
 utils.getMyApplication().then(
   res => {
@@ -213,16 +271,27 @@ utils.getMyApplication().then(
     }
   }
 );
-// 管理员查看所有申请表
+// 管理员查看所有申请表 demo-14
 wx.cloud.callFunction({
   name: 'manageApplication',
   data: {
     toViewList: true, userid:'当前用户ID'
   }
 }).then(
-  res => res // res是一个list
+  res => res.data // res.data是一个list
 )
-// 管理员处理申请表
+// 管理员处理申请表 demo-15
+wx.cloud.callFunction({
+  name: 'manageApplication',
+  data: {
+    toViewList: false, userid:'当前用户ID',
+    isApproved: true,//管理员是否通过这个机构的申请。
+    appliactionid: '',//上一个函数的返回的list里面元素的_id
+    message: ''
+  }
+}).then(
+  res => res.data // res.data是一个list
+)
 ```
 
 ### Activity control

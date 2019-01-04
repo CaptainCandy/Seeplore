@@ -20,6 +20,7 @@ Post列表，每一条记录的字段包括：标题、作者、摘要、关键�
 */
 exports.main = async (event, context) => {
   const wxContext = cloud.getWXContext();
+  console.log('\n',event);
   
   let [recent, hot, ids] = [event.recent, event.hot, event.ids];
   let [tags, words] = [event.tags, event.words];
@@ -44,14 +45,28 @@ exports.main = async (event, context) => {
     ref = posts.orderBy('heartCount', 'desc');
   }else if(ids){
     ref = posts.where({
-      authorID:db.command.in(ids)
+      _id:db.command.in(ids)
     });
   }else{
     ref = posts;
   }
 
   if(words){
-    //TODO
+    if (!(words instanceof Array)) {
+      throw new Error('tags should be an array.');
+    }
+    else{
+      let reg = db.RegExp({
+        regexp: words.join('|'),
+        options: 'i'
+      });
+      ref = ref.where(
+        db.command.or([
+          {abstract: reg},
+          {title: reg}
+        ])
+      );
+    }
   } else if(tags){
     if(!(tags instanceof Array)){
       throw new Error('tags should be an array.');
@@ -67,7 +82,7 @@ exports.main = async (event, context) => {
     }
   }
 
-  const size = await ref.count();
+  const size = (await ref.count()).total;
 
   if (skip){
     ref = ref.skip(skip);
@@ -140,6 +155,6 @@ exports.main = async (event, context) => {
 
   return {
     data: rawpostlist.map(extract),
-    size: size
+    size: size // 全部符合条件的记录数，忽略skip和limit。
   }
 }

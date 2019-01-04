@@ -97,7 +97,9 @@ function getInstitutionList(rankingType, userid) {
                 lsInstitutions
               });
             },
-            err => {console.log(err)}
+            err => {
+              console.log(err)
+            }
           )
         },
         err => reject
@@ -120,6 +122,7 @@ let submitApplication = (agentInfo) => {
   const db = wx.cloud.database();
   agentInfo.userid = userid;
   agentInfo.isChecked = false;
+  agentInfo.createTime = new Date();
 
   return new Promise(
     (resolve, reject) => {
@@ -168,6 +171,32 @@ let getMyApplication = () => {
   )
 };
 
+let getPostsHeartedByUser = (userid) => {
+  return new Promise(
+    (resolve, reject) => {
+      wx.cloud.callFunction({
+        name: 'getActions',
+        data: {
+          heart: true,
+          post: true,
+          userid
+        }
+      }).then(
+        res => {
+          let lsPostid = res.result.actions.map(e => e.targetid);
+          resolve(wx.cloud.callFunction({
+            name: 'getPostList',
+            data: {
+              ids: lsPostid,
+              userid: userid // 当前登录用户的ID
+            }
+          })) //.then(res => resolve(res));
+        }
+      )
+    }
+  )
+}
+
 module.exports = {
   showLoading: showLoading,
   hideLoading: hideLoading,
@@ -176,5 +205,6 @@ module.exports = {
   getInstitutionList,
   RANK_TYPE,
   submitApplication,
-  getMyApplication
+  getMyApplication,
+  getPostsHeartedByUser
 }
