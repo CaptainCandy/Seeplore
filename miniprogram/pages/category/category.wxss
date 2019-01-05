@@ -17,11 +17,13 @@ page{
 .category-zone .head{
   width: 100%;
   height: 5.5vh;
-  padding: 0 0 0 6vw;
+  padding: 0 0 0 4vw;
   border-bottom: solid 3rpx rgb(244,244,244);
 }
 .category-zone .head .name{
   font-size: 36rpx;
+  padding-left: 2vw;
+  border-left: solid 1vw rgb(39, 96, 202)
 }
 .category-zone .body{
   width: 100%;

@@ -1,11 +1,11 @@
 <!--miniprogram/pages/category/category.wxml-->
 <view class='container'>
-  <view wx:for="{{tagList}}" wx:for-index="aindex" data-aindex='{{aindex}}' wx:key="index" bindtap='test' class='category-zone'>
+  <view wx:for="{{tagList}}" wx:for-index="aindex" wx:key="index" bindtap='test' class='category-zone'>
     <view class='head'>
       <text class='name'>{{item.category}}</text>
     </view>
     <view class='body'>
-      <view wx:for="{{item.tags}}" wx:for-item="tag" wx:for-index="bindex" data-bindex='{{bindex}}' wx:key="index" bindtap='test' class='tag-zone'>
+      <view wx:for="{{item.tags}}" wx:for-item="tag" wx:for-index="bindex" data-aindex='{{aindex}}' data-bindex='{{bindex}}' wx:key="index" bindtap='onTag' class='tag-zone'>
         <view class='image-box'>
           <image class='image' src='{{tag.url}}' mode='widthFix'></image>
         </view>
