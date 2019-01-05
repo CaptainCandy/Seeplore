@@ -1,0 +1,89 @@
+/* miniprogram/pages/mine/collectedPost.wxss */
+page{
+  background: #f6f6f6
+}
+.container{
+  width: 100%;
+  margin-top: 7.5vh;
+}
+.flexWrp{
+  display: flex;
+}
+.flexTab{
+  flex-flow: row nowrap;
+  justify-content: space-around;
+  align-items: stretch;
+}
+.flexItem{
+  flex-grow: 1;
+  text-align: center;
+}
+.topTab{
+  width: 100vw;
+  height:75rpx;
+  background: #ffffff;
+  color: #000000;
+  font-size: 28rpx;
+  line-height: 75rpx;
+  box-shadow: 0 2px 2px #bebebe;
+  margin: 0 0 8rpx 0;
+  position: fixed;
+  top: 0;
+  z-index: 9999;
+}
+.top-Tab.active{
+  color:#7cb9e8;
+  border-bottom: solid 2px #7cb9e8;
+}
+.body{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 15vh;
+}
+.body .list-item{
+  border-top: solid 1rpx rgb(244, 244, 244);
+  width: 98%;
+  display: flex;
+  align-items: center;
+  background:#ffffff;
+
+  border-bottom:1px solid #eee;
+  box-shadow:0 2px 5px #eeeeee;
+}
+.body .list-item .rank-box{
+  width: 15%;
+  text-align: center;
+  padding: 0 2vw 0 2vw;
+}
+.body .list-item .rank-box .rank{
+  font-size: 48rpx;
+  color: rgb(39, 96, 202);
+}
+.body .list-item .info{
+  width: 82%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding: 2vw 1vw 2vw 1vw;
+}
+.body .list-item .info .name{
+  font-size: 40rpx;
+  padding-bottom: 1vw;
+  text-align: center;
+}
+.body .list-item .info .intro{
+  font-size: 32rpx;
+}
+.body .list-item .button-box{
+  width: 8%;
+  padding: 0 2vw 0 1vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.body .list-item .button-box .collect{
+  width: 4vh;
+  height: 4vh;
+}

@@ -1,0 +1,65 @@
+<!--miniprogram/pages/mine/userSite.wxml-->
+<view class='container'>
+  <view class='head' bindtap='onChangeInfo'>
+    <image class='portrait' mode="widthFix" src='{{userInfo.wxUserInfo.avatarUrl}}'></image>
+    <view class='selfinfo'>
+      <view class='nickname'>
+        <text>{{userInfo.wxUserInfo.nickName}}</text>
+      </view>
+      <view class='intro'>
+        <text wx:if="{{userInfo.introduction}}">个人简介：{{userInfo.introduction}}</text>
+        <text wx:else style='color: rgb(182, 182, 182)'>个人简介：这个人很懒，什么也没有留下。</text>
+      </view>
+    </view>
+  </view>
+  <view class='second'>
+    <view class='box' bindtap='onPost'>
+      <text>{{userInfo.stats.post}}</text>
+      <text>帖子</text>
+    </view>
+    <view class='box' bindtap='onFollow'>
+      <text>34</text>
+      <text>关注</text>
+    </view>
+    <view class='box' bindtap='onFollower'>
+      <text>56</text>
+      <text>粉丝</text>
+    </view>
+  </view>
+  <view class='body'>
+    <view class='button' bindtap='onCollection'>
+      <text class='text'>TA的收藏</text>
+    </view>
+  </view>
+  <!--
+  <view class='infolist'>
+    <view class='info'>
+      <view class='title'>
+        <text space='ensp'> 所在大学</text>
+      </view>
+      <view class='content'>{{currentCollege.country}}，{{currentCollege.location}}</view>
+      <view class='content'>{{currentCollege.englocation}}</view>
+    </view>
+    <view class='info'>
+      <view class='title'>
+        <text space='ensp'> 排名</text>
+      </view>
+      <view class='content'><text space='ensp' selectable='true'>U.S.News: {{currentCollege.rankusnews}}</text></view>
+      <view class='content'><text space='ensp' selectable='true'>QS: {{currentCollege.rankqs}}</text></view>
+      <view class='content'><text space='ensp' selectable='true'>Times: {{currentCollege.ranktimes}}</text></view>
+    </view>
+    <view class='info'>
+      <view class='title'>
+        <text space='ensp'> 简介</text>
+      </view>
+      <view class='content'><text space='ensp' selectable='true'>{{currentCollege.introduction}}</text></view>
+    </view>
+    <view class='info'>
+      <view class='title'>
+        <text space='ensp'> 网站</text>
+      </view>
+      <view class='content'><text space='ensp' selectable='true'>{{currentCollege.website}}</text></view>
+    </view>
+  </view>
+  -->
+</view>

@@ -1,4 +1,10 @@
 <!--index.wxml-->
+<view class='search' bindtap='onSearch'>
+  <view class='input'>
+    <text>🔍搜索</text>
+  </view>
+</view>
+
 <view class="topTab flexWrp flexTab" >
   <view class="top-Tab flexItem {{currentNavtab==idx ? 'active' : ''}}" wx:for="{{navTab}}" wx:for-index="idx" wx:for-item="tabName" data-idx="{{idx}}" bindtap="switchTopTab">
     {{tabName}}
@@ -7,21 +13,21 @@
 
 <import src="../../app.wxml"/>
 
-<scroll-view scroll-y="true" style='margin-top: 80rpx; margin-bottom: 130rpx' class="container withtab" bindscrolltoupper="upper" bindscrolltolower="lower"  scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+<scroll-view scroll-y="true" style='margin-top: 140rpx; margin-bottom: 150rpx' class="container withtab" bindscrolltoupper="upper" bindscrolltolower="lower"  scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
   
   <view class="container" hidden="{{currentNavtab==0 ? '' : true}}">
 
     <view wx:for="{{prePostListNew}}" wx:key="{{index}}">
       <view class="postList">
         <view class="postPre_block">
-          <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
+          <view class="postPre_portrait_box" bindtap='onUser' data-currentindex='{{index}}'>
             <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
-          </navigator>
-          <navigator class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}' hover-class='none'>
+          </view>
+          <view class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}'>
             <view class="postPre_title"><text>{{item.title}}</text></view>
-            <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
+            <view class="postPre_nickname" bindtap='onUser' data-currentindex='{{index}}'><text>{{item.author.nickName}}</text></view>
             <view class="postPre_date"><text>{{item.createTime}}</text></view>
-          </navigator>
+          </view>
           <view class="postPre_abstract" bindtap='onPostList' data-currentindex='{{index}}'>
             <text>{{item.abstract}}</text>
           </view>

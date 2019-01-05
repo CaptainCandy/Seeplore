@@ -1,0 +1,40 @@
+<!--miniprogram/pages/mine/agentApply.wxml-->
+
+<view class='container'>
+  <view class='body'>
+    <view class='tips'>
+      <text>请在下方填入必要的信息并提交审核</text>
+    </view>
+    <view class='input-zone'>
+      <view class='title'>机构名称</view>
+      <view class='input'>
+        <input bindinput='onInput' placeholder='在这里输入' data-type='name'></input>
+      </view>
+    </view>
+    <view class='input-zone'>
+      <view class='title'>统一社会信用代码</view>
+      <view class='input'>
+        <input bindinput='onInput' placeholder='在这里输入' data-type='unicode'></input>
+      </view>
+    </view>
+    <view class='input-zone'>
+      <view class='title'>法人代表</view>
+      <view class='input'>
+        <input bindinput='onInput' placeholder='在这里输入' data-type='legalperson'></input>
+      </view>
+    </view>
+    <view class='input-zone'>
+      <view class='title'>机构地址</view>
+      <view class='input'>
+        <input bindinput='onInput' placeholder='在这里输入' data-type='address'></input>
+      </view>
+    </view>
+    <view class='input-zone'>
+      <view class='title' style='align-self: flex-start'>机构简介</view>
+      <view class='textarea-box'>
+        <textarea class='textarea' bindinput='onInput' placeholder='在这里输入' data-type='intro'></textarea>
+      </view>
+    </view>
+    <view class='button' bindtap='onSubmit'>提交</view>
+  </view>
+</view>

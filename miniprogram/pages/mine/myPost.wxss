@@ -1,0 +1,14 @@
+/* miniprogram/pages/mine/myPost.wxss */
+page{
+  background: #f6f6f6;
+}
+.container{
+  width: 100%;
+}
+.tips{
+  font-size: 32rpx;
+  margin-top: 4vh;
+  color: rgb(182, 182, 182);
+  display: flex;
+  justify-content: center;
+}

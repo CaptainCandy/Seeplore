@@ -1,5 +1,5 @@
 // miniprogram/pages/category/category.js
-var app = getApp()
+const app = getApp()
 
 Page({
 
@@ -51,15 +51,16 @@ Page({
         ]
       },
       {
-        category: '求职',
+        category: '交流',
         tags: [
           {
-            name: "任天堂",
-            url: '../../images/pikachu.jpg'
+            name: "心灵之约",
+            url: '../../images/chat_heart.png'
           },
         ]
       },
-    ]
+    ],
+    searchResult: [],
   },
 
   /**
@@ -118,7 +119,49 @@ Page({
 
   },
 
-  test: function(e) {
-    console.log(e.currentTarget)
+  onTag: function(e) {
+    console.log(e.currentTarget.dataset)
+    let tags = []
+    let tag = this.data.tagList[e.currentTarget.dataset.aindex].tags[e.currentTarget.dataset.bindex].name
+    console.log(tag)
+    tags.push(tag)
+    let that = this
+    wx.showLoading({
+      title: '正在获取',
+    })
+    wx.cloud.callFunction({
+      name: 'getPostList', data: {
+        userid: app.globalData.userid,
+        tags: tags,
+        //words: ['王逸群']
+      }
+    }).then(
+      res => {
+        res.result.data.map(post => {
+          //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+          let now = new Date();
+          let createTime = new Date(post.createTime);
+          if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+            let strTime = null;
+            if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+            else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+            createTime = strTime;
+          }
+          else {
+            let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+            createTime = strTime;
+          }
+          post.createTime = createTime;
+        })
+        console.log(res.result.data);
+        that.setData({
+          searchResult: res.result.data.reverse()
+        })
+        wx.navigateTo({
+          url: '../mine/myPost?isSearch=true',
+        })
+        wx.hideLoading()
+      } // .data is a list of posts.
+    );
   }
 })

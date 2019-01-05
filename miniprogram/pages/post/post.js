@@ -77,41 +77,39 @@ Page({
   createPost: function(e){
     let content = null;
     console.log(e.detail);
-    
-    const posts = wx.cloud.database().collection('posts');
-    posts.add({
-      data:{
+
+    wx.cloud.callFunction({
+      name: 'createPost',
+      data: {
         title: e.detail.title,
         abstract: e.detail.abstract,
         content: e.detail.content,
-        tags: "",//? 仅保存至tag collection;; String可用db.RegExp
-        authorID: app.globalData.userid, //_id in 'user' collection
-        createTime: new Date(),
-        heartCount: 0,
-        status: 1 // 0 草稿 1 发布 -1 隐藏
+        tags: e.detail.tags, //? 仅保存至tag collection;; String可用db.RegExp
+        userid: app.globalData.userid //_id in 'user' collection
       }
-    }).then(function(resp){
-      console.log(resp._id);//TODO 此时应当跳转发帖结束页面。
-      //返回上一层的界面并刷新
+    }).then(function (resp) {
+      console.log(resp.result.postid);//TODO 此时应当跳转发帖结束页面。
+      wx.hideLoading()
       wx.redirectTo
-      ({
-        url: '../index/viewPost?curPostId=' + resp._id,
-        success: function () {
-          // 暂时不需要
-        },
-        fail: function(){
-          wx.switchTab({
-            url: '../index/index',
-          })
-        }
-      })
+        ({
+          url: '../index/viewPost?curPostId=' + resp.result.postid,
+          success: function () {
+            // 暂时不需要
+          },
+          fail: function () {
+            wx.switchTab({
+              url: '../index/index',
+            })
+          }
+        })
     },
-    function(err){
-      console.log(err)
-      wx.showToast({
-        title: '发帖失败！',
-        duration: 2000
+      function (err) {
+        console.log(err)
+        wx.showToast({
+          title: '发帖失败！',
+          duration: 2000,
+          icon: 'none'
+        })
       })
-    });
   }
 })

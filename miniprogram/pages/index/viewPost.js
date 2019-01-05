@@ -1,5 +1,5 @@
 // miniprogram/pages/index/myPost.js
-var utils = require('../../utils/utils.js'); 
+const utils = require('../../utils/utils.js');
 const app = getApp();
 
 //使用严格模式，为了使用let
@@ -20,6 +20,7 @@ Page({
     loaded: false, //"已经没有数据"的变量，默认false，隐藏 
     isFirstLoading: true,  //第一次加载，设置true ,进入该界面时就开始加载
     userInfo: {},
+    searchResult: []
   },  
 
   /**
@@ -408,16 +409,23 @@ Page({
   },
 
   onDelete: function(e) {
+    console.log(this.data.currentPost.postid)
     wx.showModal({
       title: '删除帖子',
       content: '确定要删除这篇帖子吗？',
       success: res => {
         if (res.confirm) {
-          wx.cloud.database().collection('posts').doc(this.data.currentPost.postid).remove().then(
+          wx.cloud.callFunction(
+            {
+              name: 'managePost',
+              data: { 
+                postid: this.data.currentPost.postid, 
+                hide: true 
+                }
+            }
+          ).then(
             function (resp) {
-              console.log(resp)
-              //说明删除成功，否则 removed == 0.
-              if (resp.stats.removed == 1) {
+              if(resp.result.updated === 1 && resp.result.hidden === true) {
                 wx.showToast({
                   title: '删除成功',
                   duration: 2000
@@ -427,23 +435,22 @@ Page({
                     delta: 1,
                   })
                 }, 2200)
-              }
-              else
+              }else
                 wx.showToast({
-                  title: '删除失败\n请检查网络后重试',
+                  title: '删除失败',
                   duration: 2000,
                   icon: 'none'
                 })
             },
             function (err) {
               //错误处理。
+              console.log(err)
               wx.showToast({
-                title: '删除失败\n请检查网络后重试',
+                title: '删除失败',
                 duration: 2000,
                 icon: 'none'
               })
-            }
-          )
+            })
         }
       }
     })
@@ -724,4 +731,63 @@ Page({
       }
     })
   },
+
+  onUser: function(e) {
+    wx.navigateTo({
+      url: '../mine/userSite?isMine=' + (this.data.currentPost.author.userid === app.globalData.userid) + '&targetUserid=' + this.data.currentPost.author.userid,
+    })
+  },
+
+  onReplyUser: function(e) {
+    let rindex = e.currentTarget.dataset.rindex
+    console.log(rindex)
+    wx.navigateTo({
+      url: '../mine/userSite?isMine=' + (this.data.replyList[rindex].replier.userid === app.globalData.userid) + '&targetUserid=' + this.data.replyList[rindex].replier.userid,
+    })
+  },
+
+  onTag: function(e) {
+    let tag = e.currentTarget.dataset.tagname
+    let tags = []
+    console.log(tag)
+    tags.push(tag)
+    let that = this
+    wx.showLoading({
+      title: '正在获取',
+    })
+    wx.cloud.callFunction({
+      name: 'getPostList', data: {
+        userid: app.globalData.userid,
+        tags: tags,
+        //words: ['王逸群']
+      }
+    }).then(
+      res => {
+        res.result.data.map(post => {
+          //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+          let now = new Date();
+          let createTime = new Date(post.createTime);
+          if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+            let strTime = null;
+            if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+            else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+            createTime = strTime;
+          }
+          else {
+            let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+            createTime = strTime;
+          }
+          post.createTime = createTime;
+        })
+        console.log(res.result.data);
+        that.setData({
+          searchResult: res.result.data.reverse()
+        })
+        wx.navigateTo({
+          url: '../mine/myPost?isSearch=true',
+        })
+        wx.hideLoading()
+      } // .data is a list of posts.
+    );
+  }
 })

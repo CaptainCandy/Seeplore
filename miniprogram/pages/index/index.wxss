@@ -20,7 +20,7 @@ page {
 }
 .topTab{
   width: 100vw;
-  height:75rpx;
+  height: 75rpx;
   background: #ffffff;
   color: #000000;
   font-size: 28rpx;
@@ -28,7 +28,7 @@ page {
   box-shadow: 0 2px 2px #bebebe;
   margin: 0 0 8rpx 0;
   position: fixed;
-  top: 0;
+  top: 60rpx;
   z-index: 9999;
 }
 .top-Tab.active{
@@ -163,4 +163,24 @@ page {
   font-size: 24rpx;
   line-height: 36rpx;
   word-break: break-all;
+}
+.search{
+  width: 98vw;
+  padding: 1vw 1vw 1vw 1vw;
+  position: fixed;
+  top: 0rpx;
+  z-index: 9999;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+.search .input{
+  width: 100%;
+  border-radius: 8rpx;
+  background-color: rgb(244, 244, 244);
+  color: rgb(182, 182, 182);
+  font-size: 28rpx;
+  padding: 1vw 0 1vw 0;
 }

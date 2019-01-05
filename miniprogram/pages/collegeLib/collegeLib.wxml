@@ -1,4 +1,35 @@
 <!--pages/collegeLib/collegeLib.wxml-->
-<text>哎呀都说了叫你别看了。。</text>
+<view class='container'>
+  <view class='head'>
+    <view class='pickers'>
+      <view class='pickerName'>国家:</view>
+      <picker mode='selector' class='picker' range='{{countryPicker}}' value='{{countryIndex}}' bindchange="countryChange">
+        <view class='content'>{{countryPicker[countryIndex]}}</view>
+      </picker>
+      <view class='pickerName'>排名类型:</view>
+      <picker mode='selector' class='picker' range='{{rankPicker}}' value='{{rankIndex}}' bindchange="rankChange">
+        <view class='content'>{{rankPicker[rankIndex]}}</view>
+      </picker>
+    </view>
+    <view class='buttons'>
+      <view class='button' bindtap='filter'>筛选</view>
+    </view>
+  </view>
+  <view class='body'>
+    <view wx:for='{{collegeList}}' wx:key='index' data-index='{{index}}' class='list-item'>
+      <view class='rank-box'>
+        <text class='rank' space="ensp">{{item.ranking}}</text>
+      </view>
+      <view class='info' bindtap='onCollege' data-name='{{item.name}}'>
+        <view class='name'>{{item.name}}</view>
+        <view class='intro'>{{item.introduction}}</view>
+      </view>
+      <view class='button-box'>
+        <image wx:if="{{item.collected}}" class='collect' mode='widthFix' src='../../icon/collect_true.png' bindtap='onCollect' data-index='{{index}}'></image>
+        <image wx:else class='collect' mode='widthFix' src='../../icon/collect_false.png' bindtap='onCollect' data-index='{{index}}'></image>
+      </view>
+    </view>
+  </view>
+</view>
 
 <tabbar tabbar="{{tabbar}}"></tabbar>

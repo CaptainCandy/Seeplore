@@ -1,0 +1,15 @@
+<!--miniprogram/pages/index/search.wxml-->
+<view class='container'>
+  <view class='title'>
+    <text>搜索</text>
+  </view>
+  <view class='tips'>
+    <text>请用空格隔开关键词</text>
+  </view>
+  <view class='search-box'>
+    <input class='input' bindinput='onInput' placeholder='请输入搜索内容'></input>
+    <view class='button' bindtap='onSearch'>
+      <text>搜索</text>
+    </view>
+  </view>
+</view>

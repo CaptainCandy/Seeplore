@@ -38,6 +38,19 @@
   - wx.cloud.uploadFile则是返回fileID
   - rich-text组件应当可以处理fileID [文档：组件支持](https://developers.weixin.qq.com/miniprogram/dev/wxcloud/reference-client-api/component/index.html) 退而求其次，也可以使用image组件
 
+```js
+/* demo-2 通过搜索获取帖子列表 */
+wx.cloud.callFunction({
+  name: 'getPostList',data:{
+    userid: 'og8v64qQg6Ws-71AGkdAAF-wXTTk',
+    //tags: ['心灵之约'], 关键词与标签检索不并存。
+    words: ['王逸群']
+  }
+}).then(
+  res => {console.log(res.result.data);} // .data is a list of posts.
+);
+```
+
 ### User control
 
 - 由于用户会更改头像和微信昵称，数据库保存的用户身份可能失效；因此，每次用户打开小程序时与后端数据库同步一次UserInfo；Post control需要显示发帖人昵称和头像时，从数据库User Collection调取。
@@ -58,6 +71,102 @@
   - [x] login云函数根据openid判断是否新用户，选择调用create/update
     - create可以直接写进login; 而update函数在用户手动更新个人信息时也会被调用
   - [x] 保存到globalData: openid, userid, wxUserInfo
+- “查看用户”
+  - 显示用户的post/collection/following/follower的count
+
+```js
+/* 查看 用户信息 demo-1 */
+wx.cloud.callFunction({
+  name: 'getUserInfo',
+  data: {
+    userid: 'og8v64qQg6Ws-71AGkdAAF-wXTTk',
+    fields: {
+      "wxUserInfo.nickName": true,
+      "wxUserInfo.avatarUrl": true,
+      contact: true, // object：字段有email/phone
+      createDate: true, // 注册时间 Datetime字符串
+      "introduction": true // 指定所需要的字段
+    },
+    stats: true // 客户端从 res.result.stats 获取统计结果。返回值里面的 stats：对象，字段包括post, heart, collect, follower, following，均为number。
+  }
+})
+
+/* 查看当前用户身份 demo-6 */
+wx.cloud.callFunction({
+  name: 'getUserInfo',
+  data: {
+    userid: 'og8v64qQg6Ws-71AGkdAAF-wXTTk',
+    fields: null // field为空时 默认返回头像与昵称、role字段。
+  }
+}).then(res => res.result.role.isAgent) // isAgent: false 若普通用户 "agentName" 若机构用户
+// 帖子列表的 authorInfo 同样会增加一个role.isAgent字段
+
+/* 查看 用户赞过的帖子/收藏列表 demo-7 */
+// getPostsHeartedByUser 获取用户赞过的帖子。 userid: 所查看用户的ID
+wx.cloud.callFunction({
+        name: 'getActions',
+        data: {
+          heart: true, // 查看收藏列表 collect: true
+          post: true, // 查看回复列表 reply: true
+          userid: targetUserID // 所查看的目标用户的id ！！
+        }
+      }).then(
+        res => {
+          let lsPostid = res.result.actions.map(e => e.targetid);
+          wx.cloud.callFunction({
+            name: 'getPostList',
+            data: {
+              ids: lsPostid,
+              userid: currentUserID // 当前登录用户的ID
+            }
+          }).then(res => {
+            res.result.data // 帖子列表，不包含content ！！
+            /*
+            操作页面的回调函数写在这里。
+            */
+          });
+      )
+
+/* 查看 自己发布的帖子 列表 demo-8 */
+wx.cloud.callFunction({
+    name: 'getPostList',
+    data: {
+      authorid: targetUserID, // 所查看的目标用户的id ！！
+      userid: currentUserID // 当前登录用户的ID !
+    }
+  }).then(res => {
+    res.result.data // 帖子列表，不包含content
+    /*
+    操作页面的回调函数写在这里。
+    */
+  });
+
+/* demo-9 查看 院校收藏 */
+wx.cloud.database().collection('institution-actions').where({
+  userid: 'og8v64vuhRAlpyfBMkYkPPBhOy4Y'// 目标用户userid！！
+}).get().then(
+  res => {
+    let lsName = res.data.map(e => e.target);
+    let p = utils.getInstitutionList('usnews', 'og8v64vuhRAlpyfBMkYkPPBhOy4Y', lsName); // 第二个参数用当前用户userID替代！！
+    p.then(
+      resp => { // 回调开始
+        let lsInstitutions = resp.lsInstitutions
+        console.log(lsInstitutions);
+        lsInstitutions.map(college => {
+          college.introduction = college.introduction.slice(0, 31) + '...'
+        });
+        /*
+        that.setData({
+          collegeList: lsInstitutions,
+        })
+        */
+      },// 回调结束
+      err => { throw err }
+    );
+  }
+);
+
+```
 
 ### tag control
 
@@ -74,24 +183,193 @@
     - tag有分类，比如：地理位置、目标院校、标化考试
     - 特殊标签：院校标签可以跟院校库绑定；活动贴都需要入口
 - 功能
-  - doPostTags 增删post的标签
+  - doPostTags 增删post的标签 `发帖没有经过这个函数；这个函数没有处理redirect`
     - 输入：postid, tagname, remove
     - 输出：added, removed, unmatched, primary
   - doUserTags 增删user的标签
     - 输入：postid, tagname, remove
     - 输出：added, removed, unmatched, primary
   - manageTagsInfo 管理标签的分类
-    - 输入：tagname, setcategory, setprimary
+    - 输入：tagname, category, alias, description
+    - 直接前端调用数据库更好。
+- [ ] 添加checked字段
+- 权限控制
+  - 小程序端可以任意读取tag
+  - 管理tag必须通过云函数
+
+```js
+wx.cloud.database().collection('tags').add({
+  _id:'tagname', category:1
+});
+wx.cloud.database().collection('tags').where({//获取标签
+  category: 5
+}).get().then(
+  resp=>console.log(resp.data)
+);
+[{_id:'浙江大学',category:5,description:'标签说明。'}]//resp.data
+```
+
+### institution control
+
+- [ ] 院校与tag的链接如何实现？
+  - Solution 1: 院校将name作为ID，tag不做处理
+  - solution 2：tag新增字段：link
+
+```js
+wx.cloud.database().collection('institutions').add({//添加院校
+  data:{
+    _id:'浙江大学',
+    engname:'Zhejiang University',
+    region:'中国大陆',
+    website:'www.zju.edu.cn',
+    introduction:'坐落在风景优美的杭州市。'
+  }
+}).then(
+  resp=>console.log(resp._id),//入库成功，院校名称
+  err=>{}
+);
+wx.cloud.database().collection('institutions').doc('加州大学洛杉矶分校').update({//更新院校   这个无法执行：因为小程序端没有权限
+  data:{
+    introduction:'坐落在风景优美的洛杉矶的西木村。'
+  }
+}).then(
+  resp=>console.log(resp.stats.updated),//若更新成功，updated==1
+  err=>{console.log(err);}//doc()的院校名称输入错误。
+);
+//读取院校数据
+const db = wx.cloud.database();
+let rankingType = 'rankusnews';// "ranktimes" "rankqs"
+db.collection('institutions').orderBy(rankingType, 'asc').where({
+  country:'美国'
+}).get().then(
+  resp => {
+    let lsInstitutions = resp.data.map(
+      elem => {
+        return {
+          ranking: elem[rankingType],
+          name: elem.name, engname: elem.engname,
+          country: elem.country, location: elem.location,
+          introduction: elem.introduction, website: elem.website
+        }
+      }
+    );
+    console.log(lsInstitutions);
+  },
+  err => { throw err });
+/*
+* 收藏院校库
+*/
+//函数定义。
+let collectInstitution = function(institutionName, userid){
+  const db = wx.cloud.database();
+  const actions = db.collection('institution-actions');
+  const cond = {target:institutionName,userid:userid}
+  const q = actions.where(cond);
+  return new Promise((resolve,reject)=>{
+    q.get().then(
+      res=>{
+        let collected = null;
+        let total = res.data.length;
+        if(total==1){
+          let id = res.data[0]._id;
+          actions.doc(id).remove().then(console.log);
+          collected = false;
+          resolve({collected});
+        }else if(total==0){
+          actions.add({data:cond}).then(console.log);
+          collected = true;
+          resolve({collected});
+        }else{
+          throw new Error('|| multiple collection records. ||')
+        }
+      }
+    )
+  });
+};
+//函数调用。
+const userid = app.globalData.userid;
+collectInstitution('哈佛大学',userid).then(
+  result=>{
+    if(result.collected){
+      //由未收藏变为已收藏状态
+    }else{
+      //相反
+    }
+  }, err=>{}
+  //缺少错误处理代码。
+)
+```
+
+### Agent control
+
+```js
+// 机构用户提交表单 sumbitApplication demo-12
+agentInfo = { userid: '', name: '', unicode: '', legalperson: '',
+address: '', introduction: '' };
+var utils = require('../../utils/utils.js');
+//userid = app.globalData.userid;//"当前用户userid"
+utils.submitApplication(agentInfo).then(
+  res => res.isSubmitted // true: 提交成功 false: 提交失败（userid/name 重复）
+);
+// 机构用户查看自己的申请表 demo-13
+var utils = require('../../utils/utils.js');
+utils.getMyApplication().then(
+  res => {
+    if(res.isSubmitted){
+      res.data // 用户申请表的数据，状态字段包括：isChecked, isApproved, message(管理员check时附上的消息)
+    }else{
+      //TODO 用户未曾提交过申请
+    }
+  }
+);
+// 管理员查看所有申请表 demo-14
+wx.cloud.callFunction({
+  name: 'manageApplication',
+  data: {
+    toViewList: true, userid:'当前用户ID'
+  }
+}).then(
+  res => res.data // res.data是一个list
+)
+// 管理员处理申请表 demo-15
+wx.cloud.callFunction({
+  name: 'manageApplication',
+  data: {
+    toViewList: false, userid:'当前用户ID',
+    isApproved: true,//管理员是否通过这个机构的申请。
+    appliactionid: '',//上一个函数的返回的list里面元素的_id
+    message: ''
+  }
+}).then(
+  res => res.data // res.data是一个list
+)
+```
 
 ### Activity control
 
 - 设计
-  - 报名界面有多个入口？好像只有查看活动贴详情才有。
-  - post增加一个可选字段：“活动报名链接？”
-  - 如何避免重复报名：显示是否报名字段。如何查询已报名活动。根据userid唯一匹配报名。
+  - [ ] post新增字段：activityid
+  - [ ] 传给前端 isSignedup 从user-activities查询报名记录。
+  - 如何临时关闭报名？
+  - 页面使用逻辑：帖子详情，活动详情，报名表
   - 活动报名表字段
     - 管理员设置：数组（每个对象包括字段名和字段验证方式）
     - 报名时：数组（每个元素包括字段名和内容）
+- 数据
+  - activities
+    - status
+    - description
+    - openTime
+    - closeTime
+  - user-activities
+  - 报名表
+    - 活动信息：标题、描述、详情、类型（是否付费）
+    - 活动状态：开始报名、结束报名
+  - 用户报名表
+- 实现
+  - [ ] manageActivities
+    - 输入：
+      - basics: title
 
 ## Protocol
 
@@ -220,6 +498,64 @@
 ]
 ```
 
+- tags
+  - category
+    - 0 系统； 1 主题； 2 地理； 3 考试； 4 工作； 5 院校； 6 生活
+  - checked: Boolean
+
+```js
+{
+  _id:'心灵之约',
+  category: 1,
+  description: '畅所欲言'
+}
+```
+
+- institutions
+  - name / _id
+  - engname
+  - region
+  - website
+  - introduction
+
+### 前端调用云函数
+
+```js
+/* demo-7 发帖 */
+e = {
+  detail: {
+    title: '美国的牛逼大学真多',
+    abstract: '啊！真不容易。',
+    content: [{img:false, text:'啊！真不容易。'}],
+    tags:['美国']
+  }
+}
+const app = getApp()
+wx.cloud.callFunction({//发帖。
+  name: "createPost",
+  data: {
+    title: e.detail.title,
+    abstract: e.detail.abstract,
+    content: e.detail.content,
+    tags: e.detail.tags,
+    userid: app.globalData.userid //_id in 'user' collection
+  }
+}).then(
+  resp => console.log(resp.result.postid),
+  err => console.log('发帖失败')
+)
+
+wx.cloud.callFunction({//管理员管理标签。
+  name: "manageTagInfo",
+  data: {
+    tag: '心灵之约',
+    alias: ["心灵"],
+    description: "随便聊聊",
+    //category: 设置一位数字。
+  }
+})//没有返回值。
+```
+
 ### 前端操作数据库
 
 ```js
@@ -242,7 +578,20 @@ wx.cloud.database().collection('posts').add({
 ```
 
 ```js
-//删除Post
+/* demo-10 删除帖子*/
+wx.cloud.callFunction(
+  {
+    name: 'managePost',
+    data: {postid: 'XDBbyHffS3SWgAtB',hide:true}
+  }
+).then(  
+  function(resp){
+    console.log(resp.result.updated === 1 && resp.result.hidden === true); //说明删除成功
+  },
+  function(err){
+    //错误处理。
+  })
+//
 wx.cloud.database().collection('posts').doc('post-id').update({
   data:{status:0}
 }).then(

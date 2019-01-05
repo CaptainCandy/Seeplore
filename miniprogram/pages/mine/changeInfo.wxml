@@ -1,0 +1,15 @@
+<!--miniprogram/pages/mine/changeInfo.wxml-->
+<view class='container'>
+  <view class='body'>
+    <view class='tips'>
+      <text>请在下方填入修改的信息并提交</text>
+    </view>
+    <view wx:if="{{changeType === 'intro'}}" class='input-zone'>
+      <view class='title' style='align-self: flex-start'>个人简介</view>
+      <view class='textarea-box'>
+        <textarea class='textarea' bindinput='onInput' placeholder='在这里输入' data-type='intro'></textarea>
+      </view>
+    </view>
+    <view wx:if="{{changeType === 'intro'}}" class='button' bindtap='onChangeIntro'>提交</view>
+  </view>
+</view>
