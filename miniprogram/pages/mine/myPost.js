@@ -7,7 +7,7 @@ Page({
    * 页面的初始数据
    */
   data: {
-    myPost: null,
+    myPost: [],
     isMine: true,
     postList: null,
     targetUserid: null,
@@ -21,6 +21,21 @@ Page({
       targetUserid: app.globalData.userid
     })
     let that = this
+    //查看搜索帖子
+    if (options.isSearch === 'true') {
+      wx.showLoading({
+        title: '正在渲染',
+      })
+      let pages = getCurrentPages()
+      let prePage = pages[pages.length - 2]
+      let postList = prePage.data.searchResult
+      this.setData({
+        postList
+      })
+      wx.hideLoading()
+      return
+    }
+    //普通的查看用户帖子
     if (options.isMine !== 'true') {
       this.setData({
         isMine: false,
@@ -108,5 +123,12 @@ Page({
    */
   onShareAppMessage: function () {
 
+  },
+
+  onPostList: function (e) {
+    let postid = this.data.postList[e.currentTarget.dataset.currentindex].postid
+    wx.navigateTo({
+      url: '../index/viewPost?curPostId=' + postid,
+    })
   }
 })

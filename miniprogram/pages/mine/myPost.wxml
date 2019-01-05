@@ -1,20 +1,25 @@
 <!--miniprogram/pages/mine/myPost.wxml-->
-<view class='container'>
+<view wx:if="{{postList.length !== 0}}" class='container'>
   <view wx:for="{{postList}}" wx:key="{{index}}">
-      <view class="postList">
-        <view class="postPre_block">
-          <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
-            <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
-          </navigator>
-          <navigator class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}' hover-class='none'>
-            <view class="postPre_title"><text>{{item.title}}</text></view>
-            <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
-            <view class="postPre_date"><text>{{item.createTime}}</text></view>
-          </navigator>
-          <view class="postPre_abstract" bindtap='onPostList' data-currentindex='{{index}}'>
-            <text>{{item.abstract}}</text>
-          </view>
+    <view class="postList">
+      <view class="postPre_block">
+        <view class="postPre_portrait_box" open-type='navigate' hover-class='none'>
+          <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
+        </view>
+        <view class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}' hover-class='none'>
+          <view class="postPre_title"><text>{{item.title}}</text></view>
+          <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
+          <view class="postPre_date"><text>{{item.createTime}}</text></view>
+        </view>
+        <view class="postPre_abstract" bindtap='onPostList' data-currentindex='{{index}}'>
+          <text>{{item.abstract}}</text>
         </view>
       </view>
     </view>
+  </view>
+</view>
+<view wx:else class='container'>
+  <view class='tips'>
+    <text>没有相关的帖子哦！</text>
+  </view>
 </view>
