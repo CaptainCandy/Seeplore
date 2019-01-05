@@ -44,6 +44,6 @@
   background-color: #409EFF;
   color: #fff;
   text-align: center;
-  padding: 2vw 0 2vw 0;
+  padding: 4vw 0 4vw 0;
   border-radius: 8rpx;
 }
