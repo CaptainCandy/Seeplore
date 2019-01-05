@@ -1,8 +1,11 @@
 {
   "pages": [
+    "pages/loginEntry/entry",
+    "pages/mine/userSite",
+    "pages/mine/mine",
+    "pages/mine/agentApply",
     "pages/collegeLib/collegeLib",
     "pages/category/category",
-    "pages/loginEntry/entry",
     "pages/reply/comment",
     "pages/reply/reply",
     "pages/index/viewPost",
@@ -10,9 +13,12 @@
     "pages/userConsole/userConsole",
     "pages/storageConsole/storageConsole",
     "pages/submitForm/submitForm",
-    "pages/mine/mine",
     "pages/reply/viewReply",
-    "pages/collegeLib/college"
+    "pages/collegeLib/college",
+    "pages/mine/changeInfo",
+    "pages/mine/myApply",
+    "pages/mine/myPost",
+    "pages/mine/collectedPost"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",
