@@ -43,7 +43,7 @@ Page({
     }
     else if (options.isCollegeShare === 'true') {
       wx.navigateTo({
-        url: '../collegeLib/college?name=' + options.curCollegeName,
+        url: '../collegeLib/college?name=' + options.name,
       })
     }
   },
@@ -245,6 +245,12 @@ Page({
     let curUser = currentPost.author.userid
     wx.navigateTo({
       url: '../mine/userSite?isMine=' + (curUser === app.globalData.userid) + '&targetUserid=' + curUser,
+    })
+  },
+
+  onSearch: function() {
+    wx.navigateTo({
+      url: 'search',
     })
   }
 })

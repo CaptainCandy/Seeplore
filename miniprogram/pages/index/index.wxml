@@ -1,4 +1,10 @@
 <!--index.wxml-->
+<view class='search' bindtap='onSearch'>
+  <view class='input'>
+    <text>🔍搜索</text>
+  </view>
+</view>
+
 <view class="topTab flexWrp flexTab" >
   <view class="top-Tab flexItem {{currentNavtab==idx ? 'active' : ''}}" wx:for="{{navTab}}" wx:for-index="idx" wx:for-item="tabName" data-idx="{{idx}}" bindtap="switchTopTab">
     {{tabName}}
@@ -7,7 +13,7 @@
 
 <import src="../../app.wxml"/>
 
-<scroll-view scroll-y="true" style='margin-top: 80rpx; margin-bottom: 130rpx' class="container withtab" bindscrolltoupper="upper" bindscrolltolower="lower"  scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
+<scroll-view scroll-y="true" style='margin-top: 140rpx; margin-bottom: 150rpx' class="container withtab" bindscrolltoupper="upper" bindscrolltolower="lower"  scroll-into-view="{{toView}}" scroll-top="{{scrollTop}}">
   
   <view class="container" hidden="{{currentNavtab==0 ? '' : true}}">
 
