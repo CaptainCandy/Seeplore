@@ -18,7 +18,8 @@
     "pages/mine/changeInfo",
     "pages/mine/myApply",
     "pages/mine/myPost",
-    "pages/mine/collectedPost"
+    "pages/mine/collectedPost",
+    "pages/index/search"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

@@ -60,7 +60,9 @@ Component({
     titleBuffer: '',
     textBufferPool: [],
     currentIndex: 0,
-    count:0
+    count:0,
+    tagString: '',
+    tagArray: [],
   },
 
   /*attached: function () {
@@ -255,7 +257,7 @@ Component({
         })
       }
       this.setAbstract();
-      console.log('abs没问题')
+      console.log('没问题')
       this.handleOutput();
     },
 
@@ -299,6 +301,7 @@ Component({
       const textBufferPool = this.data.textBufferPool;
       const titleNode = this.data.titleNode
       const nodeList = this.data.nodeList;
+      const tagString = this.data.tagString;
       if (e.fromMethod === 'onFinish' && nodeList.length === 0) throw "emptyPostError"
       titleNode.children[0].text = titleBuffer;
       nodeList.forEach((node, index) => {
@@ -309,6 +312,7 @@ Component({
       this.setData({
         titleNode,
         nodeList,
+        tagString
       })
     },
 
@@ -411,6 +415,9 @@ Component({
      */
     handleOutput: function (index = 0) {
       let nodeList = this.data.nodeList;
+      let tagArray = this.data.tagArray;
+      let tagString = this.data.tagString;
+      tagArray = tagString.split(" ")
       if (index >= nodeList.length) {
         wx.hideLoading();
         console.log(nodeList);
@@ -420,7 +427,8 @@ Component({
             if (n.name === 'img') return { img: true, fileid: n.attrs.src };
             else return { img: false, text: n.children[0].text };
           }),
-          title: this.data.titleBuffer
+          title: this.data.titleBuffer, 
+          tags: tagArray
         });
         /*
         if (this.properties.outputType.toLowerCase() === 'array') {
@@ -444,5 +452,12 @@ Component({
         this.handleOutput(index + 1);
       }
     },
-  }
+
+    onTagInput: function (e) {
+      let string = e.detail.value
+      this.setData({
+        tagString: string
+      })
+    }
+  },
 })
