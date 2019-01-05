@@ -5,7 +5,16 @@
   </view>
   <view wx:for='{{applyList}}' class='applylist'>
     <view class='apply'>
-      <view class='time'>item.createTime</view>
+      <view class='time'>{{item.createTime}}</view>
+      <view class='content'>
+        <text space='ensp'>机构名称：{{item.name}}</text>
+      </view>
+      <view class='content'>
+        <text space='ensp'>统一社会信用代码：{{item.unicode}}</text>
+      </view>
+      <view class='content'>
+        <text space='ensp'>法人代表：{{item.legalperson}}</text>
+      </view>
       <view class='content'>
         <text wx:if='{{item.isChecked}}' space='ensp'>是否已审核：已审核</text>
         <text wx:else space='ensp'>是否已审核：未审核</text>

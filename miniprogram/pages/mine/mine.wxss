@@ -22,7 +22,7 @@ page{
   flex-direction: column;
 }
 .head .selfinfo .nickname{
-  font-size: 48rpx;
+  font-size: 44rpx;
 }
 .head .selfinfo .intro{
   font-size: 32rpx;
