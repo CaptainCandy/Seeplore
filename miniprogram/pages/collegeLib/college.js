@@ -18,6 +18,7 @@ Page({
     //读取院校数据
     const db = wx.cloud.database();
     let that = this;
+    console.log(options)
     db.collection('institutions').where({name:options.name}).get().then(
       resp => {
         let institution = resp.data;
@@ -76,7 +77,7 @@ Page({
   /**
    * 用户点击右上角分享
    */
-  onShareAppMessage: function () {
+  onShareAppMessage: function (e) {
     if (e.from === 'button') {
       // 来自页面内转发按钮
       console.log(e.target)
