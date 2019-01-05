@@ -1,5 +1,5 @@
 // miniprogram/pages/category/category.js
-var app = getApp()
+const app = getApp()
 
 Page({
 
@@ -131,7 +131,7 @@ Page({
     })
     wx.cloud.callFunction({
       name: 'getPostList', data: {
-        userid: 'og8v64qQg6Ws-71AGkdAAF-wXTTk',
+        userid: app.globalData.userid,
         tags: tags,
         //words: ['王逸群']
       }

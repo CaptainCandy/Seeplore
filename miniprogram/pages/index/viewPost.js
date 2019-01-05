@@ -20,6 +20,7 @@ Page({
     loaded: false, //"已经没有数据"的变量，默认false，隐藏 
     isFirstLoading: true,  //第一次加载，设置true ,进入该界面时就开始加载
     userInfo: {},
+    searchResult: []
   },  
 
   /**
@@ -743,5 +744,50 @@ Page({
     wx.navigateTo({
       url: '../mine/userSite?isMine=' + (this.data.replyList[rindex].replier.userid === app.globalData.userid) + '&targetUserid=' + this.data.replyList[rindex].replier.userid,
     })
+  },
+
+  onTag: function(e) {
+    let tag = e.currentTarget.dataset.tagname
+    let tags = []
+    console.log(tag)
+    tags.push(tag)
+    let that = this
+    wx.showLoading({
+      title: '正在获取',
+    })
+    wx.cloud.callFunction({
+      name: 'getPostList', data: {
+        userid: app.globalData.userid,
+        tags: tags,
+        //words: ['王逸群']
+      }
+    }).then(
+      res => {
+        res.result.data.map(post => {
+          //控制时间的展示样式，当天的帖子显示小时分钟，非当天的显示日期
+          let now = new Date();
+          let createTime = new Date(post.createTime);
+          if (now.getFullYear() == createTime.getFullYear() && now.getDate() == createTime.getDate() && now.getMonth() == createTime.getMonth()) {
+            let strTime = null;
+            if (createTime.getMinutes() <= 9 && createTime.getMinutes() >= 0) strTime = createTime.getHours() + ':0' + createTime.getMinutes();
+            else strTime = createTime.getHours() + ':' + createTime.getMinutes();
+            createTime = strTime;
+          }
+          else {
+            let strTime = (createTime.getMonth() + 1) + '-' + createTime.getDate();
+            createTime = strTime;
+          }
+          post.createTime = createTime;
+        })
+        console.log(res.result.data);
+        that.setData({
+          searchResult: res.result.data.reverse()
+        })
+        wx.navigateTo({
+          url: '../mine/myPost?isSearch=true',
+        })
+        wx.hideLoading()
+      } // .data is a list of posts.
+    );
   }
 })

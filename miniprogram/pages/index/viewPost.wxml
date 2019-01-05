@@ -17,6 +17,12 @@
         <text class='text' selectable='true' space='ensp'>{{node.text}}</text>
       </view>
     </view>
+    <view class='tags'>
+      <text class='tag' style='color: #000'>标签:</text>
+      <view wx:for='{{currentPost.tags}}' class='tag' bindtap='onTag' data-tagname='{{item.tag}}'>
+        <text>#{{item.tag}}</text>
+      </view>
+    </view>
   </view>
   <view class='bottom-tools'>
     <view class='bottom-button' bindtap='onReply'>
