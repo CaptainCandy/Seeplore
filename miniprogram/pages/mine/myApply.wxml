@@ -1,0 +1,23 @@
+<!--miniprogram/pages/mine/myApply.wxml-->
+<view wx:if='{{isApplied}}' class='container'>
+  <view class='title'>
+    <text>我的申请</text>
+  </view>
+  <view wx:for='{{applyList}}' class='applylist'>
+    <view class='apply'>
+      <view class='time'>item.createTime</view>
+      <view class='content'>
+        <text wx:if='{{item.isChecked}}' space='ensp'>是否已审核：已审核</text>
+        <text wx:else space='ensp'>是否已审核：未审核</text>
+      </view>
+      <view class='content'>
+        <text wx:if='{{item.isApproved}}' space='ensp'>是否通过：已通过</text>
+        <text wx:else space='ensp'>是否通过：未通过</text>
+      </view>
+      <view class='content'>
+        <text space='ensp'>回馈消息：{{item.message}}</text>
+      </view>
+    </view>
+  </view>
+</view>
+<view wx:else class='container'>你还没有过任何申请记录！</view>
