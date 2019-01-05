@@ -408,18 +408,23 @@ Page({
   },
 
   onDelete: function(e) {
+    console.log(this.data.currentPost.postid)
     wx.showModal({
       title: '删除帖子',
       content: '确定要删除这篇帖子吗？',
       success: res => {
         if (res.confirm) {
-          wx.cloud.database().collection('posts').doc(this.data.currentPost.postid).update({
-            data: { status: 0}
-          }).then(
+          wx.cloud.callFunction(
+            {
+              name: 'managePost',
+              data: { 
+                postid: this.data.currentPost.postid, 
+                hide: true 
+                }
+            }
+          ).then(
             function (resp) {
-              console.log(resp)
-              //说明删除成功，否则 removed == 0.
-              if (resp.stats.updated === 1) {
+              if(resp.result.updated === 1 && resp.result.hidden === true) {
                 wx.showToast({
                   title: '删除成功',
                   duration: 2000
@@ -429,23 +434,22 @@ Page({
                     delta: 1,
                   })
                 }, 2200)
-              }
-              else
+              }else
                 wx.showToast({
-                  title: '删除失败\n请检查网络后重试',
+                  title: '删除失败',
                   duration: 2000,
                   icon: 'none'
                 })
             },
             function (err) {
               //错误处理。
+              console.log(err)
               wx.showToast({
-                title: '删除失败\n请检查网络后重试',
+                title: '删除失败',
                 duration: 2000,
                 icon: 'none'
               })
-            }
-          )
+            })
         }
       }
     })
