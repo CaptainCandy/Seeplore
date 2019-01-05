@@ -121,8 +121,8 @@
 }
 
 .tips{
-  font-size: 32rpx;
-  color: #409EFF;
+  font-size: 27rpx;
+  color: rgb(182, 182, 182);
   padding: 6rpx 0 6rpx 6rpx;
 }
 

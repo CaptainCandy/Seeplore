@@ -1,8 +1,8 @@
 <!--components/xing-editor.wxml-->
 <view class="editor-wrapper" style="min-height: {{windowHeight}}px" scroll-y enable-back-to-top>
   <input class='editor-title' placeholder='请输入标题' placeholder-style='color: #d1d1d1' data-index="-1" value="{{titleNode.children[0].text}}" bindinput='onTitleInput'></input>
-  <view class='tips'><text>请输入符合该帖子的标签，不同标签请用空格隔开，如“美国 托福”等</text></view>
-  <input class='editor-tag' placeholder='请输入标签(可空)' placeholder-style='color: #d1d1d1' value="{{tagString}}" bindinput='onTagInput'></input>
+  <view class='tips'><text>请在下方输入符合该帖子的标签，不同标签请用空格隔开，如“美国 托福”等</text></view>
+  <input class='editor-tag' placeholder='请输入标签(可空)' placeholder-style='color: #d1d1d1;' value="{{tagString}}" bindinput='onTagInput'></input>
   <view class='tips'><text>请在下方选择文本窗格(左)或图片窗格(右)添加文字段落或图片</text></view>
   <block wx:for="{{nodeList}}" wx:for-item="node" wx:key="{{index}}">
     <view class="editor-node-wrapper">
