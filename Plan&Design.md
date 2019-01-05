@@ -521,14 +521,24 @@ wx.cloud.callFunction({
 ### 前端调用云函数
 
 ```js
+/* demo-7 发帖 */
+e = {
+  detail: {
+    title: '美国的牛逼大学真多',
+    abstract: '啊！真不容易。',
+    content: [{img:false, text:'啊！真不容易。'}],
+    tags:['美国']
+  }
+}
+const app = getApp()
 wx.cloud.callFunction({//发帖。
   name: "createPost",
   data: {
     title: e.detail.title,
     abstract: e.detail.abstract,
     content: e.detail.content,
-    tags: ["心灵之约","似水流年"],
-    authorID: app.globalData.userid //_id in 'user' collection
+    tags: e.detail.tags,
+    userid: app.globalData.userid //_id in 'user' collection
   }
 }).then(
   resp => console.log(resp.result.postid),

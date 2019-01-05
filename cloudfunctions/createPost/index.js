@@ -13,6 +13,7 @@ exports.main = async(event, context) => {
   let userid = (!event.userid) ? wxContext.OPENID : event.userid;
   let [title, abstract, content] = [event.title, event.abstract, event.content];
   let [tags] = [event.tags];
+  console.log(event);
 
   if(!userid){
     return {
@@ -78,20 +79,21 @@ exports.main = async(event, context) => {
       }
     }
 
+/*
     if (tags) {
       console.log('现在向数据库添加标签帖子联系。');
       for (let tag of tags) {
-        wx.cloud.callFunction({
+        cloud.callFunction({
           name: 'doPostTag',
           data: {
-            tag: tags[i],
+            tagname,
             postid,
-            undo: false
+            remove: false
           }
         })
       }
     }
-
+*/
   } catch (error) {
     console.error('|| we caught an error. ||');
     console.error(error);

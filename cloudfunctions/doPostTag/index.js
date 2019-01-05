@@ -11,6 +11,7 @@ exports.main = async (event, context) => {
   let [postid, userid] = [event.postid, (!event.userid) ? wxContext.OPENID : event.userid];
   let remove = event.remove;
   let tagname = event.tagname;
+  console.log(event);
 
   if(!postid || !tagname){
     throw new Error('[postid and tagname are a must]');
