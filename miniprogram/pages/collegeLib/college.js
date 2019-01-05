@@ -83,7 +83,7 @@ Page({
     }
     return {
       title: this.data.currentCollege.name,
-      path: '/pages/index/index?curCollegeName=' + this.data.currentCollege.name + '&isCollegeShare=' + true,
+      path: '/pages/index/index?name=' + this.data.currentCollege.name + '&isCollegeShare=' + true,
       success: function (res) {
         // 转发成功
         console.log("转发成功:" + JSON.stringify(res));

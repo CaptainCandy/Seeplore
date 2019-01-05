@@ -1,8 +1,8 @@
 <!--miniprogram/pages/index/myPost.wxml-->
 <view class='container'>
   <view class='author'>
-    <image class='portrait' mode='widthFix' src='{{currentPost.author.avatarUrl}}'></image>
-    <text class='nickname'>{{currentPost.author.nickName}}</text>
+    <image class='portrait' mode='widthFix' src='{{currentPost.author.avatarUrl}}' bindtap='onUser'></image>
+    <text class='nickname' bindtap='onUser'>{{currentPost.author.nickName}}</text>
     <text class='date'>发表于 {{currentPost.createTime}}</text>
   </view>
   <view class='title'>
@@ -51,10 +51,10 @@
     <text class='zone-title' style=''>评论区</text>
     <view wx:for="{{replyList}}" wx:if="{{item.status === 1}}" wx:for-index="rindex" wx:key="index" data-rindex='{{rindex}}' class='content'>
       <view class='portrait-box'>
-        <image class='portrait' mode="widthFix" src='{{item.replier.avatarUrl}}'></image>
+        <image class='portrait' mode="widthFix" src='{{item.replier.avatarUrl}}' bindtap='onReplyUser' data-rindex='{{rindex}}'></image>
       </view>
       <view class='main'>
-        <view class='nickname'>{{item.replier.nickName}}</view>
+        <view class='nickname' bindtap='onReplyUser' data-rindex='{{rindex}}'>{{item.replier.nickName}}</view>
         <view>
           <text class='text' bindtap='onComment' data-curreplyid='{{item._id}}' data-author='{{item.replier.nickName}}' data-content='{{item.content}}'>{{item.content}}</text>
         </view>

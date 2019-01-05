@@ -28,7 +28,6 @@ page{
 .infolist .info{
   width: 100%;
   border-top: solid 2rpx rgb(244, 244, 244);
-
 }
 .infolist .info .title{
   margin: 2vw 0 3vw 2vw;

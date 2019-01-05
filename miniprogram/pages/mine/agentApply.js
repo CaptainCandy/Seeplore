@@ -1,5 +1,6 @@
 // miniprogram/pages/mine/agentApply.js
 const app = getApp()
+const utils = require('../../utils/utils.js')
 
 Page({
 
@@ -109,10 +110,49 @@ Page({
 
   onSubmit: function(e) {
     let agentInfo = this.data.agentInfo;
+    let isCompleted = true;
+    console.log(app.globalData.userid)
     agentInfo.userid = app.globalData.userid;
-    this.setData({
-      agentInfo
-    })
+    for (var i in agentInfo) {
+      if (agentInfo[i] === '') {
+        wx.showModal({
+          title: '错误信息',
+          content: '请填写所有内容后再尝试提交审核',
+          showCancel: false,
+        })
+        isCompleted = false
+        break
+      }
+    }
+    console.log(agentInfo)
+    if (isCompleted) {
+      this.setData({
+        agentInfo
+      })
+      utils.submitApplication(agentInfo).then(
+        res => {
+          if (res.isSubmitted) {
+            console.log(res)
+            wx.showToast({
+              title: '提交成功',
+              duration: 2000,
+            })
+            setTimeout(function () {
+              wx.navigateBack({
+                delta: 1
+              })
+            }, 2200)
+          }
+          else {
+            wx.showToast({
+              title: '提交失败',
+              icon: 'none',
+              duration: 2000
+            })
+          }
+        } // true: 提交成功 false: 提交失败（userid/name 重复）
+      );
+    }
     console.log(this.data.agentInfo)
   }
 })

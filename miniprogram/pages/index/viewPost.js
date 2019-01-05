@@ -726,4 +726,18 @@ Page({
       }
     })
   },
+
+  onUser: function(e) {
+    wx.navigateTo({
+      url: '../mine/userSite?isMine=' + (this.data.currentPost.author.userid === app.globalData.userid) + '&targetUserid=' + this.data.currentPost.author.userid,
+    })
+  },
+
+  onReplyUser: function(e) {
+    let rindex = e.currentTarget.dataset.rindex
+    console.log(rindex)
+    wx.navigateTo({
+      url: '../mine/userSite?isMine=' + (this.data.replyList[rindex].replier.userid === app.globalData.userid) + '&targetUserid=' + this.data.replyList[rindex].replier.userid,
+    })
+  }
 })

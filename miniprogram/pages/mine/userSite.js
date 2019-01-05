@@ -1,4 +1,4 @@
-// miniprogram/pages/mine/mine.js
+// miniprogram/pages/mine/userSite.js
 const app = getApp()
 
 Page({
@@ -7,19 +7,30 @@ Page({
    * 页面的初始数据
    */
   data: {
-    tabbar:{},
-    userInfo: null,
+    userInfo: null, //使用者
+    siteUser: null, //看的页面属于哪个用户
+    isMine: false,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    app.editTabbar()
+    let that = this
+    if (options.isMine === 'true') {
+      this.setData({
+        isMine: true,
+        siteUser: app.globalData.userid
+      })
+    }else {
+      this.setData({
+        siteUser: options.targetUserid
+      })
+    }
     wx.cloud.callFunction({
       name: 'getUserInfo',
       data: {
-        userid: app.globalData.userid,
+        userid: that.data.siteUser,
         fields: {
           "wxUserInfo.nickName": true,
           "wxUserInfo.avatarUrl": true,
@@ -48,7 +59,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-    console.log(this.data.userInfo)
+
   },
 
   /**
@@ -86,41 +97,23 @@ Page({
 
   },
 
-  onAgentApply: function() {
+  onChangeInfo: function () {
+    if (this.data.isMine === true) {
+      wx.navigateTo({
+        url: 'changeInfo?changeType=intro&userid=' + app.globalData.userid,
+      })
+    }
+  },
+
+  onCollection: function () {
     wx.navigateTo({
-      url: 'agentApply',
+      url: 'collectedPost?isMine' + this.data.isMine + '&targetUserid=' + this.data.siteUser,
     })
   },
 
-  onMyCollection: function() {
+  onPost: function () {
     wx.navigateTo({
-      url: 'collectedPost?isMine=true',
-    })
-  },
-
-  onMyFollow: function () {
-
-  },
-
-  onMyFollower: function () {
-
-  },
-
-  onMyPost: function () {
-    wx.navigateTo({
-      url: 'myPost?isMine=true',
-    })
-  },
-
-  onMyInfo: function () {
-    wx.navigateTo({
-      url: 'userSite?isMine=' + true,
-    })
-  },
-
-  onMyApply: function () {
-    wx.navigateTo({
-      url: 'myApply',
+      url: 'myPost?isMine' + this.data.isMine + '&targetUserid=' + this.data.siteUser,
     })
   }
 })

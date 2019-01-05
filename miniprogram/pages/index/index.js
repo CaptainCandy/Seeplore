@@ -226,12 +226,25 @@ Page({
     console.log(e.currentTarget.dataset.currentindex)
     let curNav = e.currentTarget.dataset.currentnavtab
     let currentPost = null
-    if (curNav == 1) //因为在0的时候显示的是undefined，所以不能用0来判断
+    if (curNav === 1) //因为在0的时候显示的是undefined，所以不能用0来判断
       currentPost = this.data.prePostListHot[e.currentTarget.dataset.currentindex]
     else currentPost = this.data.prePostListNew[e.currentTarget.dataset.currentindex]
     let curPostId = currentPost.postid
     wx.navigateTo({
       url: 'viewPost?curPostId=' + curPostId
+    })
+  },
+
+  onUser: function(e) {
+    console.log(e.currentTarget.dataset.currentindex)
+    let curNav = e.currentTarget.dataset.currentnavtab
+    let currentPost = null
+    if (curNav === 1) //因为在0的时候显示的是undefined，所以不能用0来判断
+      currentPost = this.data.prePostListHot[e.currentTarget.dataset.currentindex]
+    else currentPost = this.data.prePostListNew[e.currentTarget.dataset.currentindex]
+    let curUser = currentPost.author.userid
+    wx.navigateTo({
+      url: '../mine/userSite?isMine=' + (curUser === app.globalData.userid) + '&targetUserid=' + curUser,
     })
   }
 })
