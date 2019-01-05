@@ -578,7 +578,20 @@ wx.cloud.database().collection('posts').add({
 ```
 
 ```js
-//删除Post
+/* demo-10 删除帖子*/
+wx.cloud.callFunction(
+  {
+    name: 'managePost',
+    data: {postid: 'XDBbyHffS3SWgAtB',hide:true}
+  }
+).then(  
+  function(resp){
+    console.log(resp.result.updated === 1 && resp.result.hidden === true); //说明删除成功
+  },
+  function(err){
+    //错误处理。
+  })
+//
 wx.cloud.database().collection('posts').doc('post-id').update({
   data:{status:0}
 }).then(

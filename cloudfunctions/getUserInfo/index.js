@@ -22,6 +22,7 @@ exports.main = async(event, context) => {
       ["wxUserInfo.nickName"]: true,
       "wxUserInfo.avatarUrl": true,
       "role.isAgent": true,
+      "role.isAccoundManager":true,
       _id: true
     }
   }
