@@ -1,0 +1,45 @@
+/* miniprogram/pages/index/search.wxss */
+.container{
+  width: 100%;
+}
+.title{
+  text-align: center;
+  font-size: 48rpx;
+  margin: 4vh 0 2vh 0;
+}
+.tips{
+  display: flex;
+  width: 70%;
+  font-size: 32rpx;
+  justify-content: center;
+  margin: 0 0 2vh 0;
+  color: rgb(182, 182, 182)
+}
+.search-box{
+  display: flex;
+  align-items: center;
+  width: 90%;
+}
+.search-box .input{
+  height: 6vh;
+  flex-grow: 1;
+  font-size: 32rpx;
+  padding: 0 1vw 0 2vw;
+  border: solid 2rpx rgb(39, 96, 202);
+  border-bottom-left-radius: 8rpx;
+  border-top-left-radius: 8rpx;
+}
+.search-box .button{
+  width: 20%;
+  height: 6vh;
+  font-size: 32rpx;
+  border: solid 2rpx rgb(39, 96, 202);
+  background-color: rgb(39, 96, 202);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2vw 0 1vw;
+  border-bottom-right-radius: 8rpx;
+  border-top-right-radius: 8rpx;
+}
