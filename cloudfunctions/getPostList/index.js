@@ -27,7 +27,7 @@ exports.main = async(event, context) => {
   let [skip, limit] = [event.skip, event.limit];
   let authorid = event.authorid;
   let ref = null;
-  let userid = event.userid;
+  let userid = (!event.userid) ? wxContext.OPENID : event.userid;
 
   var num = [recent, hot, ids].filter(obj => obj != undefined).length;
   if (num > 1) {
@@ -83,7 +83,8 @@ exports.main = async(event, context) => {
       });
       //不需要在list页面呈现每个post拥有的全部tag，只需要取出不重复的post列表
     }
-  } else if (authorid){
+  } 
+  if (authorid){
     ref = ref.where({
       authorID: authorid
     });
@@ -96,13 +97,15 @@ exports.main = async(event, context) => {
   }
   if (limit) {
     ref = ref.limit(limit);
+  } else{
+    ref = ref.limit(30);
   }
 
   var resp;
   resp = await ref.get();
   var rawpostlist = resp.data;
 
-  //console.log(rawpostlist) 此处rawpostlist内部的createTime还是Date类型。
+  //console.log(rawpostlist) //此处rawpostlist内部的createTime还是Date类型。
 
   var useridlist = rawpostlist.map(item => item.authorID);
 
@@ -115,6 +118,7 @@ exports.main = async(event, context) => {
 
   var userinfolist = resp.result.data; //.map(function(item){return item.wxUserInfo;})
   var userinfodict = new Array();
+  console.log('\n || userinfolist|| \n', userinfolist);
   userinfolist.forEach(function(elem) {
     elem.wxUserInfo.role = elem.role;
     userinfodict[elem._id] = elem.wxUserInfo;
@@ -150,8 +154,15 @@ exports.main = async(event, context) => {
     return ele.targetid;
   });
 
+  console.log("|| userinfodict ||\n ", userinfodict);
   var extract = function(item) {
     var authorinfo = userinfodict[item.authorID];
+    if(authorinfo){
+      authorinfo.userid = item.authorID;
+    }else{
+      console.log('\n here : ||',item)
+    }
+    
     return {
       postid: item._id,
       isMine: item.authorID == userid || item._openid == wxContext.OPENID, // 如果是从客户端调用。 //

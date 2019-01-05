@@ -57,6 +57,7 @@ exports.main = async(event, context) => {
   var userinfodict = new Array();
   authorlist.forEach(function(elem) {
     elem.wxUserInfo.role = elem.role;
+    elem.wxUserInfo.userid = elem._id;
     userinfodict[elem._id] = elem.wxUserInfo;
   });
 

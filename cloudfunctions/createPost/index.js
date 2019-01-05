@@ -14,6 +14,12 @@ exports.main = async(event, context) => {
   let [title, abstract, content] = [event.title, event.abstract, event.content];
   let [tags] = [event.tags];
 
+  if(!userid){
+    return {
+      postid: 'XCJOud7E7L4w6Qo6'
+    };
+  }
+
   const ctags = db.collection('tags');
   const cposts = db.collection('posts');
 
