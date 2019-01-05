@@ -1,1 +1,63 @@
 /* miniprogram/pages/mine/mine.wxss */
+page{
+
+}
+.container{
+  width: 100%;
+}
+.head{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 3vh 0 3vh 0;
+}
+.head .portrait{
+  width: 20%;
+  border-radius: 50%;
+}
+.head .selfinfo{
+  width: 60%;
+  padding: 0 0 0 4vw;
+  display: flex;
+  flex-direction: column;
+}
+.head .selfinfo .nickname{
+  font-size: 48rpx;
+}
+.head .selfinfo .intro{
+  font-size: 32rpx;
+  padding-top: 2vw;
+}
+.second{
+  width: 100%;
+  border-bottom: solid 2vh rgb(244, 244, 244);
+  display: flex;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 2vh;
+}
+.second .box{
+  padding: 2vw 2vw 2vw 2vw;
+  font-size: 32rpx;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+.body{
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.body .button{
+  width: 100%;
+  border-bottom: solid 2rpx rgb(244, 244, 244);
+  font-size: 36rpx;
+  padding: 2vw 2vw 2vw 4vw;
+}
+.body .button .text{
+  width: 100%;
+  border-left: solid 1vw rgb(39, 96, 202);
+  padding: 0 0 0 2vw;
+}
