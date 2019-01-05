@@ -1,0 +1,42 @@
+<!--miniprogram/pages/mine/collectedPost.wxml-->
+<view class="topTab flexWrp flexTab" >
+  <view class="top-Tab flexItem {{currentNavtab==idx ? 'active' : ''}}" wx:for="{{navTab}}" wx:for-index="idx" wx:for-item="tabName" data-idx="{{idx}}" bindtap="switchTopTab">
+    {{tabName}}
+  </view>
+</view>
+<view class="container" hidden="{{currentNavtab==0 ? '' : true}}">
+  <view wx:for="{{collectedPost}}" wx:key="{{index}}">
+      <view class="postList">
+        <view class="postPre_block">
+          <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
+            <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
+          </navigator>
+          <navigator class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}' hover-class='none'>
+            <view class="postPre_title"><text>{{item.title}}</text></view>
+            <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
+            <view class="postPre_date"><text>{{item.createTime}}</text></view>
+          </navigator>
+          <view class="postPre_abstract" bindtap='onPostList' data-currentindex='{{index}}'>
+            <text>{{item.abstract}}</text>
+          </view>
+        </view>
+      </view>
+    </view>
+</view>
+<view class="container" hidden="{{currentNavtab==1 ? '' : true}}">
+  <view class='body'>
+    <view wx:for='{{collectedCollege}}' wx:key='index' data-index='{{index}}' class='list-item'>
+      <view class='rank-box'>
+        <text class='rank' space="ensp">{{item.ranking}}</text>
+      </view>
+      <view class='info' bindtap='onCollege' data-name='{{item.name}}'>
+        <view class='name'>{{item.name}}</view>
+        <view class='intro'>{{item.introduction}}</view>
+      </view>
+      <view class='button-box'>
+        <image wx:if="{{item.collected}}" class='collect' mode='widthFix' src='../../icon/collect_true.png' bindtap='onCollect' data-index='{{index}}'></image>
+        <image wx:else class='collect' mode='widthFix' src='../../icon/collect_false.png' bindtap='onCollect' data-index='{{index}}'></image>
+      </view>
+    </view>
+  </view>
+</view>
