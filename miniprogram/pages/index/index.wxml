@@ -13,15 +13,15 @@
 
     <view wx:for="{{prePostListNew}}" wx:key="{{index}}">
       <view class="postList">
-        <view wx:if='{{item.status === 1}}' class="postPre_block">
-          <navigator class="postPre_portrait_box" open-type='navigate' hover-class='none'>
+        <view class="postPre_block">
+          <view class="postPre_portrait_box" bindtap='onUser' data-currentindex='{{index}}'>
             <image class="postPre_portrait" src="{{item.author.avatarUrl}}"></image>
-          </navigator>
-          <navigator class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}' hover-class='none'>
+          </view>
+          <view class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}'>
             <view class="postPre_title"><text>{{item.title}}</text></view>
-            <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
+            <view class="postPre_nickname" bindtap='onUser' data-currentindex='{{index}}'><text>{{item.author.nickName}}</text></view>
             <view class="postPre_date"><text>{{item.createTime}}</text></view>
-          </navigator>
+          </view>
           <view class="postPre_abstract" bindtap='onPostList' data-currentindex='{{index}}'>
             <text>{{item.abstract}}</text>
           </view>
