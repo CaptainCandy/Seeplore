@@ -14,7 +14,7 @@ Page({
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onShow: function (options) {
     app.editTabbar()
     wx.cloud.callFunction({
       name: 'getUserInfo',
@@ -47,7 +47,7 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onLoad: function () {
     
   },
 
