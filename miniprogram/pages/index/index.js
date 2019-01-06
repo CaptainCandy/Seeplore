@@ -33,7 +33,7 @@ Page({
     })
 
     // 加载最新帖子列表
-    //this.fetchPostListNew()
+    this.fetchPostListNew()
 
     //判断是否是分享链接
     if (options.isPostShare === 'true') {
@@ -60,7 +60,7 @@ Page({
    */
   onShow: function () {
     // 加载最新帖子列表
-    this.fetchPostListNew()
+    //this.fetchPostListNew()
   },
 
   /**
