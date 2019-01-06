@@ -418,6 +418,13 @@ Component({
       let tagArray = this.data.tagArray;
       let tagString = this.data.tagString;
       tagArray = tagString.split(" ")
+      if (tagArray.length === 0) {tagArray = null}
+      else {
+          tagArray = tagArray.filter(function (item) {
+          return item !== ''
+        })
+      }
+      console.log(tagArray)
       if (index >= nodeList.length) {
         wx.hideLoading();
         console.log(nodeList);
