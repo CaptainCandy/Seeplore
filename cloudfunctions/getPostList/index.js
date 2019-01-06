@@ -90,6 +90,10 @@ exports.main = async(event, context) => {
     });
   }
 
+  ref = ref.where({
+    status: 1
+  });
+
   const size = (await ref.count()).total;
 
   if (skip) {
@@ -114,7 +118,7 @@ exports.main = async(event, context) => {
     data: {
       uidlist: useridlist
     }
-  })
+  });
 
   var userinfolist = resp.result.data; //.map(function(item){return item.wxUserInfo;})
   var userinfodict = new Array();
@@ -125,7 +129,7 @@ exports.main = async(event, context) => {
   });
 
   var respActionQ, useractions;
-
+/*
   respActionQ = await cloud.callFunction({
     name: 'getActions',
     data: {
@@ -153,7 +157,7 @@ exports.main = async(event, context) => {
   var collectedpostlist = useractions.map(function(ele) {
     return ele.targetid;
   });
-
+*/
   console.log("|| userinfodict ||\n ", userinfodict);
   var extract = function(item) {
     var authorinfo = userinfodict[item.authorID];
@@ -169,10 +173,10 @@ exports.main = async(event, context) => {
       abstract: item.abstract,
       title: item.title,
       content: item.content,
-      heartCount: item.heartCount,
-      isHearted: heartedpostlist.some(ele => ele == item._id),
-      isCollected: collectedpostlist.some(ele => ele == item._id),
-      tags: item.tags,
+      //heartCount: item.heartCount,
+      //isHearted: heartedpostlist.some(ele => ele == item._id),
+      //isCollected: collectedpostlist.some(ele => ele == item._id),
+      //tags: item.tags,
       createTime: item.createTime,
       author: authorinfo
     }
