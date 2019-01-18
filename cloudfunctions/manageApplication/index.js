@@ -15,8 +15,6 @@ exports.main = async (event, context) => {
   let [isApproved, isRejected] = [event.isApproved, event.isRejected];
   let message = event.message;
 
-  //TODO 验证用户的管理员身份。
-
   if (toViewList){
     return await db.collection('agent-applications').get();
   };

@@ -56,7 +56,7 @@ exports.main = async (event, context) => {
         },
         role: {
           isActivated: false, isAgent: false, isActivityManager: false,
-          isAccoundManager: false, isSuperUser: false
+          isAccountManager: false, isSuperUser: false
         },
         introduction: "",
         tagsPreferred: [],

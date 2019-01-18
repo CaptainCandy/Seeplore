@@ -341,7 +341,7 @@ wx.cloud.callFunction({
     message: ''
   }
 }).then(
-  res => res.data // res.data是一个list
+  res => res.result.updated // Boolean
 )
 ```
 
@@ -454,7 +454,7 @@ wx.cloud.callFunction({
   createTime: Date,
   email: String,
   phone: String,
-  role: {isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
+  role: {isAgent:, isActivityManager:, isAccountManager:, isSuperUser: },
   introduction: String,
   tagsPreferred: String,
   background: {undergraduate:String, graduate:,

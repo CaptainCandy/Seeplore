@@ -64,10 +64,10 @@ Page({
                   }
                 }).then(
                   res => {
-                    console.log('DONE');
+                    console.log('user info stored in global.');
                     app.globalData.user = res.result;
                   },
-                  err => { console.log('ERROR |||', err); }
+                  err => { console.log('ERROR when getUserInfo |||', err); }
                 )
               },
                 error => {
