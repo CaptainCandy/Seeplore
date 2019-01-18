@@ -24,7 +24,7 @@ exports.main = async(event, context) => {
       "role.isAgent": true,
       "role.isAccoundManager":true,
       _id: true
-    }
+    };
   }
 
   if (uidlist) {
@@ -60,7 +60,8 @@ exports.main = async(event, context) => {
   if (stats && userid) {
     // post count
     let post = (await db.collection('posts').where({
-      authorID: userid
+      authorID: userid,
+      status: 1
     }).count()).total;
 
     // collect count

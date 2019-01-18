@@ -348,28 +348,38 @@ wx.cloud.callFunction({
 ### Activity control
 
 - 设计
-  - [ ] post新增字段：activityid
-  - [ ] 传给前端 isSignedup 从user-activities查询报名记录。
-  - 如何临时关闭报名？
+  - [ ] post新增字段：activityLink
+  - [ ] 传给前端 isSignedUp 从user-activities查询报名记录。
   - 页面使用逻辑：帖子详情，活动详情，报名表
   - 活动报名表字段
     - 管理员设置：数组（每个对象包括字段名和字段验证方式）
     - 报名时：数组（每个元素包括字段名和内容）
 - 数据
   - activities
-    - status
-    - description
-    - openTime
-    - closeTime
+    - _id
+    - name:
+    - status: 0 hidden, 1 opened, 2 paused, 3 closed
+    - abstract: string 考虑是否更适合存放结构化的数据？
+    - openTime:
+    - closeTime:
+    - activityTime:
+    - createTime:
+    - postid:
   - user-activities
   - 报名表
     - 活动信息：标题、描述、详情、类型（是否付费）
     - 活动状态：开始报名、结束报名
   - 用户报名表
+- 用例
+  - 管理员：创建活动，编辑活动，发布活动，关闭报名
+  - 普通用户：报名活动，取消报名，查看活动（所有活动，结束活动，自己的活动）
 - 实现
-  - [ ] manageActivities
+  - [ ] createActivity 是否考虑同时自动发帖？
     - 输入：
-      - basics: title
+      - activity: {name, status, }
+  - [ ] manageActivity
+    - 输入：
+      - activityId 指定活动ID，若空则新建。
 
 ## Protocol
 

@@ -55,7 +55,20 @@ Page({
                 app.globalData.userid = retval.result.userid;
                 wx.switchTab({
                   url: '../index/index',
-                })
+                });
+                wx.cloud.callFunction({
+                  name: 'getUserInfo',
+                  data: {
+                    feilds: null,
+                    userid: app.globalData.userid
+                  }
+                }).then(
+                  res => {
+                    console.log('DONE');
+                    app.globalData.user = res.result;
+                  },
+                  err => { console.log('ERROR |||', err); }
+                )
               },
                 error => {
                   console.log(error);
@@ -72,14 +85,12 @@ Page({
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
   },
 
   /**
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
   },
 
   /**
