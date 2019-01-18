@@ -84,7 +84,7 @@ Page({
         title: e.detail.title,
         abstract: e.detail.abstract,
         content: e.detail.content,
-        tags: e.detail.tags, //? 仅保存至tag collection;; String可用db.RegExp
+        tags: e.detail.tags, 
         userid: app.globalData.userid //_id in 'user' collection
       }
     }).then(function (resp) {

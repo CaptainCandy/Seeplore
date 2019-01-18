@@ -31,11 +31,8 @@ exports.main = async(event, context) => {
       if (!(tags instanceof(Array))) {
         throw new Error('|| tags must be an array. ||');
       }
-      rtags = [];
-      for (let i = 0; i < tags.length; ++i) {
 
-        /*
-        */
+      for (let i = 0; i < tags.length; ++i) {
         try {
           let resp = await ctags.doc(tags[i]).get();
           if (resp.data.redirect) { //如果是redirect
@@ -46,11 +43,16 @@ exports.main = async(event, context) => {
           await ctags.add({
             data: {
               _id: tags[i],
-              description: '这是一个用户产生的标签。'
+              description: '这是一个用户产生的标签。',
+              createTime: new Date()
             }
           });
         }
       };
+
+      if (tags.length === 0) {
+        tags = null;
+      }
     }
 
     console.log('现在向数据库添加帖子。');
@@ -73,7 +75,8 @@ exports.main = async(event, context) => {
         await db.collection('post-tags').add({
           data: {
             postid: postid,
-            tag: tag
+            tag: tag,
+            createTime: new Date()
           }
         })
       }

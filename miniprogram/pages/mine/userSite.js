@@ -59,7 +59,26 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: function () {
-
+    let that = this
+    wx.cloud.callFunction({
+      name: 'getUserInfo',
+      data: {
+        userid: that.data.siteUser,
+        fields: {
+          "wxUserInfo.nickName": true,
+          "wxUserInfo.avatarUrl": true,
+          contact: true, // object：字段有email/phone
+          createDate: true, // 注册时间 Datetime字符串
+          "introduction": true // 指定所需要的字段
+        },
+        stats: true // 客户端从 res.result.stats 获取统计结果。返回值里面的 stats：对象，字段包括post, heart, collect, follower, following，均为number。
+      }
+    }).then(res => {
+      console.log(res)
+      this.setData({
+        userInfo: res.result
+      })
+    })
   },
 
   /**
