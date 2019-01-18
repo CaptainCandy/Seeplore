@@ -74,7 +74,25 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    //读取院校数据
+    let that = this;
+    let rankType = ['rankusnews', "ranktimes", "rankqs"]
+    let rankingType = rankType[this.data.rankIndex]; // "ranktimes" "rankqs" 'rankusnews'
+    const userid = app.globalData.userid;
+    let p = utils.getInstitutionList(rankingType, userid)
+    p.then(
+      resp => {
+        let lsInstitutions = resp.lsInstitutions
+        console.log(lsInstitutions);
+        lsInstitutions.map(college => {
+          college.introduction = college.introduction.slice(0, 31) + '...'
+        })
+        that.setData({
+          collegeList: lsInstitutions,
+        })
+      },
+      err => { throw err }
+    );
   },
 
   /**
