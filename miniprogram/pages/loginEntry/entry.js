@@ -21,8 +21,8 @@ Page({
         myUserInfo: event.detail.userInfo
       }
     }).then(retval => {
-      console.log(retval);
-      app.globalData.openid = retval.result.openid;
+      console.log('onLogin:||',retval);
+      //app.globalData.openid = retval.result.openid;
       app.globalData.userid = retval.result.userid;
       wx.switchTab({
         url: '../index/index',
@@ -50,8 +50,8 @@ Page({
                   myUserInfo: resp.userInfo
                 }
               }).then(retval => {
-                console.log(retval);
-                app.globalData.openid = retval.result.openid;
+                console.log('onAutoLogin:||',retval);
+                //app.globalData.openid = retval.result.openid;
                 app.globalData.userid = retval.result.userid;
                 wx.switchTab({
                   url: '../index/index',
