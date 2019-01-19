@@ -19,7 +19,10 @@
     "pages/mine/myApply",
     "pages/mine/myPost",
     "pages/mine/collectedPost",
-    "pages/index/search"
+    "pages/index/search",
+    "pages/mine/applyCheck",
+    "pages/mine/follower",
+    "pages/mine/applyFeedback"
   ],
   "window": {
     "backgroundColor": "#F6F6F6",

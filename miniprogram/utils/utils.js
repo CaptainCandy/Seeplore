@@ -292,7 +292,7 @@ const viewUsersFollowing = userid => {
         targetid: userid
       }).get().then(
         res => {
-          let uidlist = res.data.map(e => e.targetid);
+          let uidlist = res.data.map(e => e.userid);
           wx.cloud.callFunction({
             name: 'getUserInfo',
             data: {

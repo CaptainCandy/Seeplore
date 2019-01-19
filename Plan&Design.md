@@ -368,8 +368,8 @@ utils.followTargetUser('目标用户ID').then(res=>{
 });// 写入数据库失败直接抛出错误。
 //demo-18 取消关注
 utils.unfollowTargetUser('目标用户ID').then(res=>{
-  // res.ok == true; 关注成功时
-  // res.notFollowing == true; 关注失败时
+  // res.ok == true; 取消成功时
+  // res.notFollowing == true; 本来就没关注
 });
 //demo-19 查看关注列表
 utils.viewUsersFollowedBy('目标用户ID').then(res=>{

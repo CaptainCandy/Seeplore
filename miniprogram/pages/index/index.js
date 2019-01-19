@@ -95,7 +95,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      title: 'Seeplore一站式留学信息共享平台',
+      imageUrl: '../../images/Pikachu.jpg',
+      path: '/pages/index'
+    }
   },
 
   //加载最新帖子列表

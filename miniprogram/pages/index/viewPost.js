@@ -184,7 +184,14 @@ Page({
             //存入每一个回复回复的楼层的人的nickName
             for (var i = 0; i < reply.comments.length - 1; i++) {
               if (comment.parentid === reply.comments[i]._id) {
-                comment.parentNickname = reply.comments[i].replier.nickName
+                if (reply.comments[i].replier.role.isAgent) {
+                  comment.parentNickname = reply.comments[i].replier.nickName
+                  comment.parentAgent = reply.comments[i].replier.role.isAgent
+                }
+                else {
+                  comment.parentNickname = reply.comments[i].replier.nickName
+                  comment.parentAgent = false
+                  }
                 break
               }
             }
