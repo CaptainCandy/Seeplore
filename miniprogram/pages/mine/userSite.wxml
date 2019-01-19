@@ -5,6 +5,8 @@
     <view class='selfinfo'>
       <view class='nickname'>
         <text>{{userInfo.wxUserInfo.nickName}}</text>
+        <view wx:if="{{!isMine&&!isFollow}}" class='button' bindtap='onFollow'>关注</view>
+        <view wx:if="{{!isMine&&isFollow}}" class='button' bindtap='onFollow' style='color: #fff; background-color: #409EFF'>已关注</view>
       </view>
       <view class='intro'>
         <text wx:if="{{userInfo.introduction}}">个人简介：{{userInfo.introduction}}</text>
@@ -17,12 +19,12 @@
       <text>{{userInfo.stats.post}}</text>
       <text>帖子</text>
     </view>
-    <view class='box' bindtap='onFollow'>
-      <text>34</text>
+    <view class='box' bindtap='onMyFollow'>
+      <text>{{userInfo.stats.following}}</text>
       <text>关注</text>
     </view>
-    <view class='box' bindtap='onFollower'>
-      <text>56</text>
+    <view class='box' bindtap='onMyFollower'>
+      <text>{{userInfo.stats.follower}}</text>
       <text>粉丝</text>
     </view>
   </view>
