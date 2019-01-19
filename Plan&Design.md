@@ -345,6 +345,27 @@ wx.cloud.callFunction({
 )
 ```
 
+### Follow control
+
+- 用例：用户：关注、取消关注、查看粉丝、分看关注。
+- 数据：user-action
+  - createTime, targetid, userid
+- 操作
+  - [ ] doUserAction
+  - [ ] viewFollowers 本地
+  - [ ] viewFollowings 本地
+
+```js
+//demo-16 查看当前用户与目标用户之间的关系
+utils.checkRelationshipWith('目标用户ID').then(res=>{
+  // res = {myFollowing: false, 当前用户未关注目标用户
+  //        myFollower: false} 当前用户未被目标用户关注
+});
+//demo-17 当前用户关注目标用户
+utils.followTargetUser('目标用户ID'); // 返回一个Promise，没有resolve值；写入数据库失败直接抛出错误。
+//
+```
+
 ### Activity control
 
 - 设计
@@ -359,24 +380,31 @@ wx.cloud.callFunction({
     - _id
     - name:
     - status: 0 hidden, 1 opened, 2 paused, 3 closed
-    - abstract: string 考虑是否更适合存放结构化的数据？
+    - abstract: string 考虑是否更适合存放结构化的数据？跟帖子一样存吧。
     - openTime:
     - closeTime:
     - activityTime:
     - createTime:
     - postid:
+    - form
   - user-activities
   - 报名表
     - 活动信息：标题、描述、详情、类型（是否付费）
     - 活动状态：开始报名、结束报名
   - 用户报名表
 - 用例
-  - 管理员：创建活动，编辑活动，发布活动，关闭报名
+  - 管理员：创建活动，编辑活动，发布活动，关闭报名，查看活动报名情况
   - 普通用户：报名活动，取消报名，查看活动（所有活动，结束活动，自己的活动）
-- 实现
-  - [ ] createActivity 是否考虑同时自动发帖？
+- 操作
+  - 查看活动：作为一个标签？检索帖子？
+  - [ ] createActivity
+    - 功能：新建活动信息、新建活动贴、两者绑定。
     - 输入：
       - activity: {name, status, }
+      - post: {}
+      - form: {}
+    - 输出：
+      - 两个ID
   - [ ] manageActivity
     - 输入：
       - activityId 指定活动ID，若空则新建。

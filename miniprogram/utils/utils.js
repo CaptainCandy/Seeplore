@@ -1,4 +1,6 @@
 /* 工具文件*/
+const app = getApp();
+const db = wx.cloud.database();
 
 let collectInstitution = function(institutionName, userid) {
   const db = wx.cloud.database();
@@ -49,7 +51,7 @@ function getInstitutionList(rankingType, userid, namelist) {
             elem => elem.target
           ));
           let q = db.collection('institutions').orderBy(rankingType, 'asc');
-          if(namelist){
+          if (namelist) {
             console.log('selecting name.', namelist);
             q = q.where({
               name: db.command.in(namelist)
@@ -133,12 +135,16 @@ let getMyApplication = () => {
         userid
       }).get().then(
         resp => {
-          if(resp.data.length >= 1){
-            resolve({ data: resp.data, isSubmitted: true});
-          }
-          else if(resp.data.length === 0){
-            resolve({ isSubmitted: false });
-          }else{
+          if (resp.data.length >= 1) {
+            resolve({
+              data: resp.data,
+              isSubmitted: true
+            });
+          } else if (resp.data.length === 0) {
+            resolve({
+              isSubmitted: false
+            });
+          } else {
             reject(new Error('错误的application记数。'));
           }
         }
@@ -147,36 +153,104 @@ let getMyApplication = () => {
   )
 };
 
-let getPostsHeartedByUser = (userid) => {
+
+const checkRelationshipWith = (targetid) => {
   return new Promise(
     (resolve, reject) => {
-      wx.cloud.callFunction({
-        name: 'getActions',
-        data: {
-          heart: true,
-          post: true,
-          userid
-        }
-      }).then(
-        res => {
-          let lsPostid = res.result.actions.map(e => e.targetid);
-          resolve(wx.cloud.callFunction({
-            name: 'getPostList',
-            data: {
-              ids: lsPostid,
-              userid: userid // 当前登录用户的ID
-            }
-          })) //.then(res => resolve(res));
-        }
-      )
+      db.collection('user-actions').where({
+        userid: app.globalData.userid,
+        targetid
+      }).count().then(
+        res1 => {
+          wx.cloud.database().collection('user-actions').where({
+            userid: targetid,
+            targetid: app.globalData.userid
+          }).count().then(
+            res2 => {
+              console.log(res1, res2);
+              resolve({
+                myFollowing: res1.total > 0,
+                myFollower: res2.total > 0
+              });
+            })
+        },
+        err => console.log('error checking relationship ||', err))
     }
   )
-}
+
+};
+
+const followTargetUser = (targetid) => {
+  return new Promise(
+    (resolve, reject) => {
+      db.collection('user-actions').where({
+        userid: app.globalData.userid,
+        targetid
+      }).count().then(res1 => {
+        if (res1.total > 0) {
+          resolve({
+            alreadyFollowing: true
+          })
+        }
+        db.collection('user-actions').add({
+          data: {
+            createTime: new Date(),
+            userid: app.globalData.userid,
+            targetid
+          }
+        }).then(
+          res2 => {
+            console.log('new user action added: ', res2._id);
+            resolve({
+              ok: true,
+              message: `${app.globalData.userid} following ${targetid}`
+            });
+          },
+          err => reject({databaseError: true,errMsg:err})
+        )
+      })
+
+    }
+  )
+};
+
+const unfollowTargetUser = (targetid) => {
+  return new Promise(
+    (resolve, reject) => {
+      db.collection('user-actions').where({
+        userid: app.globalData.userid,
+        targetid
+      }).get().then(res1 => {
+        if (res1.data.length == 0) {
+          reject({
+            notFollowing: true
+          })
+        }
+        let cntRemoved = 0;
+        res1.data.forEach(e => {
+          db.collection('user-actions').doc(e._id).remove().then(
+            res2 => cntRemove += res2.stats.removed
+          )
+        });
+        resolve(cntRemoved);
+      })
+    }
+  )
+};
+
+const viewUsersFollowedBy = userid => {
+  // @return: list of users' basic info.
+  return new Promise()
+};
+
+const viewUsersFollowing = null;
 
 module.exports = {
   collectInstitution,
   getInstitutionList,
   RANK_TYPE,
   submitApplication,
-  getMyApplication
+  getMyApplication,
+  checkRelationshipWith,
+  followTargetUser, unfollowTargetUser, viewUsersFollowedBy, viewUsersFollowing
 }
