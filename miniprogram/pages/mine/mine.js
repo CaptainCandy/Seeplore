@@ -9,6 +9,7 @@ Page({
   data: {
     tabbar:{},
     userInfo: null,
+    user: null,
   },
 
   /**
@@ -16,6 +17,9 @@ Page({
    */
   onShow: function (options) {
     app.editTabbar()
+    this.setData({
+      user: app.globalData.user
+    })
     wx.cloud.callFunction({
       name: 'getUserInfo',
       data: {
@@ -101,7 +105,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      title: 'Seeplore一站式留学信息共享平台',
+      imageUrl: '../../images/Pikachu.jpg',
+      path: '/pages/index'
+    }
   },
 
   onAgentApply: function() {
@@ -117,11 +125,15 @@ Page({
   },
 
   onMyFollow: function () {
-
+    wx.navigateTo({
+      url: 'follower?isFollow=true&userid=' + app.globalData.userid,
+    })
   },
 
   onMyFollower: function () {
-
+    wx.navigateTo({
+      url: 'follower?isFollow=false&userid=' + app.globalData.userid,
+    })
   },
 
   onMyPost: function () {
@@ -139,6 +151,12 @@ Page({
   onMyApply: function () {
     wx.navigateTo({
       url: 'myApply',
+    })
+  },
+
+  onApplyCheck: function () {
+    wx.navigateTo({
+      url: 'applyCheck',
     })
   }
 })
