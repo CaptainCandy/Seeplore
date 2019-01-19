@@ -22,9 +22,9 @@ exports.main = async(event, context) => {
       ["wxUserInfo.nickName"]: true,
       "wxUserInfo.avatarUrl": true,
       "role.isAgent": true,
-      "role.isAccoundManager":true,
+      "role.isAccountManager":true,
       _id: true
-    }
+    };
   }
 
   if (uidlist) {
@@ -60,7 +60,8 @@ exports.main = async(event, context) => {
   if (stats && userid) {
     // post count
     let post = (await db.collection('posts').where({
-      authorID: userid
+      authorID: userid,
+      status: 1
     }).count()).total;
 
     // collect count
@@ -105,11 +106,6 @@ exports.main = async(event, context) => {
       collect
     };
   }
-
-  if (hearting) {
-    //const tmpretval = await db.collection('actions').where()//
-    //retval.data.hearting = tmpretval.data//是一个列表,可能需要map操作;;
-  };
 
   return retval.data;
 }

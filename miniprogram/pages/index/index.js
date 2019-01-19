@@ -33,7 +33,7 @@ Page({
     })
 
     // 加载最新帖子列表
-    //this.fetchPostListNew()
+    this.fetchPostListNew()
 
     //判断是否是分享链接
     if (options.isPostShare === 'true') {
@@ -60,7 +60,7 @@ Page({
    */
   onShow: function () {
     // 加载最新帖子列表
-    this.fetchPostListNew()
+    //this.fetchPostListNew()
   },
 
   /**
@@ -81,7 +81,7 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    this.fetchPostListNew()
   },
 
   /**
@@ -95,7 +95,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      title: 'Seeplore一站式留学信息共享平台',
+      imageUrl: '../../images/Pikachu.jpg',
+      path: '/pages/index'
+    }
   },
 
   //加载最新帖子列表

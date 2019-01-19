@@ -9,13 +9,17 @@ Page({
   data: {
     tabbar:{},
     userInfo: null,
+    user: null,
   },
 
   /**
    * 生命周期函数--监听页面加载
    */
-  onLoad: function (options) {
+  onShow: function (options) {
     app.editTabbar()
+    this.setData({
+      user: app.globalData.user
+    })
     wx.cloud.callFunction({
       name: 'getUserInfo',
       data: {
@@ -47,7 +51,7 @@ Page({
   /**
    * 生命周期函数--监听页面显示
    */
-  onShow: function () {
+  onLoad: function () {
     
   },
 
@@ -69,7 +73,25 @@ Page({
    * 页面相关事件处理函数--监听用户下拉动作
    */
   onPullDownRefresh: function () {
-
+    wx.cloud.callFunction({
+      name: 'getUserInfo',
+      data: {
+        userid: app.globalData.userid,
+        fields: {
+          "wxUserInfo.nickName": true,
+          "wxUserInfo.avatarUrl": true,
+          contact: true, // object：字段有email/phone
+          createDate: true, // 注册时间 Datetime字符串
+          "introduction": true // 指定所需要的字段
+        },
+        stats: true // 客户端从 res.result.stats 获取统计结果。返回值里面的 stats：对象，字段包括post, heart, collect, follower, following，均为number。
+      }
+    }).then(res => {
+      console.log(res)
+      this.setData({
+        userInfo: res.result
+      })
+    })
   },
 
   /**
@@ -83,7 +105,11 @@ Page({
    * 用户点击右上角分享
    */
   onShareAppMessage: function () {
-
+    return {
+      title: 'Seeplore一站式留学信息共享平台',
+      imageUrl: '../../images/Pikachu.jpg',
+      path: '/pages/index'
+    }
   },
 
   onAgentApply: function() {
@@ -99,11 +125,15 @@ Page({
   },
 
   onMyFollow: function () {
-
+    wx.navigateTo({
+      url: 'follower?isFollow=true&userid=' + app.globalData.userid,
+    })
   },
 
   onMyFollower: function () {
-
+    wx.navigateTo({
+      url: 'follower?isFollow=false&userid=' + app.globalData.userid,
+    })
   },
 
   onMyPost: function () {
@@ -121,6 +151,12 @@ Page({
   onMyApply: function () {
     wx.navigateTo({
       url: 'myApply',
+    })
+  },
+
+  onApplyCheck: function () {
+    wx.navigateTo({
+      url: 'applyCheck',
     })
   }
 })

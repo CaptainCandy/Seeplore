@@ -4,7 +4,8 @@
     <image class='portrait' mode="widthFix" src='{{userInfo.wxUserInfo.avatarUrl}}'></image>
     <view class='selfinfo'>
       <view class='nickname'>
-        <text>{{userInfo.wxUserInfo.nickName}}</text>
+        <text wx:if="{{user.role.isAgent}}" style='color: #ff8f20'>{{userInfo.wxUserInfo.nickName}}</text>
+        <text wx:else>{{userInfo.wxUserInfo.nickName}}</text>
       </view>
       <view class='intro'>
         <text wx:if="{{userInfo.introduction}}">个人简介：{{userInfo.introduction}}</text>
@@ -18,11 +19,11 @@
       <text>帖子</text>
     </view>
     <view class='box' bindtap='onMyFollow'>
-      <text>34</text>
+      <text>{{userInfo.stats.following}}</text>
       <text>关注</text>
     </view>
     <view class='box' bindtap='onMyFollower'>
-      <text>56</text>
+      <text>{{userInfo.stats.follower}}</text>
       <text>粉丝</text>
     </view>
   </view>
@@ -34,7 +35,10 @@
       <text class='text'>机构认证申请</text>
     </view>
     <view class='button' bindtap='onMyApply'>
-      <text class='text'>申请记录</text>
+      <text class='text'>机构申请记录</text>
+    </view>
+    <view wx:if="{{user.role.isAccountManager}}" class='button' bindtap='onApplyCheck'>
+      <text class='text'>机构申请处理</text>
     </view>
   </view>
 </view>

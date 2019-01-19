@@ -1,0 +1,31 @@
+<!--miniprogram/pages/mine/applyCheck.wxml-->
+<view wx:if='{{unCheckedCount !== 0}}' class='container'>
+  <view class='title'>
+    <text>申请列表</text>
+  </view>
+  <view wx:for='{{applyList}}' class='applylist'>
+    <view wx:if="{{!item.isChecked}}" class='apply'>
+      <view class='time'>{{item.createTime}}</view>
+      <view class='content'>
+        <text space='ensp'>机构名称：{{item.name}}</text>
+      </view>
+      <view class='content'>
+        <text space='ensp'>统一社会信用代码：{{item.unicode}}</text>
+      </view>
+      <view class='content'>
+        <text space='ensp'>法人代表：{{item.legalperson}}</text>
+      </view>
+      <view class='content'>
+        <text space='ensp'>机构介绍：{{item.introduction}}</text>
+      </view>
+      <view class='content'>
+        <text space='ensp'>机构地址：{{item.address}}</text>
+      </view>
+      <view class='buttons'>
+        <view class='button' style='background-color: #409EFF' bindtap='onCheck' data-approve='1' data-index='{{index}}'>通过</view>
+        <view class='button' style='background-color: #ff4040' bindtap='onCheck' data-approve='0' data-index='{{index}}'>拒绝</view>
+      </view>
+    </view>
+  </view>
+</view>
+<view wx:else class='container' style='color: rgb(182, 182, 182)'>目前暂时没有申请！</view>

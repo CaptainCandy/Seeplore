@@ -13,17 +13,31 @@
   border-radius: 50%;
 }
 .head .selfinfo{
-  width: 60%;
+  width: 65%;
   padding: 0 0 0 4vw;
   display: flex;
   flex-direction: column;
 }
 .head .selfinfo .nickname{
   font-size: 44rpx;
+  display: flex;
+  align-items: center;
+  padding-bottom: 1vw;
+}
+.head .selfinfo .nickname .button{
+  font-size: 32rpx;
+  width: 30%;
+  padding: 1vw 3vw 1vw 3vw;
+  margin: 0 2vw 0 4vw;
+  border-radius: 5rpx;
+  align-items: center;
+  text-align: center;
+  border: solid 2rpx #409EFF;
+  color: #409EFF;
 }
 .head .selfinfo .intro{
   font-size: 32rpx;
-  padding-top: 2vw;
+  padding-top: 1vw;
 }
 .second{
   width: 100%;

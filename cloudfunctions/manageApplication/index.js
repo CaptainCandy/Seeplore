@@ -6,7 +6,7 @@ cloud.init()
 const db = cloud.database();
 
 // 云函数入口函数
-exports.main = async (event, context) => {
+exports.main = async(event, context) => {
   const wxContext = cloud.getWXContext();
 
   let userid = event.userid;
@@ -15,31 +15,40 @@ exports.main = async (event, context) => {
   let [isApproved, isRejected] = [event.isApproved, event.isRejected];
   let message = event.message;
 
-  //TODO 验证用户的管理员身份。
-
-  if (toViewList){
+  if (toViewList) {
     return await db.collection('agent-applications').get();
   };
 
-  let data = {isChecked:true, isApproved, message};
+  let data = {
+    isChecked: true,
+    isApproved,
+    message
+  };
 
-  try{
-    let res1 = await db.collection('agent-applications').doc(appliactionid).update({data});
-    if(res1.stats.updated==1){
-      let res3 = await db.collection('agent-applications').doc(appliactionid).get();
-      console.log(res3);
-      let res2 = await db.collection('users').doc(userid).update({
-        data:{
-          role: {
-            isAgent: res3.data.name
+  try {
+    let res1 = await db.collection('agent-applications').doc(appliactionid).update({
+      data
+    });
+    if (res1.stats.updated == 1) {
+      if (isApproved) {
+        let res3 = await db.collection('agent-applications').doc(appliactionid).get();
+        let res2 = await db.collection('users').doc(res3.data.userid).update({
+          data: {
+            role: {
+              isAgent: res3.data.name
+            }
           }
-        }
-      })
-      return { updated: true };
-    }else{
-      return { updated: false };
+        });
+      }
+      return {
+        updated: true
+      };
+    } else {
+      return {
+        updated: false
+      };
     }
-  }catch(err){
+  } catch (err) {
     console.error(err);
   }
 

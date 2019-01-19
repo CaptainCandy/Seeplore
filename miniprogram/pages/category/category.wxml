@@ -1,6 +1,6 @@
 <!--miniprogram/pages/category/category.wxml-->
 <view class='container'>
-  <view wx:for="{{tagList}}" wx:for-index="aindex" wx:key="index" bindtap='test' class='category-zone'>
+  <view wx:for="{{tagList}}" wx:for-index="aindex" wx:key="index" class='category-zone'>
     <view class='head'>
       <text class='name'>{{item.category}}</text>
     </view>

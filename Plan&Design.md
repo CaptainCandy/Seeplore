@@ -341,35 +341,87 @@ wx.cloud.callFunction({
     message: ''
   }
 }).then(
-  res => res.data // res.data是一个list
+  res => res.result.updated // Boolean
 )
+```
+
+### Follow control
+
+- 用例：用户：关注、取消关注、查看粉丝、分看关注。
+- 数据：user-action
+  - createTime, targetid, userid
+- 操作
+  - [ ] doUserAction
+  - [ ] viewFollowers 本地
+  - [ ] viewFollowings 本地
+
+```js
+//demo-16 查看当前用户与目标用户之间的关系
+utils.checkRelationshipWith('目标用户ID').then(res=>{
+  // res = {myFollowing: false, 当前用户未关注目标用户
+  //        myFollower: false} 当前用户未被目标用户关注
+});
+//demo-17 当前用户关注目标用户
+utils.followTargetUser('目标用户ID').then(res=>{
+  // res.ok == true; 关注成功时
+  // res.alreadyFollowing == true; 关注失败时
+});// 写入数据库失败直接抛出错误。
+//demo-18 取消关注
+utils.unfollowTargetUser('目标用户ID').then(res=>{
+  // res.ok == true; 取消成功时
+  // res.notFollowing == true; 本来就没关注
+});
+//demo-19 查看关注列表
+utils.viewUsersFollowedBy('目标用户ID').then(res=>{
+  // res.data = [{user:{role,wxUserInfo,_id},
+  //             relationshipToCurUser:{'参见demo-16'}},...]
+});
+//demo-20 查看粉丝列表
+utils.viewUsersFollowing('目标用户ID');//与demo-19相同。
 ```
 
 ### Activity control
 
 - 设计
-  - [ ] post新增字段：activityid
-  - [ ] 传给前端 isSignedup 从user-activities查询报名记录。
-  - 如何临时关闭报名？
+  - [ ] post新增字段：activityLink
+  - [ ] 传给前端 isSignedUp 从user-activities查询报名记录。
   - 页面使用逻辑：帖子详情，活动详情，报名表
   - 活动报名表字段
     - 管理员设置：数组（每个对象包括字段名和字段验证方式）
     - 报名时：数组（每个元素包括字段名和内容）
 - 数据
   - activities
-    - status
-    - description
-    - openTime
-    - closeTime
+    - _id
+    - name:
+    - status: 0 hidden, 1 opened, 2 paused, 3 closed
+    - abstract: string 考虑是否更适合存放结构化的数据？跟帖子一样存吧。
+    - openTime:
+    - closeTime:
+    - activityTime:
+    - createTime:
+    - postid:
+    - form
   - user-activities
   - 报名表
     - 活动信息：标题、描述、详情、类型（是否付费）
     - 活动状态：开始报名、结束报名
   - 用户报名表
-- 实现
-  - [ ] manageActivities
+- 用例
+  - 管理员：创建活动，编辑活动，发布活动，关闭报名，查看活动报名情况
+  - 普通用户：报名活动，取消报名，查看活动（所有活动，结束活动，自己的活动）
+- 操作
+  - 查看活动：作为一个标签？检索帖子？
+  - [ ] createActivity
+    - 功能：新建活动信息、新建活动贴、两者绑定。
     - 输入：
-      - basics: title
+      - activity: {name, status, }
+      - post: {}
+      - form: {}
+    - 输出：
+      - 两个ID
+  - [ ] manageActivity
+    - 输入：
+      - activityId 指定活动ID，若空则新建。
 
 ## Protocol
 
@@ -444,7 +496,7 @@ wx.cloud.callFunction({
   createTime: Date,
   email: String,
   phone: String,
-  role: {isAgent:, isActivityManager:, isAccoundManager:, isSuperUser: },
+  role: {isAgent:, isActivityManager:, isAccountManager:, isSuperUser: },
   introduction: String,
   tagsPreferred: String,
   background: {undergraduate:String, graduate:,

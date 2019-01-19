@@ -13,7 +13,10 @@
           </navigator>
           <navigator class="postPre_head" bindtap='onPostList' data-currentindex='{{index}}' hover-class='none'>
             <view class="postPre_title"><text>{{item.title}}</text></view>
-            <view class="postPre_nickname"><text>{{item.author.nickName}}</text></view>
+            <view class="postPre_nickname">
+              <text wx:if="{{item.author.role.isAgent}}" style='color: #ff8f20'>{{item.author.role.isAgent}}</text>
+              <text wx:else>{{item.author.nickName}}</text>
+            </view>
             <view class="postPre_date"><text>{{item.createTime}}</text></view>
           </navigator>
           <view class="postPre_abstract" bindtap='onPostList' data-currentindex='{{index}}'>

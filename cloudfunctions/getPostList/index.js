@@ -29,28 +29,27 @@ exports.main = async(event, context) => {
   let ref = null;
   let userid = (!event.userid) ? wxContext.OPENID : event.userid;
 
-  var num = [recent, hot, ids].filter(obj => obj != undefined).length;
+  let num = [recent, hot, ids].filter(obj => obj != undefined).length;
   if (num > 1) {
     throw new Error('only one of recent, hot, ids should be passed in.');
     console.log('para err.');
     return;
   } else {
-    var posts = db.collection('posts').where({
-      status: 1
-    });
+    var posts = db.collection('posts');
   }
+
+  let condition = {status: 1};
 
   if (recent) {
     ref = posts.orderBy('createTime', 'desc');
   } else if (hot) {
     ref = posts.orderBy('heartCount', 'desc');
-  } else if (ids) {
-    ref = posts.where({
-      _id: db.command.in(ids)
-    });
   } else {
     ref = posts;
-  }
+  } 
+  if (ids) {
+    condition._id = db.command.in(ids);
+  } 
 
   if (words) {
     if (!(words instanceof Array)) {
@@ -60,15 +59,20 @@ exports.main = async(event, context) => {
         regexp: words.join('|'),
         options: 'i'
       });
-      ref = ref.where(
-        db.command.or([{
+      console.log(db.command.or([{
+        abstract: reg
+      },
+      {
+        title: reg
+      }
+      ]));
+      condition['$or'] = [{
             abstract: reg
           },
           {
             title: reg
           }
-        ])
-      );
+        ];
     }
   } else if (tags) {
     if (!(tags instanceof Array)) {
@@ -78,17 +82,15 @@ exports.main = async(event, context) => {
         tag: db.command.in(tags)
       }).get();
       let postsTagged = new Set(res.data.map(elem => elem.postid));
-      ref = ref.where({
-        _id: db.command.in(Array.from(postsTagged))
-      });
+      condition._id = db.command.in(Array.from(postsTagged));
       //不需要在list页面呈现每个post拥有的全部tag，只需要取出不重复的post列表
     }
   } 
   if (authorid){
-    ref = ref.where({
-      authorID: authorid
-    });
-  }
+    condition.authorID = authorid;
+  };
+
+  ref = ref.where(condition);
 
   const size = (await ref.count()).total;
 
@@ -100,6 +102,8 @@ exports.main = async(event, context) => {
   } else{
     ref = ref.limit(30);
   }
+
+  console.log('|| Query: ||', ref);
 
   var resp;
   resp = await ref.get();
@@ -114,18 +118,18 @@ exports.main = async(event, context) => {
     data: {
       uidlist: useridlist
     }
-  })
+  });
 
   var userinfolist = resp.result.data; //.map(function(item){return item.wxUserInfo;})
   var userinfodict = new Array();
-  console.log('\n || userinfolist|| \n', userinfolist);
+  //console.log('\n || userinfolist|| \n', userinfolist);
   userinfolist.forEach(function(elem) {
     elem.wxUserInfo.role = elem.role;
     userinfodict[elem._id] = elem.wxUserInfo;
   });
 
   var respActionQ, useractions;
-
+/*
   respActionQ = await cloud.callFunction({
     name: 'getActions',
     data: {
@@ -153,8 +157,8 @@ exports.main = async(event, context) => {
   var collectedpostlist = useractions.map(function(ele) {
     return ele.targetid;
   });
-
-  console.log("|| userinfodict ||\n ", userinfodict);
+*/
+  //console.log("|| userinfodict ||\n ", userinfodict);
   var extract = function(item) {
     var authorinfo = userinfodict[item.authorID];
     if(authorinfo){
@@ -169,10 +173,10 @@ exports.main = async(event, context) => {
       abstract: item.abstract,
       title: item.title,
       content: item.content,
-      heartCount: item.heartCount,
-      isHearted: heartedpostlist.some(ele => ele == item._id),
-      isCollected: collectedpostlist.some(ele => ele == item._id),
-      tags: item.tags,
+      //heartCount: item.heartCount,
+      //isHearted: heartedpostlist.some(ele => ele == item._id),
+      //isCollected: collectedpostlist.some(ele => ele == item._id),
+      //tags: item.tags,
       createTime: item.createTime,
       author: authorinfo
     }

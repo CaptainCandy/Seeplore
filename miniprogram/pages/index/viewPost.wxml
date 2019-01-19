@@ -2,7 +2,8 @@
 <view class='container'>
   <view class='author'>
     <image class='portrait' mode='widthFix' src='{{currentPost.author.avatarUrl}}' bindtap='onUser'></image>
-    <text class='nickname' bindtap='onUser'>{{currentPost.author.nickName}}</text>
+    <text wx:if="{{currentPost.author.role.isAgent}}" class='nickname' bindtap='onUser' style='color: #ff8f20'>{{currentPost.author.role.isAgent}}</text>
+    <text wx:else class='nickname' bindtap='onUser'>{{currentPost.author.nickName}}</text>
     <text class='date'>发表于 {{currentPost.createTime}}</text>
   </view>
   <view class='title'>
@@ -18,7 +19,7 @@
       </view>
     </view>
     <view class='tags'>
-      <text class='tag' style='color: #000'>标签:</text>
+      <text wx:if='{{currentPost.tags.length !== 0}}' class='tag' style='color: #000'>标签:</text>
       <view wx:for='{{currentPost.tags}}' class='tag' bindtap='onTag' data-tagname='{{item.tag}}'>
         <text>#{{item.tag}}</text>
       </view>
@@ -60,7 +61,8 @@
         <image class='portrait' mode="widthFix" src='{{item.replier.avatarUrl}}' bindtap='onReplyUser' data-rindex='{{rindex}}'></image>
       </view>
       <view class='main'>
-        <view class='nickname' bindtap='onReplyUser' data-rindex='{{rindex}}'>{{item.replier.nickName}}</view>
+        <view wx:if="{{item.replier.role.isAgent}}" class='nickname' bindtap='onReplyUser' data-rindex='{{rindex}}' style='color: #ff8f20'>{{item.replier.role.isAgent}}</view>
+        <view wx:else class='nickname' bindtap='onReplyUser' data-rindex='{{rindex}}'>{{item.replier.nickName}}</view>
         <view>
           <text class='text' bindtap='onComment' data-curreplyid='{{item._id}}' data-author='{{item.replier.nickName}}' data-content='{{item.content}}'>{{item.content}}</text>
         </view>
@@ -94,9 +96,11 @@
         </view>
         <view wx:else class='comment-zone'>
           <view wx:for="{{item.comments}}" wx:if="{{comment.status === 1}}" wx:for-item="comment" wx:for-index="cindex" wx:key="index" data-cindex='{{cindex}}' class='comment'>
-            <text style='color: rgb(39, 96, 202)'>{{comment.replier.nickName}} </text>
+            <text wx:if="{{comment.replier.role.isAgent}}" style='color: #ff8f20'>{{comment.replier.role.isAgent}} </text>
+            <text wx:else style='color: rgb(39, 96, 202)'>{{comment.replier.nickName}} </text>
             <text wx:if="{{comment.parentNickname}}">回复 </text>
-            <text style='color: rgb(39, 96, 202)'>{{comment.parentNickname}}: </text>
+            <text wx:if="{{comment.parentAgent}}" style='color: #ff8f20'>{{comment.parentAgent}}: </text>
+            <text wx:else style='color: rgb(39, 96, 202)'>{{comment.parentNickname}}: </text>
             <text bindtap='onComment' 
                   data-curreplyid='{{comment._id}}' 
                   data-parentid='{{item._id}}'

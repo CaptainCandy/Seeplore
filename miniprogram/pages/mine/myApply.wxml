@@ -20,7 +20,7 @@
         <text wx:else space='ensp'>是否已审核：未审核</text>
       </view>
       <view class='content'>
-        <text wx:if='{{item.isApproved}}' space='ensp'>是否通过：已通过</text>
+        <text wx:if='{{item.isApproved}}' space='ensp' style='color: #ff8f20'>是否通过：已通过</text>
         <text wx:else space='ensp'>是否通过：未通过</text>
       </view>
       <view class='content'>
