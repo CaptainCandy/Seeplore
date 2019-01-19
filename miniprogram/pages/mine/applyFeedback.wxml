@@ -1,0 +1,14 @@
+<!--miniprogram/pages/mine/applyFeedback.wxml-->
+<view class='container'>
+  <view class='post-info'>
+    <text>请填写给 </text>
+    <text style='color: rgb(39, 96, 202)'>{{apply.name}} </text>
+    <text>的反馈信息 </text>
+  </view>
+  <view>
+    <textarea class='textarea' bindinput='onInput' placeholder='请填写反馈：' placeholder-style='color: rgb(182, 182, 182)'></textarea>
+  </view>
+  <view class='finish-button' bindtap='onCheck'>
+    <text>提交</text>
+  </view>
+</view>
