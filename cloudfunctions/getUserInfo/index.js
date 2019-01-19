@@ -107,10 +107,5 @@ exports.main = async(event, context) => {
     };
   }
 
-  if (hearting) {
-    //const tmpretval = await db.collection('actions').where()//
-    //retval.data.hearting = tmpretval.data//是一个列表,可能需要map操作;;
-  };
-
   return retval.data;
 }

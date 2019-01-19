@@ -1,6 +1,7 @@
 /* 工具文件*/
 const app = getApp();
 const db = wx.cloud.database();
+const curUserId = app.globalData.userid;
 
 let collectInstitution = function(institutionName, userid) {
   const db = wx.cloud.database();
@@ -167,7 +168,6 @@ const checkRelationshipWith = (targetid) => {
             targetid: app.globalData.userid
           }).count().then(
             res2 => {
-              console.log(res1, res2);
               resolve({
                 myFollowing: res1.total > 0,
                 myFollower: res2.total > 0
@@ -190,24 +190,28 @@ const followTargetUser = (targetid) => {
         if (res1.total > 0) {
           resolve({
             alreadyFollowing: true
-          })
+          });
+        } else {
+          db.collection('user-actions').add({
+            data: {
+              createTime: new Date(),
+              userid: app.globalData.userid,
+              targetid
+            }
+          }).then(
+            res2 => {
+              console.log('new user action added: ', res2._id);
+              resolve({
+                ok: true,
+                message: `${app.globalData.userid} following ${targetid}`
+              });
+            },
+            err => reject({
+              databaseError: true,
+              errMsg: err
+            })
+          )
         }
-        db.collection('user-actions').add({
-          data: {
-            createTime: new Date(),
-            userid: app.globalData.userid,
-            targetid
-          }
-        }).then(
-          res2 => {
-            console.log('new user action added: ', res2._id);
-            resolve({
-              ok: true,
-              message: `${app.globalData.userid} following ${targetid}`
-            });
-          },
-          err => reject({databaseError: true,errMsg:err})
-        )
       })
 
     }
@@ -222,28 +226,105 @@ const unfollowTargetUser = (targetid) => {
         targetid
       }).get().then(res1 => {
         if (res1.data.length == 0) {
-          reject({
+          resolve({
             notFollowing: true
           })
+        } else {
+          //var cntRemoved = 0;
+          res1.data.forEach(e => {
+            db.collection('user-actions').doc(e._id).remove()
+            /*.then(
+                          res2 => {console.log(res2.stats.removed);cntRemoved = cntRemoved + res2.stats.removed;}
+                        )*/
+          });
+          resolve({
+            ok: true
+          }); //resolve({cntRemoved});
         }
-        let cntRemoved = 0;
-        res1.data.forEach(e => {
-          db.collection('user-actions').doc(e._id).remove().then(
-            res2 => cntRemove += res2.stats.removed
-          )
-        });
-        resolve(cntRemoved);
       })
     }
   )
 };
 
 const viewUsersFollowedBy = userid => {
-  // @return: list of users' basic info.
-  return new Promise()
+
+  return new Promise(
+    (resolve, reject) => {
+      db.collection('user-actions').where({
+        userid: userid
+      }).get().then(
+        res => {
+          let uidlist = res.data.map(e => e.targetid);
+          wx.cloud.callFunction({
+            name: 'getUserInfo',
+            data: {
+              uidlist,
+              userid: app.globalData.userid
+            }
+          }).then(res => {
+            let userlist = res.result.data;
+            const promises = userlist.map(e => {
+              return new Promise(
+                (resolve2, reject2) => {
+                  checkRelationshipWith(e._id).then(res1 => {
+                    resolve2({
+                      user: e,
+                      relationshipToCurUser: res1
+                    })
+                  })
+                });
+            });
+            Promise.all(promises).then(
+              res2=>{
+                resolve({data:res2});
+              }
+            );
+          })
+        }
+      )
+    }
+  )
 };
 
-const viewUsersFollowing = null;
+const viewUsersFollowing = userid => {
+
+  return new Promise(
+    (resolve, reject) => {
+      db.collection('user-actions').where({
+        targetid: userid
+      }).get().then(
+        res => {
+          let uidlist = res.data.map(e => e.targetid);
+          wx.cloud.callFunction({
+            name: 'getUserInfo',
+            data: {
+              uidlist,
+              userid: app.globalData.userid
+            }
+          }).then(res => {
+            let userlist = res.result.data;
+            const promises = userlist.map(e => {
+              return new Promise(
+                (resolve2, reject2) => {
+                  checkRelationshipWith(e._id).then(res1 => {
+                    resolve2({
+                      user: e,
+                      relationshipToCurUser: res1
+                    })
+                  })
+                });
+            });
+            Promise.all(promises).then(
+              res2 => {
+                resolve({ data: res2 });
+              }
+            );
+          })
+        }
+      )
+    }
+  )
+};
 
 module.exports = {
   collectInstitution,
@@ -252,5 +333,8 @@ module.exports = {
   submitApplication,
   getMyApplication,
   checkRelationshipWith,
-  followTargetUser, unfollowTargetUser, viewUsersFollowedBy, viewUsersFollowing
+  followTargetUser,
+  unfollowTargetUser,
+  viewUsersFollowedBy,
+  viewUsersFollowing
 }

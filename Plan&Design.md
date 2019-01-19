@@ -362,8 +362,22 @@ utils.checkRelationshipWith('目标用户ID').then(res=>{
   //        myFollower: false} 当前用户未被目标用户关注
 });
 //demo-17 当前用户关注目标用户
-utils.followTargetUser('目标用户ID'); // 返回一个Promise，没有resolve值；写入数据库失败直接抛出错误。
-//
+utils.followTargetUser('目标用户ID').then(res=>{
+  // res.ok == true; 关注成功时
+  // res.alreadyFollowing == true; 关注失败时
+});// 写入数据库失败直接抛出错误。
+//demo-18 取消关注
+utils.unfollowTargetUser('目标用户ID').then(res=>{
+  // res.ok == true; 关注成功时
+  // res.notFollowing == true; 关注失败时
+});
+//demo-19 查看关注列表
+utils.viewUsersFollowedBy('目标用户ID').then(res=>{
+  // res.data = [{user:{role,wxUserInfo,_id},
+  //             relationshipToCurUser:{'参见demo-16'}},...]
+});
+//demo-20 查看粉丝列表
+utils.viewUsersFollowing('目标用户ID');//与demo-19相同。
 ```
 
 ### Activity control
