@@ -1,0 +1,15 @@
+<!--miniprogram/pages/mine/follower.wxml-->
+<view class='container'>
+  <view wx:if="{{userlist.length === 0}}" style='color: rgb(182, 182, 182); font-size=32rpx'>当前用户列表为空！</view>
+  <view wx:else class='userlist'>
+    <view wx:for="{{userlist}}" class='userzone'>
+      <image class='portrait' mode='widthFix' src='{{item.user.wxUserInfo.avatarUrl}}' bindtap='onUser' data-index='{{index}}'></image>
+      <view class='nickname' bindtap='onUser' data-index='{{index}}'>
+        <text wx:if="{{item.user.role.isAgent}}" style='color: #ff8f20'>{{item.user.role.isAgent}}</text>
+        <text wx:else>{{item.user.wxUserInfo.nickName}}</text>
+      </view>
+      <view wx:if="{{!item.relationshipToCurUser.myFollowing}}" class='button' bindtap='onFollow' data-index='{{index}}'>关注</view>
+      <view wx:else class='button' bindtap='onFollow' data-index='{{index}}' style='color: #fff; background-color: #409EFF'>已关注</view>
+    </view>
+  </view>
+</view>
