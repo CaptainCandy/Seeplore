@@ -108,7 +108,7 @@ Page({
     return {
       title: 'Seeplore一站式留学信息共享平台',
       imageUrl: '../../images/Pikachu.jpg',
-      path: '/pages/index'
+      path: '/pages/loginEntry/entry'
     }
   },
 

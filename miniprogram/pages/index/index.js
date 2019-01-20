@@ -28,6 +28,11 @@ Page({
     wx.hideTabBar()
 
     // 获取用户信息
+    if (!app.globalData.userid) {
+      wx.navigateTo({
+        url: '../loginEntry/loginEntry',
+      })
+    }
     this.setData({
       userInfo: app.globalData.userInfo,
     })
@@ -98,7 +103,7 @@ Page({
     return {
       title: 'Seeplore一站式留学信息共享平台',
       imageUrl: '../../images/Pikachu.jpg',
-      path: '/pages/index'
+      path: '/pages/loginEntry/entry'
     }
   },
 

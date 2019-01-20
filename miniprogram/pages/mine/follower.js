@@ -20,6 +20,9 @@ Page({
     let isFollow = options.isFollow
     let userid = options.userid
     let that = this
+    wx.showLoading({
+      title: '正在加载',
+    })
     if (isFollow === 'true') {
       utils.viewUsersFollowedBy(options.userid).then(res => {
         // res.data = [{user:{role,wxUserInfo,_id},
@@ -28,6 +31,7 @@ Page({
         that.setData({
           userlist: res.data.reverse()
         })
+        wx.hideLoading()
       });
     }
     else if (isFollow === 'false') {
@@ -38,6 +42,7 @@ Page({
         that.setData({
           userlist: res.data.reverse()
         })
+        wx.hideLoading()
       })
     }
   },
