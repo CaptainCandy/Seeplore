@@ -784,8 +784,6 @@ promise.then(resp=>console.log(resp.result))//result = {removed: true, added: un
 - college
 - mine
 
-### Unsolved
-
 - overall
 
 - index
