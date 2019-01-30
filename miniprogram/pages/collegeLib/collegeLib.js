@@ -107,7 +107,8 @@ Page({
    */
   onShareAppMessage: function () {
     return {
-      title: 'Seeplore院校库'
+      title: 'Seeplore院校库',
+      path: '/pages/loginEntry/entry'
     }
   },
 

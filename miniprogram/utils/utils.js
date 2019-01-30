@@ -233,9 +233,7 @@ const unfollowTargetUser = (targetid) => {
           //var cntRemoved = 0;
           res1.data.forEach(e => {
             db.collection('user-actions').doc(e._id).remove()
-            /*.then(
-                          res2 => {console.log(res2.stats.removed);cntRemoved = cntRemoved + res2.stats.removed;}
-                        )*/
+            /*.then(res2 => {cntRemoved = cntRemoved + res2.stats.removed;})*/
           });
           resolve({
             ok: true

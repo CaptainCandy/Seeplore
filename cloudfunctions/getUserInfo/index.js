@@ -13,16 +13,17 @@ exports.main = async(event, context) => {
   let uidlist = event.uidlist;
   let fields = event.fields;
   let stats = event.stats;
-  let [colleting, hearting, following] = [event.colleting, event.hearting, event.following];
   let ref = null;
   let retval = 'null';
+
+  console.log(event);
 
   if (!fields) { //默认返回字段;;
     fields = {
       ["wxUserInfo.nickName"]: true,
       "wxUserInfo.avatarUrl": true,
       "role.isAgent": true,
-      "role.isAccountManager":true,
+      "role.isAccountManager": true,
       _id: true
     };
   }
@@ -100,10 +101,21 @@ exports.main = async(event, context) => {
       }
     })).result.count;
 
+    // follower count
+    let follower = (await db.collection('user-actions').where({
+      targetid: userid
+    }).count()).total;
+
+    let following = (await db.collection('user-actions').where({
+      userid: userid
+    }).count()).total;
+
     retval.data.stats = {
       post,
       heart,
-      collect
+      collect,
+      follower,
+      following
     };
   }
 
