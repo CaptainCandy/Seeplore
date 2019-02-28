@@ -4,7 +4,17 @@ Seeplore是一个留学资讯交流平台的微信小程序，服务有意留学
 
 课程作业，小组项目。
 
-## 运行效果
+## 使用说明
+
+![查看帖子](img/view.png)
+
+![搜索帖子](img/search.png)
+
+![发布新帖](img/post.png)
+
+![回复帖子](img/reply.png)
+
+![个人中心](img/centeer.png)
 
 ## 部署说明
 
